@@ -1,18 +1,18 @@
 [submodule "mod/i18n"]
 	path = mod/i18n
-	url = ../Degrees-of-Lewdity_Mod_i18nMod.git
+	url = https://github.com/Lyoko-Jeremie/Degrees-of-Lewdity_Mod_i18nMod.git
 [submodule "mod/ModLoaderGui"]
 	path = mod/ModLoaderGui
-	url = ../sugarcube-2-ModLoaderGui.git
+	url = https://github.com/Lyoko-Jeremie/sugarcube-2-ModLoaderGui.git
 [submodule "mod/ImageLoaderHook"]
 	path = mod/ImageLoaderHook
-	url = ../sugarcube-2-ModLoader-ImgLoaderHooker.git
+	url = https://github.com/Lyoko-Jeremie/sugarcube-2-ModLoader-ImgLoaderHooker.git
 [submodule "mod/CheckDoLCompressorDictionaries"]
 	path = mod/CheckDoLCompressorDictionaries
-	url = ../Degrees-of-Lewdity_Mod_CheckDoLCompressorDictionaries.git
+	url = https://github.com/Lyoko-Jeremie/Degrees-of-Lewdity_Mod_CheckDoLCompressorDictionaries.git
 [submodule "mod/TweeReplacer"]
 	path = mod/TweeReplacer
-	url = ../Degrees-of-Lewdity_Mod_TweeReplacer.git
+	url = https://github.com/Lyoko-Jeremie/Degrees-of-Lewdity_Mod_TweeReplacer.git
 [submodule "mod/ReplacePatch"]
 	path = mod/ReplacePatch
-	url = ../Degrees-of-Lewdity_Mod_ReplacePatch.git
+	url = https://github.com/Lyoko-Jeremie/Degrees-of-Lewdity_Mod_ReplacePatch.git

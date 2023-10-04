@@ -109,7 +109,7 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@v3
         with:
-          name: Mod Package
+          name: ModPackage
           path: ${{ github.workspace }}/src/insertTools/${{ env.MOD_NAME }}/*.zip
   release:
     if: ${{ needs.meta.outputs.is_release == 'true' }}
@@ -122,7 +122,7 @@ jobs:
 
       - uses: softprops/action-gh-release@v1
         with:
-          files: assets/*
+          files: assets/ModPackage/*
           tag_name: ${{ needs.meta.outputs.tag }}
 
 

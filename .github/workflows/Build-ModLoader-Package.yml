@@ -97,9 +97,8 @@ jobs:
           yarn run webpack:insertTools
 
       - name: Package Mod
-        working-directory: ${{ github.workspace }}/mod/${{ env.MOD_NAME }}
+        working-directory: ${{ github.workspace }}/src/insertTools/${{ env.MOD_NAME }}
         run: |
-          cd ${{ github.workspace }}/src/insertTools/${{ env.MOD_NAME }}
           sed -i 's/"version": *"[^"]*"/"version": "${{ needs.meta.outputs.version }}"/' boot.json
           node "${{ github.workspace }}/dist-insertTools/packModZip.js" "boot.json"
 

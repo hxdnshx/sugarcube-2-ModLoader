@@ -114,6 +114,8 @@ jobs:
   release:
     if: ${{ needs.meta.outputs.is_release == 'true' }}
     needs: [meta, build]
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v3

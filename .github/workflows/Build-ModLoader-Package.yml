@@ -96,6 +96,10 @@ jobs:
           yarn run ts:ForSC2
           yarn run webpack:insertTools
 
+      - name: Update resource version
+        run: |
+          python3 "${{ github.workspace }}/.github/update_version_info.py" boot.json ${{ needs.meta.outputs.version }}    
+
       - name: Package Mod
         working-directory: ${{ github.workspace }}/src/insertTools/${{ env.MOD_NAME }}
         run: |

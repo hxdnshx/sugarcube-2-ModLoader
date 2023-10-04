@@ -1,5 +1,10 @@
 
-# ModLoader
+# Defrock Mod
+
+这是一个基于 sugarcube-2-ModLoader 的 Mod，在启用这个 Mod 后，可以与约旦对话，进行 `还俗` 操作。
+进行这个操作之后，玩家将不再是信众，不再需要遵循关于行为的限制。之后可以再度与约旦对话重新加入。
+
+从 [Release](https://github.com/hxdnshx/sugarcube-2-ModLoader/releases) 可以下载这个 Mod 的最新版本。
 
 ---
 

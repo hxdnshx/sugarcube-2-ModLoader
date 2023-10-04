@@ -1,0 +1,53 @@
+{
+  "name": "DefrockMod",
+  "version": "1.0.3",
+  "styleFileList": [
+  ],
+  "scriptFileList_earlyload": [
+  ],
+  "scriptFileList_inject_early": [
+  ],
+  "scriptFileList_preload": [
+  ],
+  "scriptFileList": [
+  ],
+  "tweeFileList": [
+    "defrockmod.twee"
+  ],
+  "imgFileList": [
+  ],
+  "additionFile": [
+  ],
+  "addonPlugin": [
+    {
+      "modName": "TweeReplacer",
+      "addonName": "TweeReplacerAddon",
+      "modVersion": "1.0.0",
+      "params": [
+        {
+          "passage": "Temple Jordan",
+          "findRegex": "(\\<\\<if \\$temple_harassed is 1\\>\\>)",
+          "replace": "<<if $temple_rank is \"initiate\">>\n<<link [[询问还俗 (£10000 0:05)|Temple Defrock]]>><<set $money -= 1000000>><<pass 60>><</link>>\n<br>\n<</if>>$1"
+        }
+      ]
+    }
+  ],
+  "dependenceInfo": [
+    {
+      "modName": "ModLoader",
+      "version": ">=1.1.0"
+    },
+    {
+      "modName": "ModLoader DoL ImageLoaderHook",
+      "version": ">=1.0.0"
+    },
+    {
+      "modName": "TweeReplacer",
+      "version": ">=1.0.0"
+    },
+    {
+      "modName": "ReplacePatcher",
+      "version": ">=1.0.0"
+    }
+  ]
+}

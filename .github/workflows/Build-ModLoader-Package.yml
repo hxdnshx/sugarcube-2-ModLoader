@@ -3,15 +3,49 @@ name: Build ModLoader Package
 
 on:
   push:
-    branches: [ "master" ]
+    tags:
+      - "v*"
+    branches: [ "master", "main" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "master", "main" ]
   workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: ${{ matrix.os }}
+  meta:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - id: set_tag
+        run: |
+          is_release=${{ startsWith(github.ref, 'refs/tags/v') }}
+          tag=$(git describe --tags --match "v*" ${{ github.ref }} || true)
+          if [[ $tag != v* ]]; then
+            tag=$(curl -sX GET "https://api.github.com/repos/MaaAssistantArknights/MaaFramework/releases/latest" --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' | awk '/tag_name/{print $4}' FS='["]')
+            if [[ $tag != v* ]]; then
+              tag="v0.0.0"
+            fi
+            tag=$(date "+$tag-%y%m%d-$(git rev-parse --short HEAD)")
+          fi
+          if ! $($is_release) ; then
+            prefix=${tag%-*-*}
+            suffix=${tag#$prefix-}
+            tag="$prefix-ci.$suffix"
+          fi
 
+          echo tag=$tag | tee -a $GITHUB_OUTPUT
+          echo is_release=$is_release | tee -a $GITHUB_OUTPUT
+          echo version=${tag:1} | tee -a $GITHUB_OUTPUT
+    outputs:
+      tag: ${{ steps.set_tag.outputs.tag }}
+      is_release: ${{ steps.set_tag.outputs.is_release }}
+      version: ${{ steps.set_tag.outputs.version }}
+  build:
+    needs: [meta]
+    runs-on: ${{ matrix.os }}
+    env:
+      MOD_NAME: "DefrockMod"
     strategy:
       # Set fail-fast to false to ensure that feedback is delivered for all matrix combinations. Consider changing this to true when your workflow is stable.
       fail-fast: false
@@ -62,103 +96,30 @@ jobs:
           yarn run ts:ForSC2
           yarn run webpack:insertTools
 
-      - name: Build ModLoaderGui
-        working-directory: ${{ github.workspace }}/mod/ModLoaderGui
+      - name: Package Mod
+        working-directory: ${{ github.workspace }}/mod/${{ env.MOD_NAME }}
         run: |
-          cd ${{ github.workspace }}/mod/ModLoaderGui
-          yarn install
-          yarn run build:ts
-          yarn run build:webpack
+          cd ${{ github.workspace }}/src/insertTools/${{ env.MOD_NAME }}
+          sed -i 's/"version": *"[^"]*"/"version": "${{ needs.meta.outputs.version }}"/' boot.json
           node "${{ github.workspace }}/dist-insertTools/packModZip.js" "boot.json"
-      - name: Copy ModLoaderGui
-        uses: Lyoko-Jeremie/js-copy-github-action@master
-        with:
-          source: ${{ github.workspace }}/mod/ModLoaderGui/ModLoaderGui.mod.zip
-          target: ${{ github.workspace }}/out
-
-      - name: Build ImageLoaderHook
-        working-directory: ${{ github.workspace }}/mod/ImageLoaderHook
-        run: |
-          cd ${{ github.workspace }}/mod/ImageLoaderHook
-          yarn install
-          yarn run build:ts
-          yarn run build:webpack
-          node "${{ github.workspace }}/dist-insertTools/packModZip.js" "boot.json"
-      - name: Copy ImageLoaderHook
-        uses: Lyoko-Jeremie/js-copy-github-action@master
-        with:
-          source: ${{ github.workspace }}/mod/ImageLoaderHook/ModLoader DoL ImageLoaderHook.mod.zip
-          target: ${{ github.workspace }}/out
-
-      - name: Build ReplacePatch
-        working-directory: ${{ github.workspace }}/mod/ReplacePatch
-        run: |
-          cd ${{ github.workspace }}/mod/ReplacePatch
-          yarn install
-          yarn run build:ts
-          yarn run build:webpack
-          node "${{ github.workspace }}/dist-insertTools/packModZip.js" "boot.json"
-      - name: Copy ReplacePatch
-        uses: Lyoko-Jeremie/js-copy-github-action@master
-        with:
-          source: ${{ github.workspace }}/mod/ReplacePatch/ReplacePatcher.mod.zip
-          target: ${{ github.workspace }}/out
-
-      - name: Build TweeReplacer
-        working-directory: ${{ github.workspace }}/mod/TweeReplacer
-        run: |
-          cd ${{ github.workspace }}/mod/TweeReplacer
-          yarn install
-          yarn run build:ts
-          yarn run build:webpack
-          node "${{ github.workspace }}/dist-insertTools/packModZip.js" "boot.json"
-      - name: Copy TweeReplacer
-        uses: Lyoko-Jeremie/js-copy-github-action@master
-        with:
-          source: ${{ github.workspace }}/mod/TweeReplacer/TweeReplacer.mod.zip
-          target: ${{ github.workspace }}/out
-
-      - name: Build CheckDoLCompressorDictionaries
-        working-directory: ${{ github.workspace }}/mod/CheckDoLCompressorDictionaries
-        run: |
-          cd ${{ github.workspace }}/mod/CheckDoLCompressorDictionaries
-          yarn install
-          yarn run build:ts
-          yarn run build:webpack
-          node "${{ github.workspace }}/dist-insertTools/packModZip.js" "boot.json"
-      - name: Copy CheckDoLCompressorDictionaries
-        uses: Lyoko-Jeremie/js-copy-github-action@master
-        with:
-          source: ${{ github.workspace }}/mod/CheckDoLCompressorDictionaries/CheckDoLCompressorDictionaries.mod.zip
-          target: ${{ github.workspace }}/out
-
-      - name: Copy dist-BeforeSC2
-        uses: Lyoko-Jeremie/js-copy-github-action@master
-        with:
-          source: ${{ github.workspace }}/dist-BeforeSC2/**/*
-          target: ${{ github.workspace }}/out/dist-BeforeSC2/
-      - name: Copy dist-ForSC2
-        uses: Lyoko-Jeremie/js-copy-github-action@master
-        with:
-          source: ${{ github.workspace }}/dist-ForSC2/**/*
-          target: ${{ github.workspace }}/out/dist-ForSC2/
-      - name: Copy dist-insertTools
-        uses: Lyoko-Jeremie/js-copy-github-action@master
-        with:
-          source: ${{ github.workspace }}/dist-insertTools/**/*
-          target: ${{ github.workspace }}/out/dist-insertTools/
-
-      - name: Copy README.md
-        uses: Lyoko-Jeremie/js-copy-github-action@master
-        with:
-          source: ${{ github.workspace }}/README.md
-          target: ${{ github.workspace }}/out
 
       - name: Upload
         uses: actions/upload-artifact@v3
         with:
-          name: ModLoader Package
-          path: ${{ github.workspace }}/out
+          name: Mod Package
+          path: ${{ github.workspace }}/src/insertTools/${{ env.MOD_NAME }}/*.zip
+  release:
+    if: ${{ needs.meta.outputs.is_release == 'true' }}
+    needs: [meta, build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          path: assets
 
+      - uses: softprops/action-gh-release@v1
+        with:
+          files: assets/*
+          tag_name: ${{ needs.meta.outputs.tag }}
 
 

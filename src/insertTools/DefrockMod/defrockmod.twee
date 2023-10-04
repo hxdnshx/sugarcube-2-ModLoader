@@ -1,0 +1,17 @@
+
+:: Temple Defrock
+<<set $outside to 0>><<set $location to "temple">><<temple_effects>><<effects>>
+
+<<if $temple_rank is "prospective">>
+	你不是教会的成员，何谈离开？
+	<br>
+<<else>>
+	<<set $temple_rank to "prospective">>
+	经过片刻沉思后，约旦 回复道
+	<br>
+	“你的还俗请求得到了批准，愿上帝保佑你的新生活。”
+	<br>
+	他转身回到祭坛前，开始了祷告。
+	<br>
+<</if>>
+<<link [[Leave|Temple]]>><<endevent>><</link>>

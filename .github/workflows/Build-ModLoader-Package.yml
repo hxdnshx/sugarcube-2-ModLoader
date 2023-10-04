@@ -99,12 +99,11 @@ jobs:
       - name: Update resource version
         working-directory: ${{ github.workspace }}/src/insertTools/${{ env.MOD_NAME }}
         run: |
-          python3 "${{ github.workspace }}/.github/update_version_info.py" boot.json ${{ needs.meta.outputs.version }}    
+          python3 "${{ github.workspace }}/.github/update_version_info.py" "boot.json" "${{ needs.meta.outputs.version }}"    
 
       - name: Package Mod
         working-directory: ${{ github.workspace }}/src/insertTools/${{ env.MOD_NAME }}
         run: |
-          sed -i 's/"version": *"[^"]*"/"version": "${{ needs.meta.outputs.version }}"/' boot.json
           node "${{ github.workspace }}/dist-insertTools/packModZip.js" "boot.json"
 
       - name: Upload

@@ -97,6 +97,7 @@ jobs:
           yarn run webpack:insertTools
 
       - name: Update resource version
+        working-directory: ${{ github.workspace }}/src/insertTools/${{ env.MOD_NAME }}
         run: |
           python3 "${{ github.workspace }}/.github/update_version_info.py" boot.json ${{ needs.meta.outputs.version }}    
 

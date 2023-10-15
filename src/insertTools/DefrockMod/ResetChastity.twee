@@ -1,0 +1,24 @@
+
+:: Temple Sydney Reset Chastity
+<<set $outside to 0>><<set $location to "temple">><<run statusCheck("Sydney")>><<sydneySchedule>><<temple_effects>><<effects>><<set _sydneyPray to true>>
+<<npc "Sydney">>
+
+
+<<if Time.dayState is "night" or Time.dayState is "dusk">>
+	你告诉了悉尼这个建议，<<He>>听罢点点头。"但我们得等到约旦回来……所以，大概要明天去了。"
+	<br><br>
+	<<sydneyOptions>>
+<<else>>
+    你告诉了悉尼这个建议，<<He>>听罢点点头，和你一起走向约旦。
+    <br>
+    约旦见你们走来，露出了微笑。"欢迎回来。" <<He>>紧紧握住了你的手。
+    <br>
+    "尽管我们已经相互连结，我还是希望佩戴贞操锁保持誓言。"
+    <br><br>
+    约旦静静地看着你们，微微点了点头。"请随我来。"
+    /*悉尼目前不支持怀孕，所以这里不需要考虑怀孕相关逻辑。*/
+    <br><br>
+
+    <<link [[继续|Temple Sydney Reset Chastity 2]]>><<pass 5>><</link>>
+<</if>>
+

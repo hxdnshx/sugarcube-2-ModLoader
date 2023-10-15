@@ -1,0 +1,28 @@
+:: Temple Sydney Reset Chastity 2
+<<set $outside to 0>><<set $location to "temple">><<temple_effects>><<effects>><<npc "Sydney">>
+<<set $NPCName[$NPCNameList.indexOf("Sydney")].chastity.anus to "anal shield">>
+<<set $NPCName[$NPCNameList.indexOf("Sydney")].chastity.vagina to "chastity belt">>
+<<set $NPCName[$NPCNameList.indexOf("Sydney")].chastity.penis to "chastity belt">>
+
+<br><br>
+约旦带领你们来到一个小房间。"请脱衣服，我马上回来。" 悉尼褪去了自己的衣物。
+<br><br>
+不久，约旦回来了，手里拿着一个金属贞操带和贞操笼。
+
+<<if $NPCName[$NPCNameList.indexOf("Sydney")].gender isnot "m">>
+    <<he>>一言不发，只是把贞操笼放到一边，然后把贞操带围在悉尼的腰间。你听到一个响亮的咔嚓声，然后约旦退后一步欣赏他的杰作。
+	<br><br>
+	<<He>>低头检查了一下，并没有想象中那样紧或不舒服。<<He>>把手伸入贞操带检查有没有戴好，但伸不进去。<<He>>双手向下按压贞操带，但它纹丝不动。
+	<br><br>
+	"一切顺利，"约旦很满意，"如有问题，请来找我。"约旦离开房间。
+	<br><br>
+	<<link [[继续|Temple]]>><<endevent>><</link>>
+<<else>>
+    <<he>>一言不发，只是把贞操带放到一边，然后把贞操笼围在悉尼的腰间。你听到一个响亮的咔嚓声，然后约旦退后一步欣赏他的杰作。
+	<br><br>
+	<<He>>低头检查了一下，并没有想象中那样紧或不舒服。<<He>>把手伸入贞操笼检查有没有戴好，但伸不进去。<<He>>双手向下按压贞操笼，但它纹丝不动。
+	<br><br>
+	"一切顺利，"约旦很满意，"如有问题，请来找我。"约旦离开房间。
+	<br><br>
+	<<link [[继续|Temple]]>><<endevent>><</link>>
+<</if>>

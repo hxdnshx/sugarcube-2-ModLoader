@@ -12,7 +12,9 @@
   "scriptFileList": [
   ],
   "tweeFileList": [
-    "defrockmod.twee"
+    "defrockmod.twee",
+    "ResetChastity.twee",
+    "ResetChastity2.twee"
   ],
   "imgFileList": [
   ],
@@ -28,6 +30,11 @@
           "passage": "Temple Jordan",
           "findRegex": "(\\<\\<if \\$temple_harassed is 1\\>\\>)",
           "replace": "<<if $temple_rank is \"initiate\">>\n<<link [[询问还俗 (£10000 0:05)|Temple Defrock]]>><<set $money -= 1000000>><<pass 60>><</link>>\n<br>\n<</if>>$1"
+        },
+        {
+          "passage": "Widgets Sydney",
+          "findString": "<<if $location is \"temple\" and $sydneyChastityRemoveIntro>>",
+          "replace":"<<if $location is \"temple\">>\n        <<if $NPCName[$NPCNameList.indexOf(\"Sydney\")].chastity.penis is \"\" or $NPCName[$NPCNameList.indexOf(\"Sydney\")].chastity.vagina is \"\">>\n            <<ind>><<link [[建议戴上贞操锁|Temple Sydney Reset Chastity]]>><<pass 2>><</link>>\n        <</if>>\n    <</if>>\n\t<<if $location is \"temple\" and $sydneyChastityRemoveIntro>>\n\t"
         }
       ]
     }

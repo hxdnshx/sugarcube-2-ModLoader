@@ -105,12 +105,24 @@ jobs:
         working-directory: ${{ github.workspace }}/src/insertTools/${{ env.MOD_NAME }}
         run: |
           node "${{ github.workspace }}/dist-insertTools/packModZip.js" "boot.json"
+          cp -r *.zip ../
+
+      - name: Update resource version-2
+        working-directory: ${{ github.workspace }}/src/insertTools/NoAutoRebuyTrash
+        run: |
+          python3 "${{ github.workspace }}/.github/update_version_info.py" "boot.json" "${{ needs.meta.outputs.version }}"    
+
+      - name: Package Mod-2
+        working-directory: ${{ github.workspace }}/src/insertTools/NoAutoRebuyTrash
+        run: |
+          node "${{ github.workspace }}/dist-insertTools/packModZip.js" "boot.json"
+          cp -r *.zip ../    
 
       - name: Upload
         uses: actions/upload-artifact@v3
         with:
           name: ModPackage
-          path: ${{ github.workspace }}/src/insertTools/${{ env.MOD_NAME }}/*.zip
+          path: ${{ github.workspace }}/src/insertTools/*.zip
   release:
     if: ${{ needs.meta.outputs.is_release == 'true' }}
     needs: [meta, build]

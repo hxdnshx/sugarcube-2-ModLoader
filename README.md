@@ -16,6 +16,16 @@ This allows the player to re-engage in the related storyline with Sydney.
 
 从 [Release](https://github.com/hxdnshx/sugarcube-2-ModLoader/releases) 可以下载这个 Mod 的最新版本。
 
+# NoAutoReBuyTrash
+
+这是一个优化游戏中部分体验的Mod。当玩家在事件 “三角🐎展示” “浸水椅展示” 中 破布衣服 等临时的衣物被破坏时，不再会触发衣物的重新购买功能。
+
+This is a Mod that optimizes some aspects of the game experience.
+When the player's temporary clothing is damaged during events like "wooden horse" and "ducking stool," 
+it will no longer trigger the feature to repurchase the clothing.
+
+从 [Release](https://github.com/hxdnshx/sugarcube-2-ModLoader/releases) 可以下载这个 Mod 的最新版本。
+
 ---
 
 请从Release下载预编译版：[Release](https://github.com/Lyoko-Jeremie/sugarcube-2-ModLoader/releases)   

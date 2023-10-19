@@ -1,96 +1,100 @@
 import type {Passage} from "./SugarCube2";
+import {SC2DataManager} from "./SC2DataManager";
 
 export interface Sc2EventTracerCallback {
     // SugarCube2 引擎触发 StoryReady 事件后
-    whenSC2StoryReady?: () => Promise<any>;
+    whenSC2StoryReady?: () => any;
     // SugarCube2 引擎触发 PassageInit 事件后
-    whenSC2PassageInit?: (passage: Passage) => Promise<any>;
+    whenSC2PassageInit?: (passage: Passage) => any;
     // SugarCube2 引擎触发 PassageStart 事件后
-    whenSC2PassageStart?: (passage: Passage, content: HTMLDivElement) => Promise<any>;
+    whenSC2PassageStart?: (passage: Passage, content: HTMLDivElement) => any;
     // SugarCube2 引擎触发 PassageRender 事件后
-    whenSC2PassageRender?: (passage: Passage, content: HTMLDivElement) => Promise<any>;
+    whenSC2PassageRender?: (passage: Passage, content: HTMLDivElement) => any;
     // SugarCube2 引擎触发 PassageDisplay 事件后
-    whenSC2PassageDisplay?: (passage: Passage, content: HTMLDivElement) => Promise<any>;
+    whenSC2PassageDisplay?: (passage: Passage, content: HTMLDivElement) => any;
     // SugarCube2 引擎触发 PassageReady 事件后
-    whenSC2PassageEnd?: (passage: Passage, content: HTMLDivElement) => Promise<any>;
+    whenSC2PassageEnd?: (passage: Passage, content: HTMLDivElement) => any;
 }
 
 export class Sc2EventTracer {
-    constructor(public thisWin: Window) {
+    constructor(
+        public thisWin: Window,
+        public gSC2DataManager: SC2DataManager,
+    ) {
     }
 
     callback: Sc2EventTracerCallback[] = [];
 
     init() {
-        this.thisWin.jQuery(this.thisWin.document).on(":storyready", async (event: Event | any) => {
+        this.thisWin.jQuery(this.thisWin.document).on(":storyready", (event: Event | any) => {
             for (const x of this.callback) {
                 if (x.whenSC2StoryReady) {
                     try {
-                        await x.whenSC2StoryReady();
+                        x.whenSC2StoryReady();
                     } catch (e) {
                         console.error(e);
                     }
                 }
             }
         });
-        this.thisWin.jQuery(this.thisWin.document).on(":passageinit", async (event: Event | any) => {
+        this.thisWin.jQuery(this.thisWin.document).on(":passageinit", (event: Event | any) => {
             const passage: Passage = event.passage;
             for (const x of this.callback) {
                 if (x.whenSC2PassageInit) {
                     try {
-                        await x.whenSC2PassageInit(passage);
+                        x.whenSC2PassageInit(passage);
                     } catch (e) {
                         console.error(e);
                     }
                 }
             }
         });
-        this.thisWin.jQuery(this.thisWin.document).on(":passagestart", async (event: Event | any) => {
+        this.thisWin.jQuery(this.thisWin.document).on(":passagestart", (event: Event | any) => {
             const passage: Passage = event.passage;
             const content: HTMLDivElement = event.content;
             for (const x of this.callback) {
                 if (x.whenSC2PassageStart) {
                     try {
-                        await x.whenSC2PassageStart(passage, content);
+                        x.whenSC2PassageStart(passage, content);
                     } catch (e) {
                         console.error(e);
                     }
                 }
             }
         });
-        this.thisWin.jQuery(this.thisWin.document).on(":passagerender", async (event: Event | any) => {
+        this.thisWin.jQuery(this.thisWin.document).on(":passagerender", (event: Event | any) => {
             const passage: Passage = event.passage;
             const content: HTMLDivElement = event.content;
             for (const x of this.callback) {
                 if (x.whenSC2PassageRender) {
                     try {
-                        await x.whenSC2PassageRender(passage, content);
+                        x.whenSC2PassageRender(passage, content);
                     } catch (e) {
                         console.error(e);
                     }
                 }
             }
         });
-        this.thisWin.jQuery(this.thisWin.document).on(":passagedisplay", async (event: Event | any) => {
+        this.thisWin.jQuery(this.thisWin.document).on(":passagedisplay", (event: Event | any) => {
             const passage: Passage = event.passage;
             const content: HTMLDivElement = event.content;
             for (const x of this.callback) {
                 if (x.whenSC2PassageDisplay) {
                     try {
-                        await x.whenSC2PassageDisplay(passage, content);
+                        x.whenSC2PassageDisplay(passage, content);
                     } catch (e) {
                         console.error(e);
                     }
                 }
             }
         });
-        this.thisWin.jQuery(this.thisWin.document).on(":passageend", async (event: Event | any) => {
+        this.thisWin.jQuery(this.thisWin.document).on(":passageend", (event: Event | any) => {
             const passage: Passage = event.passage;
             const content: HTMLDivElement = event.content;
             for (const x of this.callback) {
                 if (x.whenSC2PassageEnd) {
                     try {
-                        await x.whenSC2PassageEnd(passage, content);
+                        x.whenSC2PassageEnd(passage, content);
                     } catch (e) {
                         console.error(e);
                     }

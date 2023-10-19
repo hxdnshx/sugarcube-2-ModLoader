@@ -126,11 +126,15 @@ The format is as follows (sample src/insertTools/MyMod/boot.json):
   "dependenceInfo": [     // （可选） 依赖的mod列表，可以在此声明此mod依赖哪些前置mod，不满足的依赖会在加载日志中产生警告
     {
       "modName": "ModLoader DoL ImageLoaderHook",   // 依赖的mod名字
-      "version": "1.0.0"                              // 依赖的mod版本
+      "version": "^2.0.0"                              // 依赖的mod版本
     },
     {
       "modName": "ModLoaderGui",
-      "version": ">=1.0.8"                          // 依赖的mod版本，使用(https://www.npmjs.com/package/semver)检查版本号，符合`语义化版本控制规范` (https://semver.org/lang/zh-CN/)
+      "version": "^1.0.8"                          // 依赖的mod版本，使用(https://www.npmjs.com/package/semver)检查版本号，符合`语义化版本控制规范` (https://semver.org/lang/zh-CN/)
+    },
+    {
+      "modName": "ModLoader",
+      "version": "^1.3.1"
     }
   ]
 }
@@ -238,6 +242,42 @@ $(document).on(":storyready", () => {
 故所有提供插件的`插件Mod`（或者说`lib mod`）需要最迟在 `EarlyLoad` 阶段（喜欢的话也可以在`InjectEarlyLoad`阶段）
 调用 `window.modAddonPluginManager.registerAddonPlugin()` 将自己提供的插件注册到 `AddonPluginManager` 。
 
+【2023-10-14】 BreakChange ：破坏性变更：为了支持 "安全模式" 和 "Mod禁用功能" ，调整了 `InjectEarlyLoad` 的加载实现以及Mod加载行为。  
+
+调整了 `AddonPluginHook` 的触发顺序， `afterModLoad` 会在 `afterInjectEarlyLoad` 且 ` LifeTimeCircleHook.afterModLoad`  执行后触发。  
+所以，如果一个Mod需要等待其他Mod对自己修改后再执行操作（例如Mod对Mod的i18n），可以在`afterInjectEarlyLoad`中或`EarlyLoad`时再执行自己的任务。
+
+现在 ModLoader 会读取所有Mod，然后在 `InjectEarlyLoad` 每一个Mod后立即使用剩余未InjectEarlyLoad的Mod列表调用所有已加载Mod的`canLoadThisMod`来过滤接下来要加载的Mod。  
+即，先加载的Mod可以决定剩下还未加载的Mod是否需要继续加载，但对于已经加载的Mod没有过滤能力。
+
+【2023-10-08】 v1.6.0 使用 `HtmlTagSrcHook` 支持替换游戏中由 SC2 引擎创建的所有 html img 标签引用的图片。在此之前只有canvas绘图引用的图片才会被替换。
+
+通过对 SC2 引擎的 `Wikifier.Parser.add 'htmlTag' ` 添加如下的代码来在创建`<IMG>`标签前拦截图片请求并交由ModLoader进行处理，来实现拦截并替换图片的功能。
+
+```js
+if (typeof window.modSC2DataManager !== 'undefined' &&
+	typeof window.modSC2DataManager.getHtmlTagSrcHook?.()?.doHook !== 'undefined') {
+	if (tagName === 'img' && !el.getAttribute('src')?.startsWith('data:')) {
+		// need check the src is not "data:" URI
+		el.setAttribute('ML-src', el.getAttribute('src'));
+		el.removeAttribute('src');
+		// call img loader on there
+		window.modSC2DataManager.getHtmlTagSrcHook().doHook(el).catch(E => console.error(E));
+	}
+}
+
+// 以下这行是SC2原始代码，上面添加的代码需要插入在这一行之前
+output.appendChild(tagName === 'track' ? el.cloneNode(true) : el);
+```
+
+`ModLoader DoL ImageLoaderHook` 已经添加了这个功能的支持，只需要像之前那样正常使用即可。
+
+_使用此功能可以通过自行注册 `HtmlTagSrcHook` 钩子，或者使用 v2.3.0 以上版本的 `ModLoader DoL ImageLoaderHook` 。_
+
+注：游戏 DoL 仍然存在部分没有拦截到的图片，这些图片由 DoL 自行添加了 `Macro.add("icon",` **icon** 标签来实现的。这些代码几乎全是在 link 前使用的标签。
+
+
+
 
 【2023-09-21】 Delete `imgFileReplaceList`. Now, use the new ImageHookLoader to intercept image requests directly for image replacement. Therefore, images with the same name as the original image files will be overwritten.
 
@@ -297,7 +337,7 @@ Load the Mod using the Mod manager.
 编译脚本
 
 ```shell
-yarn run webpack:insertTools:w
+yarn run webpack:insertTools
 ```
 
 切换到 Mod 所在文件夹，（即boot.json所在文件夹）
@@ -345,9 +385,9 @@ MyMod.mod.zip
 编译脚本
 
 ```shell
-yarn run webpack:BeforeSC2:w
-yarn run ts:ForSC2:w
-yarn run webpack:insertTools:w
+yarn run webpack:BeforeSC2
+yarn run ts:ForSC2
+yarn run webpack:insertTools
 ```
 
 如何插入Mod加载器以及将预装Mod内嵌到html文件：
@@ -525,11 +565,28 @@ Addon是一种特殊的Mod，作为一种功能扩展的形式存在，通过将
 
 ---
 
+## 加密 Mod
+
+为了满足部分Mod作者对内容保护的要求，设计了基于 libsodium 的 Mod 内容保护框架
+
+TODO
+
+---
+
 ## TODO
 
-[ ] 安全模式 Safe Mode   
-[ ] Mod排序(ModLoaderGUI) Mod sorting    
-[ ] 修改其他Mod(Mod i18n pack(eg. english a cn mod))  Modify other mods   
+- [x] 安全模式 Safe Mode   
+- [ ] Mod排序(ModLoaderGUI) Mod sorting    
+- [ ] 修改其他Mod(Mod i18n pack(eg. english a cn mod))  Modify other mods   
+- [ ] 在线编辑passage   
+- [ ] 查看Diff   
+- [ ] 游戏内Mod设置界面   
+- [ ] Mod禁用启用(可选加载)   
+- [ ] Mod-游戏版本兼容性检查   
+- [ ] 使用Wikify执行script来注入游戏上下文，注入和拦截js函数和对象   
+- [ ] 提供Passage Prefix/Postfix Addon来实现前后缀模式(可以使用注入script函数并添加一行前后缀标签的方式实现)   
+- [ ] 提供PostPassage Addon来访问输出后的html node   
+- [ ] Mod Zip 加密 ( libsodium + 安全模式 + Mod禁用启用 )   
 
 
 

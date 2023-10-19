@@ -1,6 +1,6 @@
 import {PassageDataItem, SC2DataInfo, SC2DataInfoCache} from './SC2DataInfoCache';
 import {ModDataLoadType, ModInfo, ModLoader} from "./ModLoader";
-import {cloneDeep} from "lodash";
+import {cloneDeep, isSafeInteger} from "lodash";
 import {
     concatMergeSC2DataInfoCache,
     normalMergeSC2DataInfoCache,
@@ -16,6 +16,7 @@ import {Sc2EventTracer} from "./Sc2EventTracer";
 import {SC2JsEvalContext} from "./SC2JsEvalContext";
 import {ModUtils} from "./Utils";
 import {JsPreloader} from "./JsPreloader";
+import {HtmlTagSrcHook} from "./HtmlTagSrcHook";
 
 export class SC2DataManager {
 
@@ -105,7 +106,7 @@ export class SC2DataManager {
 
     earlyResetSC2DataInfoCache() {
         // keep originSC2DataInfoCache valid
-        this.getSC2DataInfoCache();
+        this.initSC2DataInfoCache();
         // this.originSC2DataInfoCache = undefined;
         // this.getSC2DataInfoCache();
         this.flushAfterPatchCache();
@@ -118,12 +119,7 @@ export class SC2DataManager {
         this.cSC2DataInfoAfterPatchCache = undefined;
     }
 
-    /**
-     * 读取原始的没有被修改过的SC2Data，
-     * 对于mod来说，如无必要不要使用这里的数据，
-     * 特别是合并时不要使用此处的数据作为数据源，而是使用 getSC2DataInfoAfterPatch()，否则会覆盖之前的mod的修改，导致之前的修改无效
-     */
-    getSC2DataInfoCache() {
+    initSC2DataInfoCache() {
         if (!this.originSC2DataInfoCache) {
             this.originSC2DataInfoCache = new SC2DataInfoCache(
                 this.getModLoadController().getLog(),
@@ -134,8 +130,22 @@ export class SC2DataManager {
             );
             // console.log('getSC2DataInfoCache() init', this.originSC2DataInfoCache);
         }
+    }
+
+    /**
+     * 读取原始的没有被修改过的SC2Data，
+     * 对于mod来说，如无必要不要使用这里的数据，
+     * 特别是合并时不要使用此处的数据作为数据源，而是使用 getSC2DataInfoAfterPatch()，否则会覆盖之前的mod的修改，导致之前的修改无效
+     */
+    getSC2DataInfoCache(): SC2DataInfoCache {
+        this.initSC2DataInfoCache();
         // console.log('getSC2DataInfoCache() get', this.originSC2DataInfoCache);
-        return this.originSC2DataInfoCache;
+        if (!this.originSC2DataInfoCache) {
+            console.error('getSC2DataInfoCache() (!this.originSC2DataInfoCache)');
+            this.getModLoadController().getLog().error('getSC2DataInfoCache() (!this.originSC2DataInfoCache)');
+        }
+        // TODO a immutable clone
+        return this.originSC2DataInfoCache!;
     }
 
     private modLoader?: ModLoader;
@@ -163,7 +173,7 @@ export class SC2DataManager {
         return this.passageTracer;
     }
 
-    private sc2EventTracer = new Sc2EventTracer(this.thisWin);
+    private sc2EventTracer = new Sc2EventTracer(this.thisWin, this);
 
     getSc2EventTracer() {
         return this.sc2EventTracer;
@@ -193,6 +203,18 @@ export class SC2DataManager {
         return this.sC2JsEvalContext;
     }
 
+    private dependenceChecker = new DependenceChecker(this, this.getModUtils());
+
+    getDependenceChecker() {
+        return this.dependenceChecker;
+    }
+
+    private htmlTagSrcHook = new HtmlTagSrcHook(this);
+
+    getHtmlTagSrcHook() {
+        return this.htmlTagSrcHook;
+    }
+
     private conflictResult?: { mod: SC2DataInfo, result: SimulateMergeResult }[];
 
     startInitOk = false;
@@ -207,16 +229,16 @@ export class SC2DataManager {
         console.log('ModLoader ====== SC2DataManager startInit() start');
 
         // keep originSC2DataInfoCache valid, keep it have the unmodified vanilla data
-        this.getSC2DataInfoCache();
+        this.initSC2DataInfoCache();
 
         await this.getModLoader().loadMod([
-            ModDataLoadType.Remote,
             ModDataLoadType.Local,
-            ModDataLoadType.IndexDB,
+            ModDataLoadType.Remote,
             ModDataLoadType.LocalStorage,
+            ModDataLoadType.IndexDB,
         ]);
 
-        new DependenceChecker(this, this.getModUtils()).check();
+        this.getDependenceChecker().check();
 
         this.conflictResult = this.getModLoader().checkModConflictList();
         console.log('ModLoader ====== mod conflictResult', this.conflictResult.map(T => {
@@ -246,7 +268,7 @@ export class SC2DataManager {
      */
     getSC2DataInfoAfterPatch() {
         // keep originSC2DataInfoCache valid
-        this.getSC2DataInfoCache();
+        this.initSC2DataInfoCache();
         if (!this.cSC2DataInfoAfterPatchCache) {
             this.cSC2DataInfoAfterPatchCache = new SC2DataInfoCache(
                 this.getModLoadController().getLog(),
@@ -421,6 +443,38 @@ export class SC2DataManager {
     }
 
     makeScriptNode(sc: SC2DataInfo) {
+        sc.scriptFileItems.items = sc.scriptFileItems.items.sort((a, b) => {
+            if (isSafeInteger(a.id) && isSafeInteger(b.id)) {
+                if (a.id === 0 || b.id === 0) {
+                    // o always in last
+                    if (a.id === 0 && b.id !== 0) {
+                        return 1;
+                    }
+                    if (a.id !== 0 && b.id === 0) {
+                        return -1;
+                    }
+                    if (a.id === 0 && b.id === 0) {
+                        return 0;
+                    }
+                }
+                if (a.id < b.id) {
+                    return -1;
+                }
+                if (a.id === b.id) {
+                    return 0;
+                }
+                if (a.id > b.id) {
+                    return 1;
+                }
+            }
+            if (isSafeInteger(a.id)) {
+                return -1;
+            }
+            if (isSafeInteger(b.id)) {
+                return 1;
+            }
+            return 0;
+        });
         const newScriptNodeContent = sc.scriptFileItems.items.reduce((acc, T) => {
             return acc + `/* twine-user-script #${T.id}: "${T.name}" */${T.content}\n`;
         }, '');

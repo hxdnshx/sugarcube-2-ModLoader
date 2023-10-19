@@ -1,4 +1,4 @@
-import {ModBootJson} from "ModLoader";
+import {ModBootJson, ModInfo} from "ModLoader";
 import {SC2DataManager} from "SC2DataManager";
 import JSZip from "jszip";
 import {IndexDBLoader, LocalStorageLoader} from "./ModZipReader";
@@ -15,7 +15,20 @@ export interface LifeTimeCircleHook extends Partial<ModLoadControllerCallback> {
 }
 
 export interface ModLoadControllerCallback {
-    canLoadThisMod(bootJson: ModBootJson, zip: JSZip): boolean;
+    /**
+     * ban a mod use this, need register this hook in `InjectEarlyLoad`
+     * @param bootJson
+     * @param zip
+     */
+    canLoadThisMod(bootJson: ModBootJson, zip: JSZip): Promise<boolean>;
+
+    /**
+     * use this to modify a mod, like i18n a mod
+     * @param bootJson
+     * @param zip       carefully modify zip file
+     * @param modInfo   you can modify the all info in there. read: [ModZipReader.init()]
+     */
+    afterModLoad(bootJson: ModBootJson, zip: JSZip, modInfo: ModInfo): Promise<any>;
 
     InjectEarlyLoad_start(modName: string, fileName: string): Promise<any>;
 
@@ -169,6 +182,8 @@ export class ModLoadController implements ModLoadControllerCallback {
                 }
             };
         });
+
+        this.logInfo(`ModLoader ========= version: [${gSC2DataManager.getModUtils().version}]`);
     }
 
     EarlyLoad_end!: (modName: string, fileName: string) => Promise<any>;
@@ -186,16 +201,36 @@ export class ModLoadController implements ModLoadControllerCallback {
     logWarning!: (s: string) => void;
     ModLoaderLoadEnd!: () => Promise<any>;
 
-    canLoadThisMod(bootJson: ModBootJson, zip: JSZip): boolean {
-        for (const [id, hook] of this.lifeTimeCircleHookTable) {
-            if (hook.canLoadThisMod) {
-                const r = hook.canLoadThisMod(bootJson, zip);
-                if (!r) {
-                    return false;
+    async canLoadThisMod(bootJson: ModBootJson, zip: JSZip): Promise<boolean> {
+        for (const [hookId, hook] of this.lifeTimeCircleHookTable) {
+            try {
+                if (hook.canLoadThisMod) {
+                    const r = await hook.canLoadThisMod(bootJson, zip);
+                    if (!r) {
+                        console.warn(`ModLoadController canLoadThisMod() mod [${bootJson.name}] be banned by [${hookId}]`);
+                        this.getLog().warn(`ModLoadController canLoadThisMod() mod [${bootJson.name}] be banned by [${hookId}]`);
+                        return false;
+                    }
                 }
+            } catch (e: Error | any) {
+                console.error('ModLoadController canLoadThisMod()', [hookId, e]);
+                this.getLog().error(`ModLoadController canLoadThisMod() ${hookId} ${e?.message ? e.message : e}`);
             }
         }
         return true;
+    }
+
+    async afterModLoad(bootJson: ModBootJson, zip: JSZip, modInfo: ModInfo): Promise<any> {
+        for (const [id, hook] of this.lifeTimeCircleHookTable) {
+            try {
+                if (hook.afterModLoad) {
+                    await hook.afterModLoad(bootJson, zip, modInfo);
+                }
+            } catch (e: Error | any) {
+                console.error('ModLoadController afterModLoad()', [id, e]);
+                this.getLog().error(`ModLoadController afterModLoad() ${id} ${e?.message ? e.message : e}`);
+            }
+        }
     }
 
     async exportDataZip(zip: JSZip): Promise<JSZip> {

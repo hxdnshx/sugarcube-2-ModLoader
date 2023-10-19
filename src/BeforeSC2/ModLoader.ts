@@ -1,15 +1,72 @@
-import {every, get, has, isArray, isObject, isPlainObject, isString} from 'lodash';
+import {every, get, has, isArray, isObject, isPlainObject, isString, cloneDeep} from 'lodash';
 import {SC2DataInfo} from "./SC2DataInfoCache";
 import {simulateMergeSC2DataInfoCache} from "./SimulateMerge";
-import {IndexDBLoader, LocalLoader, LocalStorageLoader, RemoteLoader} from "./ModZipReader";
+import {
+    imgWrapBase64Url,
+    IndexDBLoader,
+    LocalLoader,
+    LocalStorageLoader,
+    ModZipReader,
+    RemoteLoader
+} from "./ModZipReader";
 import {SC2DataManager} from "./SC2DataManager";
 import {JsPreloader} from 'JsPreloader';
-import {ModLoadControllerCallback} from "./ModLoadController";
+import {LogWrapper, ModLoadControllerCallback} from "./ModLoadController";
 import {ReplacePatcher} from "./ReplacePatcher";
+import {LRUCache} from 'lru-cache';
+
+export interface IModImgGetter {
+    /**
+     * @return Promise<string>   base64 img string
+     */
+    getBase64Image(): Promise<string>;
+}
+
+export const StaticModImgLruCache = new LRUCache<string, string>({
+    max: 100,
+    ttl: 1000 * 60 * 30,
+    dispose: (value: string, key: string, reason: LRUCache.DisposeReason) => {
+        console.log('ModImgLruCache dispose', [value], [reason]);
+    },
+    updateAgeOnGet: true,
+    updateAgeOnHas: true,
+});
+
+export class ModImgGetterDefault implements IModImgGetter {
+    constructor(
+        public zip: ModZipReader,
+        public imgPath: string,
+        public logger: LogWrapper,
+    ) {
+    }
+
+    // imgCache?: string;
+
+    async getBase64Image() {
+        const cache = StaticModImgLruCache.get(this.imgPath);
+        if (cache) {
+            return cache;
+        }
+        const imgFile = this.zip.zip.file(this.imgPath);
+        if (imgFile) {
+            const data = await imgFile.async('base64');
+            const imgCache = imgWrapBase64Url(this.imgPath, data);
+            StaticModImgLruCache.set(this.imgPath, imgCache);
+            return imgCache;
+        }
+        console.error(`ModImgGetterDefault getBase64Image() imgFile not found: ${this.imgPath} in ${this.zip.modInfo?.name}`);
+        this.logger.error(`ModImgGetterDefault getBase64Image() imgFile not found: ${this.imgPath} in ${this.zip.modInfo?.name}`);
+        return Promise.reject(`ModImgGetterDefault getBase64Image() imgFile not found: ${this.imgPath} in ${this.zip.modInfo?.name}`);
+    }
+
+}
 
 export interface ModImg {
     // base64
-    data: string;
+    // data: string;
+
+    // () => Promise<base64 string>
+    getter: IModImgGetter;
     path: string;
 }
 
@@ -81,35 +138,43 @@ export enum ModDataLoadType {
 }
 
 export class ModLoader {
+    logger: LogWrapper;
 
     constructor(
         public gSC2DataManager: SC2DataManager,
         public modLoadControllerCallback: ModLoadControllerCallback,
         public thisWin: Window,
     ) {
+        this.logger = this.gSC2DataManager.getModUtils().getLogger();
     }
 
+    modReadCache: Map<string, ModInfo> = new Map<string, ModInfo>();
     modCache: Map<string, ModInfo> = new Map<string, ModInfo>();
 
     getMod(modName: string) {
         return this.modCache.get(modName);
     }
 
-    addMod(m: ModInfo) {
-        const overwrite = this.modCache.get(m.name);
+    getModRead(modName: string) {
+        return this.modReadCache.get(modName);
+    }
+
+    private addMod(m: ModInfo) {
+        const overwrite = this.modReadCache.get(m.name);
         if (overwrite) {
             console.error('ModLoader addMod() has duplicate name: ', [m.name], ' will be overwrite');
         }
-        this.modCache.set(m.name, m);
+        this.modReadCache.set(m.name, m);
         return !overwrite;
     }
 
+    modReadOrder: string[] = [];
     modOrder: string[] = [];
 
     checkModConflict2Root(modName: string) {
         const mod = this.getMod(modName);
         if (!mod) {
-            console.error('ModLoader checkModConfictOne() (!mod)');
+            console.error('ModLoader checkModConflictOne() (!mod)');
             return undefined;
         }
         return simulateMergeSC2DataInfoCache(this.gSC2DataManager.getSC2DataInfoAfterPatch(), mod.cache)[0];
@@ -156,33 +221,42 @@ export class ModLoader {
     private modLocalLoader?: LocalLoader;
     private modRemoteLoader?: RemoteLoader;
 
-    // public getModZipLoader() {
-    //     return this.modLocalLoader || this.modRemoteLoader;
-    // }
-
     getModZip(modName: string) {
-        if (this.modIndexDBLoader) {
-            const mod = this.modIndexDBLoader.getZipFile(modName);
-            if (mod) {
-                return mod;
-            }
-        }
-        if (this.modLocalStorageLoader) {
-            const mod = this.modLocalStorageLoader.getZipFile(modName);
-            if (mod) {
-                return mod;
-            }
-        }
-        if (this.modRemoteLoader) {
-            const mod = this.modRemoteLoader.getZipFile(modName);
-            if (mod) {
-                return mod;
-            }
-        }
-        if (this.modLocalLoader) {
-            const mod = this.modLocalLoader.getZipFile(modName);
-            if (mod) {
-                return mod;
+        const order = cloneDeep(this.loadOrder).reverse();
+        for (const loadType of order) {
+            switch (loadType) {
+                case ModDataLoadType.Remote:
+                    if (this.modRemoteLoader) {
+                        const mod = this.modRemoteLoader.getZipFile(modName);
+                        if (mod) {
+                            return mod;
+                        }
+                    }
+                    break;
+                case ModDataLoadType.Local:
+                    if (this.modLocalLoader) {
+                        const mod = this.modLocalLoader.getZipFile(modName);
+                        if (mod) {
+                            return mod;
+                        }
+                    }
+                    break;
+                case ModDataLoadType.LocalStorage:
+                    if (this.modLocalStorageLoader) {
+                        const mod = this.modLocalStorageLoader.getZipFile(modName);
+                        if (mod) {
+                            return mod;
+                        }
+                    }
+                    break;
+                case ModDataLoadType.IndexDB:
+                    if (this.modIndexDBLoader) {
+                        const mod = this.modIndexDBLoader.getZipFile(modName);
+                        if (mod) {
+                            return mod;
+                        }
+                    }
+                    break;
             }
         }
         return undefined;
@@ -204,10 +278,23 @@ export class ModLoader {
         return this.modRemoteLoader;
     }
 
+    loadOrder: ModDataLoadType[] = [];
+
     public async loadMod(loadOrder: ModDataLoadType[]): Promise<boolean> {
+        this.loadOrder = loadOrder
         let ok = false;
-        this.modOrder = [];
-        for (const loadType of loadOrder) {
+        this.modReadOrder = [];
+        const addModeZip = (T: ModZipReader) => {
+            if (T.modInfo) {
+                const overwrite = !this.addMod(T.modInfo);
+                if (overwrite) {
+                    this.modReadOrder = this.modReadOrder.filter(T1 => T1 !== T.modInfo!.name);
+                }
+                this.gSC2DataManager.getDependenceChecker().checkFor(T.modInfo);
+                this.modReadOrder.push(T.modInfo.name);
+            }
+        };
+        for (const loadType of this.loadOrder) {
             switch (loadType) {
                 case ModDataLoadType.Remote:
                     if (!this.modRemoteLoader) {
@@ -215,15 +302,7 @@ export class ModLoader {
                     }
                     try {
                         ok = await this.modRemoteLoader.load() || ok;
-                        this.modRemoteLoader.modList.forEach(T => {
-                            if (T.modInfo) {
-                                const overwrite = !this.addMod(T.modInfo);
-                                if (overwrite) {
-                                    this.modOrder = this.modOrder.filter(T1 => T1 !== T.modInfo!.name);
-                                }
-                                this.modOrder.push(T.modInfo.name);
-                            }
-                        });
+                        this.modRemoteLoader.modList.forEach(T => addModeZip(T));
                     } catch (e) {
                         console.error(e);
                     }
@@ -234,15 +313,7 @@ export class ModLoader {
                     }
                     try {
                         ok = await this.modLocalLoader.load() || ok;
-                        this.modLocalLoader.modList.forEach(T => {
-                            if (T.modInfo) {
-                                const overwrite = !this.addMod(T.modInfo);
-                                if (overwrite) {
-                                    this.modOrder = this.modOrder.filter(T1 => T1 !== T.modInfo!.name);
-                                }
-                                this.modOrder.push(T.modInfo.name);
-                            }
-                        });
+                        this.modLocalLoader.modList.forEach(T => addModeZip(T));
                     } catch (e) {
                         console.error(e);
                     }
@@ -253,15 +324,7 @@ export class ModLoader {
                     }
                     try {
                         ok = await this.modLocalStorageLoader.load() || ok;
-                        this.modLocalStorageLoader.modList.forEach(T => {
-                            if (T.modInfo) {
-                                const overwrite = !this.addMod(T.modInfo);
-                                if (overwrite) {
-                                    this.modOrder = this.modOrder.filter(T1 => T1 !== T.modInfo!.name);
-                                }
-                                this.modOrder.push(T.modInfo.name);
-                            }
-                        });
+                        this.modLocalStorageLoader.modList.forEach(T => addModeZip(T));
                     } catch (e) {
                         console.error(e);
                     }
@@ -272,15 +335,7 @@ export class ModLoader {
                     }
                     try {
                         ok = await this.modIndexDBLoader.load() || ok;
-                        this.modIndexDBLoader.modList.forEach(T => {
-                            if (T.modInfo) {
-                                const overwrite = !this.addMod(T.modInfo);
-                                if (overwrite) {
-                                    this.modOrder = this.modOrder.filter(T1 => T1 !== T.modInfo!.name);
-                                }
-                                this.modOrder.push(T.modInfo.name);
-                            }
-                        });
+                        this.modIndexDBLoader.modList.forEach(T => addModeZip(T));
                     } catch (e) {
                         console.error(e);
                     }
@@ -289,9 +344,10 @@ export class ModLoader {
                     console.error('ModLoader loadTranslateData() unknown loadType:', [loadType]);
             }
         }
-        await this.gSC2DataManager.getAddonPluginManager().triggerHook('afterModLoad');
         await this.initModInjectEarlyLoadInDomScript();
         await this.gSC2DataManager.getAddonPluginManager().triggerHook('afterInjectEarlyLoad');
+        await this.triggerAfterModLoad();
+        await this.gSC2DataManager.getAddonPluginManager().triggerHook('afterModLoad');
         await this.initModEarlyLoadScript();
         await this.gSC2DataManager.getAddonPluginManager().triggerHook('afterEarlyLoad');
         await this.registerMod2Addon();
@@ -319,14 +375,63 @@ export class ModLoader {
         }
     }
 
-    private async initModInjectEarlyLoadInDomScript() {
+    protected async triggerAfterModLoad() {
         for (const modName of this.modOrder) {
-            const mod = this.getMod(modName);
+            const modInfo = this.getModRead(modName);
+            const zips = this.getModZip(modName);
+            if (!modInfo || !zips) {
+                // never go there
+                console.error(`ModLoader ====== triggerAfterModLoad() (!m || !zips) mod not find: [${modName}]. never go there.`);
+                continue;
+            }
+            const bootJson = modInfo.bootJson;
+            const zip = zips[0];
+            await this.modLoadControllerCallback.afterModLoad(bootJson, zip.zip, modInfo);
+        }
+    }
+
+    protected async filterModCanLoad(modeList: string[]) {
+        const canLoadList: string[] = [];
+        for (const modName of modeList) {
+            const m = this.getModRead(modName);
+            const zips = this.getModZip(modName);
+            if (!m || !zips) {
+                // never go there
+                console.error(`ModLoader ====== initModInjectEarlyLoadScript() (!m || !zips) mod not find: [${modName}]. never go there.`);
+                continue;
+            }
+            const bootJ = m.bootJson;
+            const zip = zips[0];
+            if (!await this.modLoadControllerCallback.canLoadThisMod(bootJ, zip.zip)) {
+                console.warn(`ModLoader ====== ModZipReader init() Mod [${m.name}] be banned.`);
+                this.logger.warn(`ModLoader ====== ModZipReader init() Mod [${m.name}] be banned.`);
+            } else {
+                canLoadList.push(modName);
+            }
+        }
+        return canLoadList;
+    }
+
+    private async initModInjectEarlyLoadInDomScript() {
+        this.modOrder = [];
+        this.modCache.clear();
+        let toLoadModeList = cloneDeep(this.modReadOrder);
+        while (toLoadModeList.length > 0) {
+            const nowMod = toLoadModeList.shift();
+            if (!nowMod) {
+                // never go there
+                console.error('ModLoader ====== initModInjectEarlyLoadInDomScript() (!nowMod). never go there.');
+                continue;
+            }
+            const mod = this.getModRead(nowMod);
             if (!mod) {
                 // never go there
                 console.error('ModLoader ====== initModInjectEarlyLoadScript() (!mod)');
                 continue;
             }
+            const modName = mod.name;
+            this.modOrder.push(modName);
+            this.modCache.set(modName, mod);
             for (const [name, content] of mod.scriptFileList_inject_early) {
                 console.log('ModLoader ====== initModInjectEarlyLoadScript() inject start: ', [modName], [name]);
                 await this.gSC2DataManager.getModLoadController().InjectEarlyLoad_start(modName, name);
@@ -346,6 +451,8 @@ export class ModLoader {
                 console.log('ModLoader ====== initModInjectEarlyLoadScript() inject end: ', [modName], [name]);
                 await this.gSC2DataManager.getModLoadController().InjectEarlyLoad_end(modName, name);
             }
+            // check ban
+            toLoadModeList = await this.filterModCanLoad(toLoadModeList);
         }
     }
 
@@ -375,6 +482,7 @@ export class ModLoader {
                 }
                 console.log('ModLoader ====== initModEarlyLoadScript() excute end: ', [modName], [name]);
                 await this.gSC2DataManager.getModLoadController().EarlyLoad_end(modName, name);
+                this.logger.log(`ModLoader ========= version: [${this.gSC2DataManager.getModUtils().version}]`);
             }
         }
     }

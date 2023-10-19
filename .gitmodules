@@ -12,7 +12,18 @@
 	url = https://github.com/Lyoko-Jeremie/Degrees-of-Lewdity_Mod_CheckDoLCompressorDictionaries.git
 [submodule "mod/TweeReplacer"]
 	path = mod/TweeReplacer
-	url = https://github.com/Lyoko-Jeremie/Degrees-of-Lewdity_Mod_TweeReplacer.git
+	url = https://github.com/hxdnshx/DoL_Mod_TweeReplacer.git
 [submodule "mod/ReplacePatch"]
 	path = mod/ReplacePatch
 	url = https://github.com/Lyoko-Jeremie/Degrees-of-Lewdity_Mod_ReplacePatch.git
+[submodule "mod/CheckGameVersion"]
+	path = mod/CheckGameVersion
+	url = https://github.com/Lyoko-Jeremie/Degrees-of-Lewdity_Mod_CheckGameVersion.git
+	branch = master
+[submodule "mod/Diff3WayMerge"]
+	path = mod/Diff3WayMerge
+	url = https://github.com/Lyoko-Jeremie/Mod_Diff3WayMerge.git
+	branch = master
+[submodule "mod/ModdedClothesAddon"]
+	path = mod/ModdedClothesAddon
+	url = https://github.com/Lyoko-Jeremie/DoL_ModdedClothesAddon.git

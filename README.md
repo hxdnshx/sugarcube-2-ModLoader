@@ -26,6 +26,18 @@ it will no longer trigger the feature to repurchase the clothing.
 
 从 [Release](https://github.com/hxdnshx/sugarcube-2-ModLoader/releases) 可以下载这个 Mod 的最新版本。
 
+# Timehourglass
+
+新增了道具"时光项链"，在森林商店中可以购买。这个道具在佩戴时，获得以下效果：暂停野兽系转化变动。
+暂停知识遗忘。暂停怀孕进展。暂停寄生物的状态变动。暂停施虐/受虐的衰减。暂停意志等主要属性的缩减。暂停不安感的积累。
+
+Added the item "Time Necklace", which can be purchased in the Forest Shop. While wearing this item, 
+the following effects are obtained: Pause transformation in beast series. Pause knowledge forgetting. 
+Pause pregnancy progression. Pause status change of parasites. Pause decay of sadism/masochism. 
+Pause reduction of major attributes such as will. Pause accumulation of anxiety.
+
+从 [Release](https://github.com/hxdnshx/sugarcube-2-ModLoader/releases) 可以下载这个 Mod 的最新版本。
+
 ---
 
 请从Release下载预编译版：[Release](https://github.com/Lyoko-Jeremie/sugarcube-2-ModLoader/releases)   

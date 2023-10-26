@@ -116,7 +116,17 @@ jobs:
         working-directory: ${{ github.workspace }}/src/insertTools/NoAutoRebuyTrash
         run: |
           node "${{ github.workspace }}/dist-insertTools/packModZip.js" "boot.json"
-          cp -r *.zip ../    
+          cp -r *.zip ../
+      - name: Update resource version-3
+        working-directory: ${{ github.workspace }}/src/insertTools/TimeHourglass
+        run: |
+          python3 "${{ github.workspace }}/.github/update_version_info.py" "boot.json" "${{ needs.meta.outputs.version }}"    
+
+      - name: Package Mod-3
+        working-directory: ${{ github.workspace }}/src/insertTools/TimeHourglass
+        run: |
+          node "${{ github.workspace }}/dist-insertTools/packModZip.js" "boot.json"
+          cp -r *.zip ../        
 
       - name: Upload
         uses: actions/upload-artifact@v3

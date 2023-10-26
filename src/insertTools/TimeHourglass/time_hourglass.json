@@ -1,0 +1,30 @@
+[
+  {
+    "index": 1919810,
+    "name": "timehourglass",
+    "name_cap": "time hourglass", "cn_name_cap": "时光沙漏",
+    "variable": "timehourglass",
+    "integrity": 100,
+    "integrity_max": 100,
+    "fabric_strength": 50,
+    "reveal": 1,
+    "word": "a",
+    "plural": 0,
+    "colour": 0,
+    "colour_options": [],
+    "type": ["holy", "eerie", "esoteric"],
+    "gender": "n",
+    "femininity": 0,
+    "warmth": 0,
+    "cost": 200000,
+    "description": "一个沙漏。看着沙漏里细沙缓慢落下的样子，就在这一瞬间，你感觉身体的时间似乎停止了。",
+    "shop": ["forest"],
+    "accessory": 0,
+    "accessory_colour": 0,
+    "accessory_colour_options": [],
+    "cursed": 0,
+    "location": 0,
+    "iconFile": "time_hourglass.png",
+    "accIcon": 0
+  }
+]

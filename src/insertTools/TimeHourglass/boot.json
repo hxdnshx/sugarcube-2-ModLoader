@@ -1,0 +1,144 @@
+{
+  "name": "TimeHourglass",
+  "version": "1.0.3",
+  "styleFileList": [
+  ],
+  "scriptFileList_earlyload": [
+  ],
+  "scriptFileList_inject_early": [
+  ],
+  "scriptFileList_preload": [
+  ],
+  "scriptFileList": [
+  ],
+  "tweeFileList": [
+  ],
+  "imgFileList": [
+    "img/clothes/neck/timehourglass/full.png",
+    "img/misc/icon/clothes/time_hourglass.png"
+  ],
+  "additionFile": [
+    "time_hourglass.json"
+  ],
+  "addonPlugin": [
+    {
+      "modName": "ModLoader DoL ImageLoaderHook",
+      "addonName": "ImageLoaderAddon",
+      "modVersion": "^2.3.0",
+      "params": [
+      ]
+    },
+    {
+      "modName": "ModdedClothesAddon",
+      "addonName": "ModdedClothesAddon",
+      "modVersion": "^1.1.0",
+      "params": {
+        "clothes": [
+          {
+            "key": "neck",
+            "filePath": "time_hourglass.json"
+          }
+        ]
+      }
+    },
+    {
+      "modName": "TweeReplacer",
+      "addonName": "TweeReplacerAddon",
+      "modVersion": "1.0.0",
+      "params": [
+        {
+          "passage": "Widgets",
+          "findString": "($_gain * _skill_mod), -107, 200)",
+          "debug": true,
+          "replace":"($_gain * _skill_mod), 0, 200)"
+        }
+      ]
+    },
+    {
+      "modName": "ReplacePatcher",
+      "addonName": "ReplacePatcherAddon",
+      "modVersion": "1.0.0",
+      "params": {
+        "js": [
+          {
+            "from": "fragment.append(wikifier(\"transformationStateUpdate\"));",
+            "to": "if (!(V.worn.neck.name === \"timehourglass\"))\n\t{\n\t\tfragment.append(wikifier(\"transformationStateUpdate\"));\n\t}",
+            "fileName": "time.js"
+          },
+          {
+            "from": "earSlimeDaily();",
+            "to": "if (!(V.worn.neck.name === \"timehourglass\"))\n\t{\n\tearSlimeDaily();\n\t}",
+            "fileName": "time.js"
+          },
+          {
+            "from": "pregnancyProgress(genital = \"vagina\") {",
+            "to": "pregnancyProgress(genital = \"vagina\") {\n\tif ((V.worn.neck.name === \"timehourglass\")) return;",
+            "fileName": "pregnancy.js"
+          },
+          {
+            "from": "parasiteProgressDay(genital = \"anus\") {",
+            "to": "parasiteProgressDay(genital = \"anus\") {\n\tif ((V.worn.neck.name === \"timehourglass\")) return;",
+            "fileName": "parasite.js"
+          },
+          {
+            "from": "function dailyPlayerEffects() {\n\tconst fragment = document.createDocumentFragment();",
+            "to": "function dailyPlayerEffects() {\n\tconst fragment = document.createDocumentFragment();\n\tif (!(V.worn.neck.name === \"timehourglass\"))\n\t{",
+            "fileName": "time.js"
+          },
+          {
+            "from": "if (V.orgasmstat >= 1000 && V.orgasmtrait === 0) {",
+            "to": "}if (V.orgasmstat >= 1000 && V.orgasmtrait === 0) {",
+            "fileName": "time.js"
+          },
+          {
+            "from": "if (V.skulduggery >= 1000 && V.skulduggeryday < 1000) V.skulduggerymessage = 1;",
+            "to": "if ((V.worn.neck.name === \"timehourglass\")) return;\n\tif (V.skulduggery >= 1000 && V.skulduggeryday < 1000) V.skulduggerymessage = 1;",
+            "fileName": "time.js"
+          },
+          {
+            "from": "V.masochism *= 0.985;",
+            "to": "if (!(V.worn.neck.name === \"timehourglass\"))\n\t{\n\tV.masochism *= 0.985;\n\t}",
+            "fileName": "time.js"
+          },
+          {
+            "from": "V.sadism *= 0.985;",
+            "to": "if (!(V.worn.neck.name === \"timehourglass\"))\n\t{\n\tV.sadism *= 0.985;\n\t}",
+            "fileName": "time.js"
+          },
+          {
+            "from": "V.physiquechange = 1;",
+            "to": "if ((V.worn.neck.name === \"timehourglass\"))\n\t{\n\t\tV.physiquechange = 0;\n\t}\n\telse\n\t{\n\tV.physiquechange = 1;\n\t}",
+            "fileName": "time.js"
+          },
+          {
+            "from": "if (V.skulduggery >= 1000 && V.skulduggeryday < 1000) V.skulduggerymessage = 1;",
+            "to": "if ((V.worn.neck.name === \"timehourglass\")) return;\n\tif (V.skulduggery >= 1000 && V.skulduggeryday < 1000) V.skulduggerymessage = 1;",
+            "fileName": "time.js"
+          }
+        ]
+      }
+    }
+  ],
+  "dependenceInfo": [
+    {
+      "modName": "ModLoader",
+      "version": ">=1.1.0"
+    },
+    {
+      "modName": "TweeReplacer",
+      "version": ">=1.0.0"
+    },
+    {
+      "modName": "ReplacePatcher",
+      "version": ">=1.0.0"
+    },
+    {
+      "modName": "ModdedClothesAddon",
+      "version": "^1.1.0"
+    },
+    {
+      "modName": "ModLoader DoL ImageLoaderHook",
+      "version": "^2.3.0"
+    }
+  ]
+}

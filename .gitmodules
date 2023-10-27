@@ -4,18 +4,23 @@
 [submodule "mod/ModLoaderGui"]
 	path = mod/ModLoaderGui
 	url = https://github.com/Lyoko-Jeremie/sugarcube-2-ModLoaderGui.git
+	branch = master
 [submodule "mod/ImageLoaderHook"]
 	path = mod/ImageLoaderHook
 	url = https://github.com/Lyoko-Jeremie/sugarcube-2-ModLoader-ImgLoaderHooker.git
+	branch = master
 [submodule "mod/CheckDoLCompressorDictionaries"]
 	path = mod/CheckDoLCompressorDictionaries
 	url = https://github.com/Lyoko-Jeremie/Degrees-of-Lewdity_Mod_CheckDoLCompressorDictionaries.git
+	branch = master
 [submodule "mod/TweeReplacer"]
 	path = mod/TweeReplacer
 	url = https://github.com/hxdnshx/DoL_Mod_TweeReplacer.git
+	branch = master
 [submodule "mod/ReplacePatch"]
 	path = mod/ReplacePatch
 	url = https://github.com/Lyoko-Jeremie/Degrees-of-Lewdity_Mod_ReplacePatch.git
+	branch = master
 [submodule "mod/CheckGameVersion"]
 	path = mod/CheckGameVersion
 	url = https://github.com/Lyoko-Jeremie/Degrees-of-Lewdity_Mod_CheckGameVersion.git
@@ -27,3 +32,16 @@
 [submodule "mod/ModdedClothesAddon"]
 	path = mod/ModdedClothesAddon
 	url = https://github.com/Lyoko-Jeremie/DoL_ModdedClothesAddon.git
+	branch = master
+[submodule "mod/ModdedFeatsAddon"]
+	path = mod/ModdedFeatsAddon
+	url = https://github.com/Lyoko-Jeremie/DoL_ModdedFeatsAddon.git
+	branch = master
+[submodule "mod/ConflictChecker"]
+	path = mod/ConflictChecker
+	url = https://github.com/Lyoko-Jeremie/ConflictCheckerAddon.git
+	branch = master
+[submodule "mod/SweetAlert2Mod"]
+	path = mod/SweetAlert2Mod
+	url = https://github.com/Lyoko-Jeremie/SweetAlert2Mod.git
+	branch = master

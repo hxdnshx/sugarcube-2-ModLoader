@@ -41,14 +41,41 @@ Pause reduction of major attributes such as will. Pause accumulation of anxiety.
 ---
 
 请从Release下载预编译版：[Release](https://github.com/Lyoko-Jeremie/sugarcube-2-ModLoader/releases)   
-或下载自动构建版：[DoLModLoaderBuild](https://github.com/Lyoko-Jeremie/DoLModLoaderBuild/actions)   
+或下载DoL自动构建版：[DoLModLoaderBuild](https://github.com/Lyoko-Jeremie/DoLModLoaderBuild/releases)   
 Please download the precompiled version from the Release：[Release](https://github.com/Lyoko-Jeremie/sugarcube-2-ModLoader/releases)   
-Or download the automatic build version：[DoLModLoaderBuild](https://github.com/Lyoko-Jeremie/DoLModLoaderBuild/actions)
+Or download the DoL automatic build version：[DoLModLoaderBuild](https://github.com/Lyoko-Jeremie/DoLModLoaderBuild/releases)
+
+---
+
+为了将与SugarCube2无关的功能与ModLoader核心功能分离，保持低耦合，为ModLoader的通用性提供保障。  
+故将与ModLoader核心功能无关的功能分离为单独的Mod，并将部分常用mod以预置mod的方式提供。
+
+现由ModLoader提供官方支持的Mod列表：
+
+| Mod                                                                              | 状态         | 功能                                                                  |
+|----------------------------------------------------------------------------------|------------|---------------------------------------------------------------------|
+| [ModLoaderGui](mod%2FModLoaderGui)                                               | Usable     | Mod管理器，用于管理Mod的加载顺序，启用/禁用Mod，以及查看Mod加载日志                            |
+| [ConflictChecker](mod%2FConflictChecker)                                         | Stable     | Mod冲突检查器，提供附加的约束条件来检查Mod之间的冲突                                       |
+| [ImageLoaderHook](mod%2FImageLoaderHook)                                         | Stable     | 图片替换功能，用于替换游戏中的图片                                                   |
+| [ReplacePatch](mod%2FReplacePatch)                                               | Stable     | 提供对js/css/passage的简单替换                                              |
+| [TweeReplacer](mod%2FTweeReplacer)                                               | Stable     | 提供对passage的替换，可以使用正则表达式查找以及使用文件存储需替换的字符串                            |
+| [SweetAlert2Mod](mod%2FSweetAlert2Mod)                                           | Stable     | 为mod加密等功能提供通用弹出提示框，简单封装[SweetAlert2](https://sweetalert2.github.io) |
+| [CheckGameVersion](mod%2FCheckGameVersion)                                       | Stable     | 为依赖检查功能中的游戏版本检查功能提供DoL适配                                            |
+| [CheckDoLCompressorDictionaries](mod%2FCheckDoLCompressorDictionaries)           | Stable     | 对DoL的数据压缩字典进行检查，并警告用户字典变更                                           |
+| [Diff3WayMerge](mod%2FDiff3WayMerge)                                             | Developing | 基于git的Diff3Way算法实现的passage合并功能，仍在开发阶段                               |
+| [ModdedClothesAddon](mod%2FModdedClothesAddon)                                   | Stable     | DoL的快速服装添加工具                                                        |
+| [ModdedFeatsAddon](mod%2FModdedFeatsAddon)                                       | Stable     | DoL的快速成就添加工具                                                        |
+| [PhoneDebugToolsEruda](https://github.com/Lyoko-Jeremie/PhoneDebugToolsErudaMod) | Stable     | 手机调试工具，对 [Eruda](https://github.com/liriliri/eruda) 的简单封装           |
+| [i18n](mod%2Fi18n)                                                               | Stable     | i18n中文翻译Mod，其他语种基于此mod进行简单修改即可使用                                    |
+| [CryptoI18n](https://github.com/Lyoko-Jeremie/CryptoI18nMod)                     | Demo       | v2.0.0 版本的mod加密功能的demo。以i18n mod作为范例。                               |
+
+有关各个mod的功能及用法，详见对应mod项目的README.md文件。
 
 ---
 
 * [ModLoader](#ModLoader)
   * [简介](#简介)
+  * [有关安全模式(SafeMode)的使用提示](#有关安全模式safemode的使用提示)
   * [如何制作 Mod.zip 文件](#如何制作-modzip-文件)
       * [注意事项](#注意事项)
   * [如何打包Mod](#如何打包mod)
@@ -82,6 +109,17 @@ To use this ModLoader for games, you need to use this version of the SC2 engine 
 For specific instructions on how to package a game with the ModLoader,
 please refer to the details provided in the section titled "ModLoader Development and Modification Methods"
 under [ModLoader Development and Modification Methods](#ModLoader开发及修改方法).
+
+---
+
+# 有关安全模式(SafeMode)的使用提示
+
+若因未知问题触发故障导致ModLoader无法正常完成加载，请连续触发3次故障后，再次进入游戏时，ModLoader会启动安全模式自动关闭所有Mod，以便您可以正常打开Mod管理器以便卸载可能触发故障的mod。
+
+If ModLoader fails to load due to an unknown issue, trigger the fault three times.
+On the next game entry, ModLoader will entry `safe mode` to disable all mods.
+You can then access the Mod Manager to remove the problematic mod.
+
 
 ---
 
@@ -134,8 +172,12 @@ The format is as follows (sample src/insertTools/MyMod/boot.json):
     "MyMod_Image/typeBImage/222.png",
     "MyMod_Image/typeBImage/333.gif"
   ],
-  "additionFile": [     // （必须存在） 附加文件列表，额外打包到zip中的文件，此列表中的文件不会被加载，仅作为附加文件存在
+  "additionFile": [     // （必须存在） 附加文件列表，额外打包到zip中的文件，此列表中的文件不会被加载，仅作为附加文件存在。
+                        //  请注意，这里的文件会以被当作文本文件以utf-8编码读取并保存
     "readme.txt"      // 第一个以readme(不区分大小写)开头的文件会被作为mod的说明文件，会在mod管理器中显示
+  ],
+  "additionBinaryFile": [   // 附加二进制文件
+    "xxxx.zip"          // 如果有需要附加的二进制文件，编写在这里时 `packModZip.ts` 会将其以二进制格式保存
   ],
   "addonPlugin": [      // （可选） 依赖的插件列表，在此声明本mod依赖哪些插件，在此处声明后会调用对应的插件，不满足的依赖会在加载日志中产生警告
     {           //  需要首先由提供插件的mod在EarlyLoad阶段注册插件，否则会找不到插件
@@ -148,15 +190,27 @@ The format is as follows (sample src/insertTools/MyMod/boot.json):
   "dependenceInfo": [     // （可选） 依赖的mod列表，可以在此声明此mod依赖哪些前置mod，不满足的依赖会在加载日志中产生警告
     {
       "modName": "ModLoader DoL ImageLoaderHook",   // 依赖的mod名字
-      "version": "^2.0.0"                              // 依赖的mod版本
+      "version": "^2.0.0"                           // 依赖的mod版本
+      // 对于版本号声明格式的简单说明：
+      //    版本号是以逗号为分隔的数字，比较时从左往右逐个逗号进行比较。
+      //    通常是3个数字组成，第一个数字表示大版本，出现破坏性（不向前兼容的）变更时数值加一，第二个数字表示小版本，有新功能时数值加一，第三个数字表示修订版本，修复bug时数值加一。
+      //    以"^"开头表示从此大版本开始到下一个大版本结束的范围，这是推荐的默认依赖写法。
+      //    以"="或不带任何前缀表示只依赖指定的版本号。
+      //    以"> < >= <="这种不等式写法符合对应的数学语义。
+      //    
     },
     {
       "modName": "ModLoaderGui",
       "version": "^1.0.8"                          // 依赖的mod版本，使用(https://www.npmjs.com/package/semver)检查版本号，符合`语义化版本控制规范` (https://semver.org/lang/zh-CN/)
     },
+    // 除了以上的方法可以声明对普通Mod的依赖，还有下面两个特殊的对 ModLoader 版本和 游戏版本 的依赖声明
     {
-      "modName": "ModLoader",
-      "version": "^1.3.1"
+      "modName": "ModLoader",     // 部分Mod可能需要依赖从特定ModLoader版本开始才添加进ModLoader的API，例如大部分AddonMod，可以像这样声明对ModLoader版本的依赖
+      "version": "^1.6.0"
+    },
+    {
+      "modName": "GameVersion",   // 部分Mod只能在特定游戏版本下才能正常工作，可以像这样声明对游戏版本的依赖。特别注意这里以等号开头表示只匹配特定版本的游戏。此处比较时只会比较游戏的本体版本号，忽略第一个"-"开始的所有后缀。
+      "version": "=0.4.2.7"
     }
   ]
 }
@@ -299,6 +353,37 @@ _使用此功能可以通过自行注册 `HtmlTagSrcHook` 钩子，或者使用 
 注：游戏 DoL 仍然存在部分没有拦截到的图片，这些图片由 DoL 自行添加了 `Macro.add("icon",` **icon** 标签来实现的。这些代码几乎全是在 link 前使用的标签。
 
 
+【2023-10-23】 BreakChange ： 破坏性变更： v2.0.0 修正mod排序问题； 为Mod加密功能添加 SideLazyLoad API 。
+
+`modOrder` 数据结构发生重大变化。    
+为了保证向后（未来）兼容性，现在开始不允许直接访问`modOrder`。请使用以下两个API
+* `ModLoader.getModByNameOne('mod name')` 使用modName查询Mod
+* `ModLoader.getModZip('mod name')` 使用modName查询ModZip
+* `ModLoader.getModEarlyLoadCache()` 在`EarlyLoad`阶段安全地读取已经加载的mod快照
+
+以下是ModCache的低级查询/遍历方法，请注意以下方法不能在`EarlyLoad`阶段使用
+* `ModLoader.getModCacheMap()` 以Map的方式使用modName查询，返回ReadOnlyMap
+* `ModLoader.getModCacheOneArray()`  以Array的方式遍历，对返回的Array的修改不会应用到ModLoader内部数据
+* `ModLoader.getModCacheArray()`
+* `ModLoader.getModCacheByNameOne()` 以modName查询
+* `ModLoader.checkModCacheUniq()`    检查数据是否唯一，请在手动修改后调用此API验证数据
+* `ModLoader.checkModCacheData()`    检查内部数据是否一致，请在手动修改后调用此API验证数据
+
+【2023-10-23】 BreakChange: Destructive Change: v2.0.0 fixes the mod sorting issue; introduces the SideLazyLoad API for Mod encryption.
+
+The `modOrder` data structure has undergone significant changes.  
+To ensure backward (future) compatibility, direct access to `modOrder` is now prohibited. Please use the following two APIs:
+* `ModLoader.getModByNameOne('mod name')` - Query a Mod using modName.
+* `ModLoader.getModZip('mod name')` - Query ModZip using modName.
+* `ModLoader.getModEarlyLoadCache()` - Safely read loaded mod snapshots during the `EarlyLoad` phase.
+
+Below are the low-level query/traversal methods for ModCache. Please note that these methods cannot be used during the `EarlyLoad` phase:
+* `ModLoader.getModCacheMap()` - Query using modName in a Map format, returns a ReadOnlyMap.
+* `ModLoader.getModCacheOneArray()` - Traverse in an Array format; modifications to the returned Array won't affect the internal data of ModLoader.
+* `ModLoader.getModCacheArray()`
+* `ModLoader.getModCacheByNameOne()` - Query using modName.
+* `ModLoader.checkModCacheUniq()` - Check if the data is unique; call this API to validate data after manual modifications.
+* `ModLoader.checkModCacheData()` - Check if the internal data is consistent; call this API to validate data after manual modifications.
 
 
 【2023-09-21】 Delete `imgFileReplaceList`. Now, use the new ImageHookLoader to intercept image requests directly for image replacement. Therefore, images with the same name as the original image files will be overwritten.
@@ -598,18 +683,29 @@ TODO
 ## TODO
 
 - [x] 安全模式 Safe Mode   
-- [ ] Mod排序(ModLoaderGUI) Mod sorting    
+- [ ] Mod排序(ModLoaderGUI) Mod sorting
+- [ ] Mod禁用启用(可选加载)  
+- [ ] 游戏内Mod设置界面  
 - [ ] 修改其他Mod(Mod i18n pack(eg. english a cn mod))  Modify other mods   
 - [ ] 在线编辑passage   
 - [ ] 查看Diff   
-- [ ] 游戏内Mod设置界面   
-- [ ] Mod禁用启用(可选加载)   
-- [ ] Mod-游戏版本兼容性检查   
+- [x] Mod-游戏版本兼容性检查   
 - [ ] 使用Wikify执行script来注入游戏上下文，注入和拦截js函数和对象   
 - [ ] 提供Passage Prefix/Postfix Addon来实现前后缀模式(可以使用注入script函数并添加一行前后缀标签的方式实现)   
 - [ ] 提供PostPassage Addon来访问输出后的html node   
-- [ ] Mod Zip 加密 ( libsodium + 安全模式 + Mod禁用启用 )   
+- [x] Mod Zip 加密 ( libsodium + 安全模式 + Mod禁用启用 )   
+- [ ] 在存档中保存Mod相关数据，用以检查存档兼容性 ( 类似RimWorld的存档检查功能，对修改涉及存档兼容性的Addon添加存档兼容性检查 )   
 
+### addon mod
 
-
-
+- [x] ModLoaderGui       Mod管理器
+- [x] ImageLoaderHook       图片加载器，负责拦截DoL的图像加载请求并将mod提供的图片注入到游戏
+- [x] CheckDoLCompressorDictionaries       检查DoLCompressorDictionaries数据结构，发现变化时发出警告，提示mod作者可能造成了存档不兼容
+- [x] CheckGameVersion       提供mod检查游戏版本的功能
+- [x] ConflictChecker        提供mod检查冲突的功能，给mod作者提供额外的mod间的先序和后序依赖检查
+- [x] ReplacePatch           提供passage和js/css的字符串替换功能
+- [x] TweeReplacer           提供passage的字符串替换功能，支持复杂的正则替换和大分段替换
+- [x] Diff3WayMerge          以在线三方合并计算的方式提供passage的合并功能，避免手动填写搜索字符串。此addon尚不稳定不稳定
+- [x] ModdedClothesAddon     提供快速添加衣服的addon，可以简单地添加衣服，不需要编写js代码
+- [x] ModdedFeatsAddon       提供快速添加成就的addon，可以简单地添加成就，不需要编写js代码
+- [ ] ModdedNpcAddon         提供快速添加NPC的addon，可以简单地添加NPC，不需要编写js代码  【正在收集方案阶段】

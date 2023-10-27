@@ -1,14 +1,18 @@
 import {SC2DataManager} from "./SC2DataManager";
 import {isInteger, isString} from "lodash";
 import _ from "lodash";
-import {Twee2Passage, Twee2PassageR} from "./ModZipReader";
+import {ModZipReader, Twee2Passage, Twee2PassageR} from "./ModZipReader";
 import {PassageDataItem, SC2DataInfo, SC2DataInfoCache} from "./SC2DataInfoCache";
 import {SimulateMergeResult} from "./SimulateMerge";
 import {replaceMergeSC2DataInfoCache, replaceMergeSC2DataInfoCacheForce} from "./MergeSC2DataInfoCache";
+import JSZip from "jszip";
+import {ModInfo} from "./ModLoader";
+import {LogWrapper, ModLoadController} from "./ModLoadController";
+import {AddonPluginManager} from "./AddonPlugin";
 
 export class ModUtils {
 
-    version = '1.6.2';
+    version = '2.1.0';
 
     constructor(
         public pSC2DataManager: SC2DataManager,
@@ -16,7 +20,7 @@ export class ModUtils {
     ) {
     }
 
-    getThisWindow() {
+    getThisWindow(): Window {
         return this.thisWin;
     }
 
@@ -24,8 +28,8 @@ export class ModUtils {
      * 获取所有mod的名字
      * 以mod加载顺序为序
      */
-    getModListName() {
-        return this.pSC2DataManager.getModLoader().modOrder;
+    getModListName(): string[] {
+        return this.pSC2DataManager.getModLoader().getModCacheArray().map(T => T.name);
     }
 
     /**
@@ -33,42 +37,17 @@ export class ModUtils {
      * @param name ModName
      * @return ModInfo | undefined
      */
-    getMod(name: string) {
-        return this.pSC2DataManager.getModLoader().modCache.get(name);
+    getMod(name: string): ModInfo | undefined {
+        return this.pSC2DataManager.getModLoader().getModCacheByNameOne(name)?.mod;
     }
 
     /**
      * 获取指定mod的Zip
-     * @param name ModName
-     * @return ModZipReader[] | undefined
+     * @param modName ModName
+     * @return ModZipReader | undefined
      */
-    getModZip(modName: string) {
-        const loader = this.pSC2DataManager.getModLoader();
-        if (loader.getIndexDBLoader()) {
-            const mod = loader.getIndexDBLoader()!.getZipFile(modName);
-            if (mod) {
-                return mod;
-            }
-        }
-        if (loader.getLocalStorageLoader()) {
-            const mod = loader.getLocalStorageLoader()!.getZipFile(modName);
-            if (mod) {
-                return mod;
-            }
-        }
-        if (loader.getRemoteLoader()) {
-            const mod = loader.getRemoteLoader()!.getZipFile(modName);
-            if (mod) {
-                return mod;
-            }
-        }
-        if (loader.getLocalLoader()) {
-            const mod = loader.getLocalLoader()!.getZipFile(modName);
-            if (mod) {
-                return mod;
-            }
-        }
-        return undefined;
+    getModZip(modName: string): ModZipReader | undefined {
+        return this.pSC2DataManager.getModLoader().getModCacheByNameOne(modName)?.zip;
     }
 
     /**
@@ -124,26 +103,26 @@ export class ModUtils {
         return this.pSC2DataManager.flushAfterPatchCache();
     }
 
-    /**
-     * 批量更新passage数据，如果存在则覆盖，如果不存在则创建
-     * @param pd 需要更新的passage列表
-     * @param replaceForce 强制覆盖而不提示警告
-     */
-    updatePassageDataManyEarly(pd: PassageDataItem[], oldSC2Data: SC2DataInfoCache) {
-        const ti = new SC2DataInfo(this.getLogger(), 'temp');
-        ti.passageDataItems.items = pd;
-        ti.passageDataItems.fillMap();
-
-        this.pSC2DataManager.rePlacePassage(
-            oldSC2Data.passageDataNodes,
-            ti.passageDataItems.items.map(item => {
-                return this.pSC2DataManager.makePassageNode(item);
-            }),
-        );
-
-        this.pSC2DataManager.flushAfterPatchCache();
-        this.pSC2DataManager.earlyResetSC2DataInfoCache();
-    }
+    // /**
+    //  * 批量更新passage数据，如果存在则覆盖，如果不存在则创建
+    //  * @param pd 需要更新的passage列表
+    //  * @param oldSC2Data 被更新的passage列表
+    //  */
+    // updatePassageDataManyEarly(pd: PassageDataItem[], oldSC2Data: SC2DataInfoCache) {
+    //     const ti = new SC2DataInfo(this.getLogger(), 'temp');
+    //     ti.passageDataItems.items = pd;
+    //     ti.passageDataItems.fillMap();
+    //
+    //     this.pSC2DataManager.rePlacePassage(
+    //         oldSC2Data.passageDataNodes,
+    //         ti.passageDataItems.items.map(item => {
+    //             return this.pSC2DataManager.makePassageNode(item);
+    //         }),
+    //     );
+    //
+    //     this.pSC2DataManager.flushAfterPatchCache();
+    //     this.pSC2DataManager.earlyResetSC2DataInfoCache();
+    // }
 
     replaceFollowSC2DataInfo(newSC2Data: SC2DataInfo, oldSC2DataCache: SC2DataInfoCache) {
 
@@ -354,16 +333,31 @@ export class ModUtils {
         return _;
     }
 
-    getModLoadController() {
+    getModLoadController(): ModLoadController {
         return this.pSC2DataManager.getModLoadController();
     }
 
-    getAddonPluginManager() {
+    getAddonPluginManager(): AddonPluginManager {
         return this.pSC2DataManager.getAddonPluginManager();
     }
 
-    getLogger() {
+    getLogger(): LogWrapper {
         return this.getModLoadController().getLog();
     }
 
+    async lazyRegisterNewModZipData(data: ArgumentTypes<typeof JSZip.loadAsync>[0], options?: JSZip.JSZipLoadOptions) {
+        console.log('lazyRegisterNewModZipData', data);
+        try {
+            const zip = await JSZip.loadAsync(data, options);
+            return await this.pSC2DataManager.getModLoader().lazyRegisterNewMod(zip);
+        } catch (e: Error | any) {
+            console.error(e);
+            this.getLogger().error(`lazyRegisterNewMod() error:[${e?.message ? e.message : e}]`);
+            return false;
+        }
+    }
+
 }
+
+// https://stackoverflow.com/questions/51851677/how-to-get-argument-types-from-function-in-typescript
+export type ArgumentTypes<F extends Function> = F extends (...args: infer A) => any ? A : never;

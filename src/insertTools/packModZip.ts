@@ -23,6 +23,7 @@ export interface ModBootJson {
     imgFileList: string[];
     replacePatchList?: string[];
     additionFile: string[];
+    additionBinaryFile: string[];
     addonPlugin?: ModBootJsonAddonPlugin[];
     dependenceInfo?: DependenceInfo[];
 }
@@ -190,6 +191,10 @@ export function validateBootJson(bootJ: any): bootJ is ModBootJson {
         const scriptFile = await promisify(fs.readFile)(scriptPath, {encoding: 'utf-8'});
         zip.file(scriptPath, scriptFile);
     }
+    for (const bfPath of bootJson.additionBinaryFile || []) {
+        const scriptFile = await promisify(fs.readFile)(bfPath);
+        zip.file(bfPath, scriptFile, {binary: true});
+    }
     if (bootJson.replacePatchList) {
         for (const patchPath of bootJson.replacePatchList) {
             const patchFile = await promisify(fs.readFile)(patchPath, {encoding: 'utf-8'});
@@ -223,6 +228,7 @@ export function validateBootJson(bootJ: any): bootJ is ModBootJson {
 
     await promisify(fs.writeFile)(bootJson.name + '.mod.zip', zipBase64, {encoding: 'utf-8'});
 
+    console.log('=== Congratulation! packModZip done! Everything is ok. ===')
 })().catch((e) => {
     console.error(e);
     process.exit(1);

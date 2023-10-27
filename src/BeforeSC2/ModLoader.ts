@@ -1,9 +1,10 @@
-import {every, get, has, isArray, isObject, isPlainObject, isString, cloneDeep} from 'lodash';
+import {cloneDeep, get, has, isArray, isObject, isString, uniq, isNil} from 'lodash';
 import {SC2DataInfo} from "./SC2DataInfoCache";
-import {simulateMergeSC2DataInfoCache} from "./SimulateMerge";
+import {SimulateMergeResult, simulateMergeSC2DataInfoCache} from "./SimulateMerge";
 import {
     imgWrapBase64Url,
     IndexDBLoader,
+    LazyLoader,
     LocalLoader,
     LocalStorageLoader,
     ModZipReader,
@@ -13,7 +14,14 @@ import {SC2DataManager} from "./SC2DataManager";
 import {JsPreloader} from 'JsPreloader';
 import {LogWrapper, ModLoadControllerCallback} from "./ModLoadController";
 import {ReplacePatcher} from "./ReplacePatcher";
+import {
+    ModLoadFromSourceType,
+    ModOrderContainer,
+    ModOrderContainer_One_ReadonlyMap,
+    ModOrderItem
+} from "./ModOrderContainer";
 import {LRUCache} from 'lru-cache';
+import JSZip from 'jszip';
 
 export interface IModImgGetter {
     /**
@@ -109,6 +117,7 @@ export interface ModBootJson {
     imgFileList: string[];
     replacePatchList?: string[];
     additionFile: string[];
+    additionBinaryFile?: string[];
     addonPlugin?: ModBootJsonAddonPlugin[];
     dependenceInfo?: DependenceInfo[];
 }
@@ -118,13 +127,13 @@ export interface ModInfo {
     version: string;
     cache: SC2DataInfo;
     imgs: ModImg[];
-    // orgin path, replace path
+    // origin path, replace path
     imgFileReplaceList: [string, string][];
-    // file name, file contect
+    // file name, file content
     scriptFileList_preload: [string, string][];
-    // file name, file contect
+    // file name, file content
     scriptFileList_earlyload: [string, string][];
-    // file name, file contect
+    // file name, file content
     scriptFileList_inject_early: [string, string][];
     replacePatcher: ReplacePatcher[];
     bootJson: ModBootJson;
@@ -137,6 +146,10 @@ export enum ModDataLoadType {
     'IndexDB' = 'IndexDB',
 }
 
+// `modReadOrder`/`modReadCache` the read mod from zip file
+// `modOrder`/`modCache` the mod filter by the `filterModCanLoad`
+// `modLazyOrder`/`modLazyCache` the mod that Lazy load by a mod programming
+// `modLazyWaiting` the mod that Lazy load by a mod programming but not load yet
 export class ModLoader {
     logger: LogWrapper;
 
@@ -148,40 +161,61 @@ export class ModLoader {
         this.logger = this.gSC2DataManager.getModUtils().getLogger();
     }
 
-    modReadCache: Map<string, ModInfo> = new Map<string, ModInfo>();
-    modCache: Map<string, ModInfo> = new Map<string, ModInfo>();
+    private modReadCache: ModOrderContainer = new ModOrderContainer();
+    private modCache: ModOrderContainer = new ModOrderContainer();
+    private modLazyCache: ModOrderContainer = new ModOrderContainer();
 
-    getMod(modName: string) {
-        return this.modCache.get(modName);
+    // it recorded the do_initModInjectEarlyLoadInDomScript call
+    modLoadRecord: ModOrderItem[] = [];
+
+    /**
+     * O(2n)
+     */
+    public getModCacheOneArray(): ModOrderItem[] {
+        return this.modCache.get_One_Array();
     }
 
-    getModRead(modName: string) {
-        return this.modReadCache.get(modName);
+    /**
+     O(n)
+     */
+    public getModCacheArray(): ModOrderItem[] {
+        return this.modCache.get_Array();
     }
 
-    private addMod(m: ModInfo) {
-        const overwrite = this.modReadCache.get(m.name);
-        if (overwrite) {
-            console.error('ModLoader addMod() has duplicate name: ', [m.name], ' will be overwrite');
-        }
-        this.modReadCache.set(m.name, m);
-        return !overwrite;
+    /**
+     O(1)
+     */
+    public getModCacheMap(): ModOrderContainer_One_ReadonlyMap {
+        return this.modCache.get_One_Map();
     }
 
-    modReadOrder: string[] = [];
-    modOrder: string[] = [];
-
-    checkModConflict2Root(modName: string) {
-        const mod = this.getMod(modName);
-        if (!mod) {
-            console.error('ModLoader checkModConflictOne() (!mod)');
-            return undefined;
-        }
-        return simulateMergeSC2DataInfoCache(this.gSC2DataManager.getSC2DataInfoAfterPatch(), mod.cache)[0];
+    /**
+     * O(n+2log(n))
+     */
+    public checkModCacheData(): boolean {
+        return this.modCache.checkData();
     }
 
-    checkModConflictList() {
-        const ml = this.modOrder.map(T => this.modCache.get(T))
+    /**
+     O(n)
+     */
+    public checkModCacheUniq(): boolean {
+        return this.modCache.checkNameUniq();
+    }
+
+    /**
+     O(1)
+     */
+    public getModCacheByNameOne(modName: string): ModOrderItem | undefined {
+        return this.modCache.getByNameOne(modName);
+    }
+
+    public getModReadCache(): ModOrderContainer {
+        return this.modReadCache;
+    }
+
+    checkModConflictList(): { mod: SC2DataInfo, result: SimulateMergeResult }[] {
+        const ml = this.modCache.order.map(T => T.mod)
             .filter((T): T is ModInfo => !!T)
             .map(T => T.cache);
         return simulateMergeSC2DataInfoCache(this.gSC2DataManager.getSC2DataInfoAfterPatch(), ...ml).map((T, index) => {
@@ -192,75 +226,11 @@ export class ModLoader {
         });
     }
 
-    // getModImgFileReplaceList() {
-    //     // orgin path, replace
-    //     const imgFileReplace = new Map<string, string>();
-    //     for (const modName of this.modOrder) {
-    //         const mod = this.getMod(modName);
-    //         if (!mod) {
-    //             console.error('ModLoader getModImgFileReplaceList() (!mod)');
-    //             continue;
-    //         }
-    //         for (const [orgin, replace] of mod.bootJson.imgFileReplaceList) {
-    //             if (imgFileReplace.has(orgin)) {
-    //                 console.warn('ModLoader getModImgFileReplaceList() has duplicate orgin:',
-    //                     [orgin],
-    //                     ' on mod ',
-    //                     [modName],
-    //                     ' will be overwrite',
-    //                 );
-    //             }
-    //             imgFileReplace.set(orgin, replace);
-    //         }
-    //     }
-    //     return imgFileReplace;
-    // }
-
     private modIndexDBLoader?: IndexDBLoader;
     private modLocalStorageLoader?: LocalStorageLoader;
     private modLocalLoader?: LocalLoader;
     private modRemoteLoader?: RemoteLoader;
-
-    getModZip(modName: string) {
-        const order = cloneDeep(this.loadOrder).reverse();
-        for (const loadType of order) {
-            switch (loadType) {
-                case ModDataLoadType.Remote:
-                    if (this.modRemoteLoader) {
-                        const mod = this.modRemoteLoader.getZipFile(modName);
-                        if (mod) {
-                            return mod;
-                        }
-                    }
-                    break;
-                case ModDataLoadType.Local:
-                    if (this.modLocalLoader) {
-                        const mod = this.modLocalLoader.getZipFile(modName);
-                        if (mod) {
-                            return mod;
-                        }
-                    }
-                    break;
-                case ModDataLoadType.LocalStorage:
-                    if (this.modLocalStorageLoader) {
-                        const mod = this.modLocalStorageLoader.getZipFile(modName);
-                        if (mod) {
-                            return mod;
-                        }
-                    }
-                    break;
-                case ModDataLoadType.IndexDB:
-                    if (this.modIndexDBLoader) {
-                        const mod = this.modIndexDBLoader.getZipFile(modName);
-                        if (mod) {
-                            return mod;
-                        }
-                    }
-                    break;
-            }
-        }
-        return undefined;
-    }
+    private modLazyLoader?: LazyLoader;
 
     public getIndexDBLoader() {
         return this.modIndexDBLoader;
@@ -278,22 +248,28 @@ export class ModLoader {
         return this.modRemoteLoader;
     }
 
+    public getLazyLoader() {
+        return this.modLazyLoader;
+    }
+
     loadOrder: ModDataLoadType[] = [];
 
-    public async loadMod(loadOrder: ModDataLoadType[]): Promise<boolean> {
-        this.loadOrder = loadOrder
-        let ok = false;
-        this.modReadOrder = [];
-        const addModeZip = (T: ModZipReader) => {
-            if (T.modInfo) {
-                const overwrite = !this.addMod(T.modInfo);
-                if (overwrite) {
-                    this.modReadOrder = this.modReadOrder.filter(T1 => T1 !== T.modInfo!.name);
-                }
-                this.gSC2DataManager.getDependenceChecker().checkFor(T.modInfo);
-                this.modReadOrder.push(T.modInfo.name);
+    private addModeReadZip(T: ModZipReader, from: ModLoadFromSourceType) {
+        if (T.modInfo) {
+            const overwrite = !this.modReadCache.getHasByName(T.modInfo.name);
+            if (overwrite) {
+                this.modReadCache.deleteAll(T.modInfo.name);
             }
-        };
+            // // this is invalid
+            this.gSC2DataManager.getDependenceChecker().checkFor(T.modInfo, [this.modReadCache]);
+            this.modReadCache.pushBack(T, from);
+            this.modReadCache.checkNameUniq();
+        }
+    }
+
+    public async loadMod(loadOrder: ModDataLoadType[]): Promise<boolean> {
+        this.loadOrder = loadOrder;
+        let ok = false;
         for (const loadType of this.loadOrder) {
             switch (loadType) {
                 case ModDataLoadType.Remote:
@@ -302,9 +278,10 @@ export class ModLoader {
                     }
                     try {
                         ok = await this.modRemoteLoader.load() || ok;
-                        this.modRemoteLoader.modList.forEach(T => addModeZip(T));
-                    } catch (e) {
+                        this.modRemoteLoader.modList.forEach(T => this.addModeReadZip(T, ModLoadFromSourceType.Remote));
+                    } catch (e: Error | any) {
                         console.error(e);
+                        this.logger.error(`ModLoader loadMod() RemoteLoader load error: ${e?.message ? e.message : e}`);
                     }
                     break;
                 case ModDataLoadType.Local:
@@ -313,9 +290,10 @@ export class ModLoader {
                     }
                     try {
                         ok = await this.modLocalLoader.load() || ok;
-                        this.modLocalLoader.modList.forEach(T => addModeZip(T));
-                    } catch (e) {
+                        this.modLocalLoader.modList.forEach(T => this.addModeReadZip(T, ModLoadFromSourceType.Local));
+                    } catch (e: Error | any) {
                         console.error(e);
+                        this.logger.error(`ModLoader loadMod() LocalLoader load error: ${e?.message ? e.message : e}`);
                     }
                     break;
                 case ModDataLoadType.LocalStorage:
@@ -324,9 +302,10 @@ export class ModLoader {
                     }
                     try {
                         ok = await this.modLocalStorageLoader.load() || ok;
-                        this.modLocalStorageLoader.modList.forEach(T => addModeZip(T));
-                    } catch (e) {
+                        this.modLocalStorageLoader.modList.forEach(T => this.addModeReadZip(T, ModLoadFromSourceType.LocalStorage));
+                    } catch (e: Error | any) {
                         console.error(e);
+                        this.logger.error(`ModLoader loadMod() LocalStorageLoader load error: ${e?.message ? e.message : e}`);
                     }
                     break;
                 case ModDataLoadType.IndexDB:
@@ -335,19 +314,29 @@ export class ModLoader {
                     }
                     try {
                         ok = await this.modIndexDBLoader.load() || ok;
-                        this.modIndexDBLoader.modList.forEach(T => addModeZip(T));
-                    } catch (e) {
+                        this.modIndexDBLoader.modList.forEach(T => this.addModeReadZip(T, ModLoadFromSourceType.IndexDB));
+                    } catch (e: Error | any) {
                         console.error(e);
+                        this.logger.error(`ModLoader loadMod() IndexDBLoader load error: ${e?.message ? e.message : e}`);
                     }
                     break;
                 default:
                     console.error('ModLoader loadTranslateData() unknown loadType:', [loadType]);
+                    this.logger.error(`ModLoader loadTranslateData() unknown loadType: [${loadType}]`);
             }
         }
         await this.initModInjectEarlyLoadInDomScript();
         await this.gSC2DataManager.getAddonPluginManager().triggerHook('afterInjectEarlyLoad');
         await this.triggerAfterModLoad();
         await this.gSC2DataManager.getAddonPluginManager().triggerHook('afterModLoad');
+        if (!this.modCache.checkData()) {
+            console.error('ModLoader loadMod() modCache.checkData() failed. Data consistency check failed.');
+            this.logger.error(`ModLoader loadMod() modCache.checkData() failed. Data consistency check failed.`);
+        }
+        if (!this.modCache.checkNameUniq()) {
+            console.error('ModLoader loadMod() modCache.checkNameUniq() failed. Data consistency check failed.');
+            this.logger.error(`ModLoader loadMod() modCache.checkNameUniq() failed. Data consistency check failed.`);
+        }
         await this.initModEarlyLoadScript();
         await this.gSC2DataManager.getAddonPluginManager().triggerHook('afterEarlyLoad');
         await this.registerMod2Addon();
@@ -356,134 +345,404 @@ export class ModLoader {
     }
 
     private async registerMod2Addon() {
-        for (const modName of this.modOrder) {
-            const mod = this.getMod(modName);
-            if (!mod) {
-                // never go there
-                console.error('ModLoader ====== initModInjectEarlyLoadScript() (!mod)');
-                continue;
-            }
-            const zip = this.getModZip(modName);
-            if (!zip) {
-                // never go there
-                console.error('ModLoader ====== initModInjectEarlyLoadScript() (!zip)');
-                continue;
-            }
-            for (const modZipReader of zip) {
-                await this.gSC2DataManager.getAddonPluginManager().registerMod2Addon(mod, modZipReader);
-            }
+        for (const mod of this.modCache.get_Array()) {
+            const modZipReader = mod.zip;
+            await this.gSC2DataManager.getAddonPluginManager().registerMod2Addon(mod.mod, modZipReader);
         }
     }
 
     protected async triggerAfterModLoad() {
-        for (const modName of this.modOrder) {
-            const modInfo = this.getModRead(modName);
-            const zips = this.getModZip(modName);
-            if (!modInfo || !zips) {
-                // never go there
-                console.error(`ModLoader ====== triggerAfterModLoad() (!m || !zips) mod not find: [${modName}]. never go there.`);
-                continue;
-            }
+        for (const mod of this.modCache.get_Array()) {
+            const modInfo = mod.mod;
+            const modZipReader = mod.zip;
             const bootJson = modInfo.bootJson;
-            const zip = zips[0];
-            await this.modLoadControllerCallback.afterModLoad(bootJson, zip.zip, modInfo);
+            await this.modLoadControllerCallback.afterModLoad(bootJson, modZipReader.zip, modInfo);
         }
     }
 
-    protected async filterModCanLoad(modeList: string[]) {
-        const canLoadList: string[] = [];
-        for (const modName of modeList) {
-            const m = this.getModRead(modName);
-            const zips = this.getModZip(modName);
-            if (!m || !zips) {
-                // never go there
-                console.error(`ModLoader ====== initModInjectEarlyLoadScript() (!m || !zips) mod not find: [${modName}]. never go there.`);
-                continue;
-            }
-            const bootJ = m.bootJson;
-            const zip = zips[0];
+    // call the `canLoadThisMod` to filter mod.
+    protected async filterModCanLoad(modeC: ModOrderContainer) {
+        const canLoadList: ModOrderContainer = new ModOrderContainer();
+        for (const m of modeC.get_Array()) {
+            const bootJ = m.mod.bootJson;
+            const zip = m.zip;
             if (!await this.modLoadControllerCallback.canLoadThisMod(bootJ, zip.zip)) {
-                console.warn(`ModLoader ====== ModZipReader init() Mod [${m.name}] be banned.`);
-                this.logger.warn(`ModLoader ====== ModZipReader init() Mod [${m.name}] be banned.`);
+                console.warn(`ModLoader ====== ModZipReader filterModCanLoad() Mod [${m.name}] be banned.`);
+                this.logger.warn(`ModLoader ====== ModZipReader filterModCanLoad() Mod [${m.name}] be banned.`);
             } else {
-                canLoadList.push(modName);
+                canLoadList.pushBack(m.zip, m.from);
             }
         }
         return canLoadList;
     }
 
+    public async lazyRegisterNewMod(modeZip: JSZip) {
+        if (!this.modLazyLoader) {
+            this.modLazyLoader = new LazyLoader(this.modLoadControllerCallback);
+        }
+        console.log('ModLoader ====== lazyRegisterNewMod() LazyLoader load start: ', [modeZip]);
+        try {
+            const m = await this.modLazyLoader.add(modeZip);
+            if (m.modInfo) {
+                this.modLazyCache.pushBack(m, ModLoadFromSourceType.SideLazy);
+                console.log('ModLoader ====== lazyRegisterNewMod() LazyLoader load ok: ', [m, this.modLazyCache]);
+                return true;
+            } else {
+                console.error('ModLoader lazyRegisterNewMod() LazyLoader load error: modInfo not found', [m]);
+                this.logger.error(`ModLoader lazyRegisterNewMod() LazyLoader load error: modInfo not found`);
+            }
+        } catch (e: Error | any) {
+            console.error(e);
+            this.logger.error(`ModLoader lazyRegisterNewMod() LazyLoader load error: ${e?.message ? e.message : e}`);
+        }
+        return false;
+    }
+
+    private async do_initModInjectEarlyLoadInDomScript(modName: string, mod: ModInfo) {
+        for (const [name, content] of mod.scriptFileList_inject_early) {
+            console.log('ModLoader ====== do_initModInjectEarlyLoadInDomScript() inject start: ', [modName], [name]);
+            this.logger.log(`ModLoader ====== do_initModInjectEarlyLoadInDomScript() inject start: [${modName}] [${name}]`);
+            await this.gSC2DataManager.getModLoadController().InjectEarlyLoad_start(modName, name);
+            const script = this.thisWin.document.createElement('script');
+            script.innerHTML = content;
+            script.setAttribute('scriptName', (name));
+            script.setAttribute('modName', (modName));
+            script.setAttribute('stage', ('InjectEarlyLoad'));
+            if (this.gSC2DataManager) {
+                // insert before SC2 data rootNode
+                this.gSC2DataManager?.rootNode.before(script);
+            } else {
+                // or insert to head
+                console.warn('ModLoader ====== do_initModInjectEarlyLoadInDomScript() gSC2DataManager is undefined, insert to head');
+                this.logger.warn(`ModLoader ====== do_initModInjectEarlyLoadInDomScript() gSC2DataManager is undefined, insert to head`);
+                this.thisWin.document.head.appendChild(script);
+            }
+            console.log('ModLoader ====== do_initModInjectEarlyLoadInDomScript() inject end: ', [modName], [name]);
+            this.logger.log(`ModLoader ====== do_initModInjectEarlyLoadInDomScript() inject end: [${modName}] [${name}]`);
+            await this.gSC2DataManager.getModLoadController().InjectEarlyLoad_end(modName, name);
+        }
+    }
+
     private async initModInjectEarlyLoadInDomScript() {
-        this.modOrder = [];
-        this.modCache.clear();
-        let toLoadModeList = cloneDeep(this.modReadOrder);
-        while (toLoadModeList.length > 0) {
-            const nowMod = toLoadModeList.shift();
+        let toLoadModeList = this.modReadCache.clone();
+        this.modCache = new ModOrderContainer();
+        while (toLoadModeList.size > 0) {
+            const nowMod = toLoadModeList.popFront();
             if (!nowMod) {
                 // never go there
                 console.error('ModLoader ====== initModInjectEarlyLoadInDomScript() (!nowMod). never go there.');
+                this.logger.error(`ModLoader ====== initModInjectEarlyLoadInDomScript() (!nowMod). never go there.`);
                 continue;
             }
-            const mod = this.getModRead(nowMod);
-            if (!mod) {
-                // never go there
-                console.error('ModLoader ====== initModInjectEarlyLoadScript() (!mod)');
-                continue;
-            }
-            const modName = mod.name;
-            this.modOrder.push(modName);
-            this.modCache.set(modName, mod);
-            for (const [name, content] of mod.scriptFileList_inject_early) {
-                console.log('ModLoader ====== initModInjectEarlyLoadScript() inject start: ', [modName], [name]);
-                await this.gSC2DataManager.getModLoadController().InjectEarlyLoad_start(modName, name);
-                const script = this.thisWin.document.createElement('script');
-                script.innerHTML = content;
-                script.setAttribute('scriptName', (name));
-                script.setAttribute('modName', (modName));
-                script.setAttribute('stage', ('InjectEarlyLoad'));
-                if (this.gSC2DataManager) {
-                    // insert before SC2 data rootNode
-                    this.gSC2DataManager?.rootNode.before(script);
-                } else {
-                    // or insert to head
-                    console.warn('ModLoader ====== initModInjectEarlyLoadScript() gSC2DataManager is undefined, insert to head');
-                    this.thisWin.document.head.appendChild(script);
-                }
-                console.log('ModLoader ====== initModInjectEarlyLoadScript() inject end: ', [modName], [name]);
-                await this.gSC2DataManager.getModLoadController().InjectEarlyLoad_end(modName, name);
-            }
+            this.modCache.pushBack(nowMod.zip, nowMod.from);
+            this.modLoadRecord.push(nowMod);
+            await this.do_initModInjectEarlyLoadInDomScript(nowMod.name, nowMod.mod);
             // check ban
+            // the `canLoadThisMod` will be call in `filterModCanLoad`
+            // a mod only can ban the mods that load after it.
+            // any mod loaded cannot be banned, because it's `InjectEarlyLoad` already be injected and run.
             toLoadModeList = await this.filterModCanLoad(toLoadModeList);
         }
     }
 
-    private async initModEarlyLoadScript() {
-        for (const modName of this.modOrder) {
-            const mod = this.getMod(modName);
-            if (!mod) {
-                console.error('ModLoader ====== initModEarlyLoadScript() (!mod)');
-                continue;
+    private async do_initModEarlyLoadScript(modName: string, mod: ModInfo) {
+        for (const [name, content] of mod.scriptFileList_earlyload) {
+            console.log('ModLoader ====== initModEarlyLoadScript() excute start: ', [modName], [name]);
+            this.logger.log(`ModLoader ====== initModEarlyLoadScript() excute start: [${modName}] [${name}]`);
+            await this.gSC2DataManager.getModLoadController().EarlyLoad_start(modName, name);
+            try {
+                // const R = await Function(`return ${content}`)();
+                const R = await JsPreloader.JsRunner(
+                    content,
+                    name,
+                    modName,
+                    'EarlyLoadScript',
+                    this.gSC2DataManager,
+                    this.thisWin,
+                    this.logger,
+                );
+                console.log('ModLoader ====== initModEarlyLoadScript() excute result: ', [modName], [name], R);
+                this.logger.log(`ModLoader ====== initModEarlyLoadScript() excute result: [${modName}] [${name}] [${R}]`);
+            } catch (e) {
+                console.error('ModLoader ====== initModEarlyLoadScript() excute error: ', [modName], [name], e);
+                this.logger.error(`ModLoader ====== initModEarlyLoadScript() excute error: [${modName}] [${name}] [${e}]`);
             }
-            for (const [name, content] of mod.scriptFileList_earlyload) {
-                console.log('ModLoader ====== initModEarlyLoadScript() excute start: ', [modName], [name]);
-                await this.gSC2DataManager.getModLoadController().EarlyLoad_start(modName, name);
-                try {
-                    // const R = await Function(`return ${content}`)();
-                    const R = await JsPreloader.JsRunner(
-                        content,
-                        name,
-                        modName,
-                        'EarlyLoadScript',
-                        this.gSC2DataManager,
-                        this.thisWin,
-                    );
-                    console.log('ModLoader ====== initModEarlyLoadScript() excute result: ', [modName], [name], R);
-                } catch (e) {
-                    console.error('ModLoader ====== initModEarlyLoadScript() excute error: ', [modName], [name], e);
-                }
-                console.log('ModLoader ====== initModEarlyLoadScript() excute end: ', [modName], [name]);
-                await this.gSC2DataManager.getModLoadController().EarlyLoad_end(modName, name);
-                this.logger.log(`ModLoader ========= version: [${this.gSC2DataManager.getModUtils().version}]`);
-            }
+            console.log('ModLoader ====== initModEarlyLoadScript() excute end: ', [modName], [name]);
+            this.logger.log(`ModLoader ====== initModEarlyLoadScript() excute end: [${modName}] [${name}]`);
+            await this.gSC2DataManager.getModLoadController().EarlyLoad_end(modName, name);
+            this.logger.log(`ModLoader ========= version: [${this.gSC2DataManager.getModUtils().version}]`);
         }
     }
+
+    private async initModEarlyLoadScript() {
+        this.loadEndModList = new ModOrderContainer();
+        this.toLoadModList = this.modCache.clone();
+        this.modCache = new ModOrderContainer();
+        while (this.toLoadModList.size > 0) {
+            const modNow = this.toLoadModList.popFront()!;
+            this.newNowMod = modNow;
+            await this.do_initModEarlyLoadScript(modNow.name, modNow.mod);
+            // to load lazy mod if this mod inject lazy mod
+            // `tryInitWaitingLazyLoadMod` will change `modOrder` , so we receive the new list from it
+            /*[toLoadModList, loadEndModList] = */
+            await this.tryInitWaitingLazyLoadMod(modNow/*, toLoadModList, loadEndModList*/);
+            // console.log('loadEndModList', this.loadEndModList.clone());
+        }
+        this.toLoadModList = undefined;
+        // console.log('loadEndModList', this.loadEndModList.clone());
+        if (!isNil(this.newNowMod)) {
+            // invalid state . never go there
+            console.error('ModLoader ====== initModEarlyLoadScript() invalid state. never go there.', [this.newNowMod]);
+            this.logger.error(`ModLoader ====== initModEarlyLoadScript() invalid state. never go there.`);
+        }
+        if (!this.loadEndModList.checkNameUniq()) {
+            // never go there
+            console.error('ModLoader ====== initModEarlyLoadScript() loadEndModList.checkNameUniq() failed. Data consistency check failed.', [this.loadEndModList]);
+            this.logger.error(`ModLoader ====== initModEarlyLoadScript() loadEndModList.checkNameUniq() failed. Data consistency check failed.`);
+        }
+        this.modCache = this.loadEndModList;
+        this.loadEndModList = undefined;
+    }
+
+    public getModEarlyLoadCache(): ModOrderContainer {
+        if (this.modCache.size > 0) {
+            // we are not in EarlyLoad
+            if (!isNil(this.loadEndModList) || !isNil(this.nowLoadedMod) || !isNil(this.toLoadModList) || !isNil(this.newNowMod) || !isNil(this.replacedNowMod)) {
+                // invalid state, never go there
+                console.error('ModLoader ====== getModEarlyLoadCache() not in EarlyLoad invalid state. never go there.',
+                    [this.loadEndModList, this.nowLoadedMod, this.toLoadModList, this.newNowMod, this.replacedNowMod]);
+                this.logger.error(`ModLoader ====== getModEarlyLoadCache() not in EarlyLoad invalid state. never go there.`);
+            }
+            return this.modCache;
+        }
+        if (isNil(this.loadEndModList) || isNil(this.nowLoadedMod) || isNil(this.toLoadModList) || isNil(this.newNowMod) || isNil(this.replacedNowMod)) {
+            // invalid state, never go there
+            console.error('ModLoader ====== getModEarlyLoadCache() in EarlyLoad invalid state. never go there.',
+                [this.loadEndModList, this.nowLoadedMod, this.toLoadModList, this.newNowMod, this.replacedNowMod]);
+            this.logger.error(`ModLoader ====== getModEarlyLoadCache() in EarlyLoad invalid state. never go there.`);
+        }
+        if (this.replacedNowMod) {
+            return ModOrderContainer.mergeModOrderContainer([
+                this.loadEndModList!,
+                this.newNowMod!,
+                this.nowLoadedMod!,
+            ]);
+        } else {
+            return ModOrderContainer.mergeModOrderContainer([
+                this.loadEndModList!,
+                this.nowLoadedMod!,
+            ]);
+        }
+    }
+
+    public getModByNameOne(modName: string): ModOrderItem | undefined {
+        const rr = () => {
+            let nn = this.modCache.getByNameOne(modName, true);
+            // console.log('getModByNameOne modCache', [nn, this.modCache]);
+            if (nn) {
+                return nn;
+            }
+            nn = this.loadEndModList?.getByNameOne(modName, true);
+            // console.log('getModByNameOne loadEndModList', [nn, this.loadEndModList]);
+            if (nn) {
+                return nn;
+            }
+            nn = this.nowLoadedMod?.getByNameOne(modName, true);
+            // console.log('getModByNameOne nowLoadedMod', [nn, this.nowLoadedMod]);
+            if (nn) {
+                return nn;
+            }
+            // console.log('getModByNameOne newNowMod', [this.newNowMod]);
+            if (this.newNowMod && this.newNowMod.mod.name === modName) {
+                return this.newNowMod;
+            }
+            return undefined;
+        };
+        if (!rr) {
+            console.warn('ModLoader ====== getModByNameOne() mod not found:', [modName]);
+            this.logger.warn(`ModLoader ====== getModByNameOne() mod not found: [${modName}]`);
+        }
+        return rr();
+    }
+
+    public getModZip(modName: string) {
+        const rr = () => {
+            let nn = this.modCache.getByNameOne(modName, true);
+            if (nn) {
+                return nn.zip;
+            }
+            nn = this.loadEndModList?.getByNameOne(modName, true);
+            if (nn) {
+                return nn.zip;
+            }
+            nn = this.nowLoadedMod?.getByNameOne(modName, true);
+            if (nn) {
+                return nn.zip;
+            }
+            if (this.newNowMod && this.newNowMod.mod.name === modName) {
+                return this.newNowMod.zip;
+            }
+            return undefined;
+        }
+        if (!rr) {
+            console.warn('ModLoader ====== getModZip() mod not found:', [modName]);
+            this.logger.warn(`ModLoader ====== getModZip() mod not found: [${modName}]`);
+        }
+        return rr();
+    }
+
+    private loadEndModList?: ModOrderContainer;
+    private toLoadModList?: ModOrderContainer;
+    private nowLoadedMod?: ModOrderContainer;
+    private newNowMod?: ModOrderItem;
+    private replacedNowMod?: boolean;
+
+    private async tryInitWaitingLazyLoadMod(
+        nowMod: ModOrderItem,
+        // toLoadModList: ModOrderContainer,
+        // loadEndModList: ModOrderContainer,
+    ): Promise<any/*[ModOrderContainer, ModOrderContainer]*/> /* [toLoadModList, endLoadModList] */ {
+
+        this.replacedNowMod = false;
+
+        if (isNil(this.loadEndModList) || isNil(this.toLoadModList) || isNil(this.newNowMod) || this.modCache.size !== 0) {
+            // invalid state, never go there
+            console.error('ModLoader ====== tryInitWaitingLazyLoadMod() start invalid state. never go there.',
+                [this.loadEndModList, this.toLoadModList, this.newNowMod, this.modCache]);
+            this.logger.error(`ModLoader ====== tryInitWaitingLazyLoadMod() start invalid state. never go there.`);
+        }
+
+        if (this.modLazyCache.size > 0) {
+            // the nowMod added some Lazy mod. we need load the Lazy mod and it's add Lazy mod.
+            //      when this progress, Lazy mod will overwrite the mod that loaded before.
+            //      there some mod can be safe(allow) overwrite, and some will dangerous if overwrite (that maybe incorrect need warning author).
+
+            await this.gSC2DataManager.getModLoadController().LazyLoad_start(nowMod.name);
+            const checkCanSafeOverwriteMod = (mod: ModOrderItem) => {
+                return nowMod.name === mod.name
+                    || this.toLoadModList!.getHasByName(mod.name)
+                    // || this.modLazyCache.getHasByName(mod.name)  // this cannot detect
+                    ;
+            }
+            const checkCannotSafeOverwriteMod = (mod: ModOrderItem) => {
+                return this.loadEndModList!.getHasByName(mod.name);
+            }
+
+            // filter ban
+            this.modLazyCache = await this.filterModCanLoad(this.modLazyCache);
+
+            this.nowLoadedMod = new ModOrderContainer();
+
+            if (isNil(this.loadEndModList) || isNil(this.nowLoadedMod) || isNil(this.toLoadModList) || isNil(this.newNowMod) || this.modCache.size !== 0) {
+                // invalid state, never go there
+                console.error('ModLoader ====== tryInitWaitingLazyLoadMod() init invalid state. never go there.',
+                    [this.loadEndModList, this.nowLoadedMod, this.toLoadModList, this.newNowMod, this.modCache]);
+                this.logger.error(`ModLoader ====== tryInitWaitingLazyLoadMod() init invalid state. never go there.`);
+            }
+
+            // mod can call add lazy mod on this loop,
+            // so we must process the case that overwrite itself.
+            // the `canSafeOverwriteMod` is the mod that can overwrite,
+            // because in some case , user can load same name mod again and again to do some magic to hidden info.
+            while (this.modLazyCache.size > 0) {
+                console.log('modLazyCache', this.modLazyCache.clone());
+                console.log('nowLoadedMod', this.nowLoadedMod.clone());
+                console.log('loadEndModList', this.loadEndModList!.clone());
+                // remember the loading mod info, then pop-front it
+                const mod = this.modLazyCache.popFront()!;
+                // warning overwrite, but user can in-place overwrite self
+                if (checkCanSafeOverwriteMod(mod)) {
+                    console.log('ModLoader ====== tryInitWaitingLazyLoadMod() mod overwrite safe already loaded:',
+                        [nowMod.name, mod.name, this.toLoadModList]);
+                    this.logger.log(`ModLoader ====== tryInitWaitingLazyLoadMod() mod overwrite safe already loaded: [${mod.name}]. when LazyLoad by [${nowMod.name}] . ` +
+                        ' be carefully, this will case unexpected behavior .');
+                    if (nowMod.name === mod.name) {
+                        this.replacedNowMod = true;
+                        this.newNowMod = mod;
+                    }
+                } else if (checkCannotSafeOverwriteMod(mod)) {
+                    console.warn('ModLoader ====== tryInitWaitingLazyLoadMod() mod overwrite unsafe already loaded:',
+                        [nowMod.name, mod.name, this.loadEndModList]);
+                    this.logger.warn(`ModLoader ====== tryInitWaitingLazyLoadMod() mod overwrite unsafe already loaded: [${mod.name}]. when LazyLoad by [${nowMod.name}] . ` +
+                        'are you sure you want overwrite the mod that was loaded ? this will case unexpected behavior !!!');
+                }
+
+                this.gSC2DataManager.getDependenceChecker().checkFor(mod.mod, [this.loadEndModList!, this.nowLoadedMod]);
+
+                // overwrite loaded mod
+                // user can overwrite loaded mod, but this is unusual case
+                if (this.loadEndModList!.getHasByName(mod.name)) {
+                    console.warn('ModLoader ====== tryInitWaitingLazyLoadMod() overwrite loaded mod:',
+                        [nowMod.name, mod.name, this.loadEndModList, this.toLoadModList, this.nowLoadedMod]);
+                    this.logger.warn(`ModLoader ====== tryInitWaitingLazyLoadMod() overwrite loaded mod: [${mod.name}]. when LazyLoad by [${nowMod.name}] . ` +
+                        'are you sure you want overwrite a mod that was loaded ? ' +
+                        'this is unusual case , will cause js conflict and memory incorrect , and will case unexpected behavior !!!');
+                    this.loadEndModList!.deleteAll(mod.name);
+                }
+                // replace pending mod
+                // means, the later mod we will overwrite and load early
+                if (this.toLoadModList!.getHasByName(mod.name)) {
+                    console.warn('ModLoader ====== tryInitWaitingLazyLoadMod() overwrite later mod:',
+                        [nowMod.name, mod.name, this.loadEndModList, this.toLoadModList, this.nowLoadedMod]);
+                    this.logger.warn(`ModLoader ====== tryInitWaitingLazyLoadMod() overwrite later mod: [${mod.name}]. when LazyLoad by [${nowMod.name}] . ` +
+                        'are you sure you want overwrite and early load the mod that need later load ? ' +
+                        'this is unusual case , will broken mod order system , and will case unexpected behavior !!!');
+                    this.toLoadModList!.deleteAll(mod.name);
+                }
+                // loop overwrite lazy mod in this loop
+                // user can overwrite self in this loop multi time
+                if (this.nowLoadedMod.getHasByName(mod.name)) {
+                    console.log('ModLoader ====== tryInitWaitingLazyLoadMod() overwrite loaded lazy mod:',
+                        [nowMod.name, mod.name, this.loadEndModList, this.toLoadModList, this.nowLoadedMod]);
+                    this.logger.log(`ModLoader ====== tryInitWaitingLazyLoadMod() overwrite loaded lazy mod: [${mod.name}]. when LazyLoad by [${nowMod.name}] . ` +
+                        'are you sure you want overwrite a mod that was loaded in lazy load ? ' +
+                        'carefully use this feature, otherwise will case unexpected behavior !!!');
+                    this.nowLoadedMod.deleteAll(mod.name);
+                }
+                this.nowLoadedMod.pushBack(mod.zip, ModLoadFromSourceType.SideLazy);
+
+                this.modLoadRecord.push(mod);
+                await this.do_initModInjectEarlyLoadInDomScript(mod.name, mod.mod);
+                await this.do_initModEarlyLoadScript(mod.name, mod.mod);
+                // next
+                // user add lazy mod in this loop will be added into the end of `modLazyWaiting`
+                // and maybe add duplicate mod, there maybe case duplicate load, so we must filter it.
+                // in this special case, the duplicate mod will be overwritten by the last one, but will early load in the first one order.
+                this.modLazyCache = await this.filterModCanLoad(this.modLazyCache);
+                // console.log('nowLoadedMod', this.nowLoadedMod.clone());
+                // console.log('loadEndModList', this.loadEndModList!.clone());
+            }
+
+            // now the this.modLazyCache empty
+
+            // rebuild `modOrder` (loadEndModList)
+            if (!this.replacedNowMod) {
+                this.loadEndModList!.pushBack(this.newNowMod!.zip, this.newNowMod!.from);
+            }
+            for (const mm of this.nowLoadedMod.get_Array()) {
+                if (mm.from !== ModLoadFromSourceType.SideLazy) {
+                    // never go there
+                    console.error('ModLoader ====== tryInitWaitingLazyLoadMod() (!mm.from). never go there.', [mm]);
+                    this.logger.error(`ModLoader ====== tryInitWaitingLazyLoadMod() (!mm.from). never go there.`);
+                }
+                this.loadEndModList!.pushBack(mm.zip, mm.from);
+            }
+            this.nowLoadedMod = undefined;
+
+            await this.gSC2DataManager.getModLoadController().LazyLoad_end(nowMod.name);
+
+            this.newNowMod = undefined;
+            this.replacedNowMod = undefined;
+            // return [toLoadModList, loadEndModList];
+            return;
+        }
+
+        this.loadEndModList!.pushBack(this.newNowMod!.zip, this.newNowMod!.from);
+
+        this.newNowMod = undefined;
+        this.replacedNowMod = undefined;
+        // return [toLoadModList, loadEndModList];
+        return;
+    }
+
 }

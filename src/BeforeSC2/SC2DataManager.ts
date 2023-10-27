@@ -25,6 +25,19 @@ export class SC2DataManager {
     ) {
     }
 
+    private modUtils = new ModUtils(this, this.thisWin);
+
+    getModUtils() {
+        return this.modUtils;
+    }
+
+    // it needs access modUtils, so must only init after modUtils
+    private modLoadController: ModLoadController = new ModLoadController(this);
+
+    getModLoadController() {
+        return this.modLoadController;
+    }
+
     get rootNode() {
         return this.thisWin.document.getElementsByTagName('tw-storydata')[0];
     }
@@ -158,15 +171,6 @@ export class SC2DataManager {
         return this.modLoader;
     }
 
-    private modLoadController?: ModLoadController;
-
-    getModLoadController() {
-        if (!this.modLoadController) {
-            this.modLoadController = new ModLoadController(this);
-        }
-        return this.modLoadController;
-    }
-
     private passageTracer = new PassageTracer(this.thisWin);
 
     getPassageTracer() {
@@ -177,12 +181,6 @@ export class SC2DataManager {
 
     getSc2EventTracer() {
         return this.sc2EventTracer;
-    }
-
-    private modUtils = new ModUtils(this, this.thisWin);
-
-    getModUtils() {
-        return this.modUtils;
     }
 
     private jsPreloader = new JsPreloader(this, this.modUtils, this.thisWin);
@@ -222,11 +220,13 @@ export class SC2DataManager {
     async startInit() {
         if (this.startInitOk) {
             console.log('ModLoader ====== SC2DataManager startInit() already start');
+            this.getModLoadController().logInfo('ModLoader ====== SC2DataManager startInit() already start');
             return;
         }
         this.startInitOk = true;
 
         console.log('ModLoader ====== SC2DataManager startInit() start');
+        this.getModLoadController().logInfo('ModLoader ====== SC2DataManager startInit() start');
 
         // keep originSC2DataInfoCache valid, keep it have the unmodified vanilla data
         this.initSC2DataInfoCache();
@@ -249,6 +249,16 @@ export class SC2DataManager {
                 passage: Array.from(T.result.passageDataItems.conflict),
             };
         }));
+
+        if (!this.getModLoader().checkModCacheData()) {
+            // never go there
+            console.error('ModLoader ====== SC2DataManager startInit() checkData() fail. never go there.');
+            this.getModLoadController().logError('ModLoader ====== SC2DataManager startInit() checkData() fail. Data consistency check failed.. never go there.');
+        }
+        if (!this.getModLoader().checkModCacheUniq()) {
+            console.error('ModLoader ====== SC2DataManager startInit() checkNameUniq() fail. never go there.');
+            this.getModLoadController().logError('ModLoader ====== SC2DataManager startInit() checkNameUniq() fail. Data consistency check failed.. never go there.');
+        }
 
         await this.getAddonPluginManager().triggerHook('beforePatchModToGame');
         await this.patchModToGame();
@@ -291,16 +301,11 @@ export class SC2DataManager {
 
     async applyReplacePatcher(modSC2DataInfoCache: SC2DataInfo) {
 
-        const modCache = this.getModLoader().modCache;
-        const modOrder = this.getModLoader().modOrder;
+        const modOrder = this.getModLoader().getModCacheOneArray();
 
-        for (const modName of modOrder) {
-            const mod = modCache.get(modName);
-            if (!mod) {
-                console.error('applyReplacePatcher() (!mod)', [modName]);
-                continue;
-            }
-            for (const rp of mod.replacePatcher) {
+        for (const mod of modOrder) {
+            for (const rp of mod.mod.replacePatcher as ReplacePatcher[]) {
+                const modName = mod.name;
                 console.log('ModLoader ====== applyReplacePatcher() Replace Patch', [modName, rp.patchFileName]);
                 await this.getModLoadController().ReplacePatcher_start(modName, rp.patchFileName);
                 const log = this.getModLoadController().getLog();
@@ -320,8 +325,7 @@ export class SC2DataManager {
     async patchModToGame() {
         await this.getModLoadController().PatchModToGame_start();
 
-        const modCache = this.getModLoader().modCache;
-        const modOrder = this.getModLoader().modOrder;
+        const modOrder = this.getModLoader().getModCacheArray();
         this.cSC2DataInfoAfterPatchCache = undefined;
         this.flushAfterPatchCache();
         const originSC2DataInfoCache = this.getSC2DataInfoAfterPatch();
@@ -330,7 +334,7 @@ export class SC2DataManager {
         console.log('ModLoader ====== patchModToGame() Concat Mod');
         const em = normalMergeSC2DataInfoCache(
             new SC2DataInfo(this.getModLoadController().getLog(), 'EmptyMod'),
-            ...modOrder.map(T => modCache.get(T))
+            ...modOrder.map(T => T.mod)
                 .filter((T): T is ModInfo => !!T)
                 .map(T => T.cache)
         );

@@ -19,7 +19,7 @@ label
 !label/.gitkeep
 dist*
 
-src/insertTools/*.zip
+src/insertTools/**/*.zip
 
 mod
 !mod/.gitkeep
@@ -30,4 +30,8 @@ mod
 !mod/CheckGameVersion
 !mod/Diff3WayMerge
 !mod/ModdedClothesAddon
+!mod/ModdedFeatsAddon
+!mod/ConflictChecker
+!mod/SweetAlert2Mod
+
 .idea/

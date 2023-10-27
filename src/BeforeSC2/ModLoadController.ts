@@ -2,6 +2,7 @@ import {ModBootJson, ModInfo} from "ModLoader";
 import {SC2DataManager} from "SC2DataManager";
 import JSZip from "jszip";
 import {IndexDBLoader, LocalStorageLoader} from "./ModZipReader";
+import moment from "moment";
 
 
 export interface LogWrapper {
@@ -37,6 +38,10 @@ export interface ModLoadControllerCallback {
     EarlyLoad_start(modName: string, fileName: string): Promise<any>;
 
     EarlyLoad_end(modName: string, fileName: string): Promise<any>;
+
+    LazyLoad_start(modName: string): Promise<any>;
+
+    LazyLoad_end(modName: string): Promise<any>;
 
     Load_start(modName: string, fileName: string): Promise<any>;
 
@@ -99,6 +104,16 @@ const ModLoadControllerCallback_ScriptLoadHook = [
     'Load_start',
     'Load_end',
 ] as const;
+const ModLoadControllerCallback_ScriptLazyLoadHook = [
+    'LazyLoad_start',
+    'LazyLoad_end',
+] as const;
+
+export interface LogRecord {
+    type: 'info' | 'warning' | 'error';
+    time: moment.Moment;
+    message: string;
+}
 
 /**
  * ModLoader lifetime circle system,
@@ -118,6 +133,20 @@ export class ModLoadController implements ModLoadControllerCallback {
                     try {
                         if (hook[T]) {
                             await hook[T]!.apply(hook, [modName, fileName]);
+                        }
+                    } catch (e: any | Error) {
+                        console.error('ModLoadController', [T, id, e]);
+                        this.logError(`ModLoadController ${T} ${id} ${e?.message ? e.message : e}`);
+                    }
+                }
+            };
+        });
+        ModLoadControllerCallback_ScriptLazyLoadHook.forEach((T) => {
+            this[T] = async (modName: string) => {
+                for (const [id, hook] of this.lifeTimeCircleHookTable) {
+                    try {
+                        if (hook[T]) {
+                            await hook[T]!.apply(hook, [modName]);
                         }
                     } catch (e: any | Error) {
                         console.error('ModLoadController', [T, id, e]);
@@ -170,14 +199,41 @@ export class ModLoadController implements ModLoadControllerCallback {
         });
         ModLoadControllerCallback_Log.forEach((T) => {
             this[T] = (s: string) => {
+                let logOutput = false;
                 for (const [id, hook] of this.lifeTimeCircleHookTable) {
                     try {
                         if (hook[T]) {
                             hook[T]!.apply(hook, [s]);
+                            logOutput = true;
                         }
                     } catch (e: any | Error) {
                         // must never throw error
                         console.error('ModLoadController', [T, id, e]);
+                    }
+                }
+                if (!logOutput) {
+                    switch (T) {
+                        case "logInfo":
+                            this.logRecordBeforeAnyLogHookRegister.push({
+                                type: 'info',
+                                time: moment(),
+                                message: s,
+                            });
+                            break;
+                        case "logWarning":
+                            this.logRecordBeforeAnyLogHookRegister.push({
+                                type: 'warning',
+                                time: moment(),
+                                message: s,
+                            });
+                            break;
+                        case "logError":
+                            this.logRecordBeforeAnyLogHookRegister.push({
+                                type: 'error',
+                                time: moment(),
+                                message: s,
+                            });
+                            break;
                     }
                 }
             };
@@ -186,6 +242,10 @@ export class ModLoadController implements ModLoadControllerCallback {
         this.logInfo(`ModLoader ========= version: [${gSC2DataManager.getModUtils().version}]`);
     }
 
+    public logRecordBeforeAnyLogHookRegister: LogRecord[] = [];
+
+    LazyLoad_end!: (modName: string) => Promise<any>;
+    LazyLoad_start!: (modName: string) => Promise<any>;
     EarlyLoad_end!: (modName: string, fileName: string) => Promise<any>;
     EarlyLoad_start!: (modName: string, fileName: string) => Promise<any>;
     InjectEarlyLoad_end!: (modName: string, fileName: string) => Promise<any>;
@@ -251,8 +311,8 @@ export class ModLoadController implements ModLoadControllerCallback {
 
     public addLifeTimeCircleHook(id: string, hook: LifeTimeCircleHook) {
         if (this.lifeTimeCircleHookTable.has(id)) {
-            console.warn(`ModLoadController addLifeTimeCircleHook() id ${id} already exists.`);
-            this.logWarning(`ModLoadController addLifeTimeCircleHook() id ${id} already exists.`);
+            console.error(`ModLoadController addLifeTimeCircleHook() id ${id} already exists.`);
+            this.logError(`ModLoadController addLifeTimeCircleHook() id ${id} already exists.`);
         }
         this.lifeTimeCircleHookTable.set(id, hook);
     }

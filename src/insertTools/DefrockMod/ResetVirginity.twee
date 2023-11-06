@@ -1,0 +1,21 @@
+:: Reset Virginity
+
+<<set $outside to 0>><<set $location to "hospital">><<effects>>
+
+<<npc Harper>><<person1>>
+
+接待员在她的电脑上敲了几下，指示你在等候室里坐下来。
+<br>
+过了一会，哈珀医生从他的办公室里走出来并向你招手。你跟着他进去并找了个地方坐了下来。
+<br>
+<br>
+"这可不是一个简单的手术。"他拿出了一张人体的解剖学图片，指着 生殖器官 的位置。
+<br>
+"不过，在此之前，先让我检查一下。请脱掉你的衣服，躺在床上。"
+<br><br>
+<<He>>注意到了你的犹豫不决，对你笑了笑。 "别担心，难为情很正常，但真的没必要。"
+
+<br><br>
+<<link [[继续(0:15)|Reset Virginity Check]]>><<pass 15>><</link>>
+<br>
+<<link [[拒绝|Reset Virginity Refuse]]>><</link>>

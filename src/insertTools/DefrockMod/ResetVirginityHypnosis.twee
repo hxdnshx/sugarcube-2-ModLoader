@@ -1,0 +1,25 @@
+:: Reset Virginity Hypnosis
+<<npc Harper>><<person1>>
+
+<<set $money -= 1500000>>
+
+哈珀拿起桌子上的一支笔。"我希望你专注于这支笔，深呼吸。宇宙中除了这支笔，我的声音和你自己的呼吸之外，什么都没有。"
+<br><br>
+<<pass 5>>
+这持续了几分钟。不知为何，每次你走神的时候哈珀都会发现，然后提醒你集中注意力。当你出神时，意识中好像产生了什么变化。
+<br><br>
+<<generatem1>>
+"很好，"医生说道。接着，一位<<person1>><<person>>进来了。你迫不及待地想与之<<bred>>。
+<br><br>
+恍惚间你感觉到自己与<<person>>做了该做的一切，随后你听到了刀刃切割，与针线缝合的声音。
+<br><br>
+当我掉下这支笔时，你们就会醒过来。"医生说道。
+<br><br>
+你从恍惚中惊醒。<span class="gold">你感到一些东西回到了你身上。</span>
+<<set $player.virginity.penile to true>>
+<<set $player.virginity.vaginal to true>>
+<<if $fallenangel gte 2>>
+但另一些已经失去的却回不来了。<<stress 12>><<ggstress>><<trauma 4>><<gtrauma>>
+<</if>>
+<br><br>
+<<link [[继续|Hospital Foyer]]>><<clotheson>><</link>>

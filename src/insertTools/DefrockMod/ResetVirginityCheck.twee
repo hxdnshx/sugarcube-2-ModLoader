@@ -1,0 +1,81 @@
+:: Reset Virginity Check
+
+<<set $outside to 0>><<set $location to "hospital">><<effects>>
+
+<<npc Harper>><<person1>>
+<<upperstrip>><<lowerstrip>>
+<<underlowerstrip>>
+<<underupperstrip>>
+你颤抖着脱掉衣服，然后躺在床上，双手捂住你的<<genitals>>。哈珀把<<his>>椅子滑到了你的身边。 "我要检查你了，请放松。"<<He>>微笑着说道。 "我保证我会很温柔。"
+<br><br>
+"可以把你的手拿开吗？我得看看下面有什么。"<<He>>看着你问道。你移开了手，美丽的胴体不再有任何遮挡。你盯着天花板，试图保持冷静。
+<br><br>
+<<He>>用<<his>>的手指轻轻地探索着你的<<genitals>>。
+	<<if $worn.genitals.type.includes("naked") and setup.bodyliquid.combined("vagina") gte 2>>
+		精液和其他淫秽的液体
+		<<if setup.bodyliquid.combined("vagina") gte 4>>
+			涌出
+		<<else>>
+			滴下
+		<</if>>
+		从你的<<if $player.penisExist>>阴道<</if>>里流出来，哈珀的手缩了回去。
+		<br><br>
+		"性行为是完全正常的，但是保持卫生是至关重要的，"哈珀责备道。
+		<br><br>
+	<</if>>
+	当<<he>>接触到你时，你的下体很快就感到一种明显的温暖。你试图抵抗，但你完全控制不了它。
+	<<if $player.penisExist and $worn.genitals.type.includes("naked")>>
+		你的阴茎很快就明显地勃起了。哈珀继续进行，好像没有任何异常。
+	<<elseif $player.penisExist>>
+		即使没有空间，你的阴茎也很快试图勃起。哈珀继续进行，好像没有任何异常。
+	<<else>>
+		你可以感觉到液体从你的裂缝中流出。哈珀把<<his>>的手抬到<<his>>的眼前，你看到液体从<<his>>的手指上滴落。
+	<</if>>
+<br><br>
+
+	“不必感到羞愧。这是完全自然和正常的反应，”<<he>>用干燥的语气说。
+	<<He>>继续对你的<<genitals 1>>进行系统的调查。
+	<<arousal 2000 "genitals">>
+	<br><br>
+
+	<<if $arousal gte $arousalmax>><<arousal -8000>><<set $stress -= 200>>
+		你内心的温暖不断增加，但哈珀没有任何停止的迹象。你感觉自己到了无法挽回的地步，轻声哭泣。
+		"请不要，"当你被击中时，哈珀正疑惑地看着你。高潮出现了，你的背立刻弓起。
+		无法控制的呻吟从你的嘴里溢出，你紧握床边以防止手臂乱动。
+		<<orgasmstat>><<orgasmcount 1>>
+		<br><br>
+
+		<<if $player.penisExist and $orgasmcount lte 23 and !$femaleclimax and !_deniedOrgasm>>
+			<<if !$worn.genitals.type.includes("naked")>>
+				你射精了，产生了一个大的湿点，并将你的体液填满了你$worn.genitals.cn_name_cap的内部。
+			<<elseif !$worn.under_lower.type.includes("naked")>>
+				你射精了，产生了一个大的湿点，并将你的体液填满了你$worn.under_lower.cn_name_cap的内部。
+			<<else>>
+				精液从你的龟头喷射而出，溅射到空中，落在你的大腿和身上。
+			<</if>>
+		<</if>>
+
+		尽管发生了这一切，哈珀却继续像没发生什么一样。你躺在那里，筋疲力尽和受辱，看着<<he>>完成了检查。最后，<<he>>拿起一些纸巾开始清理你的体液。你装作看不见。
+		<br><br>
+	<</if>>
+
+"好了，检查完毕。"<<He>>把椅子推回桌子旁，开始打字。"你可以穿上衣服了。"你毫不拖延地这样做。
+
+<<if playerChastity()>>
+"你现在还穿戴着贞操器具，请将它去掉之后再来。"
+<br>
+<<He>>看到你穿好衣服，然后把带你到了门口。
+<<link [[继续|Hospital Foyer]]>><<clotheson>><<endevent>><</link>>
+<<else>>
+"修复你的贞操需要£15000。"
+<br><br>
+<<if $money gte 1500000>>
+    <<link [[继续(1:00)|Reset Virginity Hypnosis]]>><<pass 60>><</link>><<printmoney 1500000>>
+	<br>
+<<else>>
+	你的钱不够。
+	<br>
+<</if>>
+
+<<link [[拒绝|Reset Virginity Refuse]]>><<clotheson>><<endevent>><</link>>
+<</if>>

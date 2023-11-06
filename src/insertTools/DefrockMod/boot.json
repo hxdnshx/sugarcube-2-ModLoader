@@ -14,7 +14,11 @@
   "tweeFileList": [
     "defrockmod.twee",
     "ResetChastity.twee",
-    "ResetChastity2.twee"
+    "ResetChastity2.twee",
+    "ResetVirginity.twee",
+    "ResetVirginityCheck.twee",
+    "ResetVirginityHypnosis.twee",
+    "ResetVirginityRefuse.twee"
   ],
   "imgFileList": [
   ],
@@ -35,6 +39,11 @@
           "passage": "Widgets Sydney",
           "findString": "<<if $location is \"temple\" and $sydneyChastityRemoveIntro>>",
           "replace":"<<if $location is \"temple\">>\n        <<if $NPCName[$NPCNameList.indexOf(\"Sydney\")].chastity.penis is \"\" or $NPCName[$NPCNameList.indexOf(\"Sydney\")].chastity.vagina is \"\">>\n            <<ind>><<link [[建议戴上贞操锁|Temple Sydney Reset Chastity]]>><<pass 2>><</link>>\n        <</if>>\n    <</if>>\n\t<<if $location is \"temple\" and $sydneyChastityRemoveIntro>>\n\t"
+        },
+        {
+          "passage": "Hospital Foyer",
+          "findString": "<<if $player.breastsize lte 11>>",
+          "replace":"<<if $player.virginity.penile isnot true or $player.virginity.vaginal isnot true>>\n\t\t    <<templeicon \"virginity\">><<link [[咨询恢复童贞 (0:10)|Reset Virginity]]>><<pass 10>><</link>>\n\t\t<br><</if>>\n\t\t<<if $player.breastsize lte 11>>"
         }
       ]
     }

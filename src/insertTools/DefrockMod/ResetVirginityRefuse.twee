@@ -1,0 +1,10 @@
+:: Reset Virginity Refuse
+
+<<set $outside to 0>><<set $location to "hospital">><<effects>>
+
+<<npc Harper>><<person1>>
+
+<<He>>叹了口气:"随你便。"
+<br><br>
+<<link [[继续|Hospital Foyer]]>><</link>>
+

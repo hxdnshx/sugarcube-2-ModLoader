@@ -14,6 +14,10 @@ behavioral restrictions. Later, you can talk to Jordan again to rejoin.
 Additionally, after completing Sydney's storyline, you can talk to her in the `Temple` to put the `chastity belt` back on. 
 This allows the player to re-engage in the related storyline with Sydney.
 
+现在你可以在医院进行事件，以回复自己的童贞。
+
+Now you can engage in an event at the hospital to regain your virginity.
+
 从 [Release](https://github.com/hxdnshx/sugarcube-2-ModLoader/releases) 可以下载这个 Mod 的最新版本。
 
 # NoAutoReBuyTrash

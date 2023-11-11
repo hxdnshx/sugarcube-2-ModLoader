@@ -1,0 +1,275 @@
+[
+  {
+    id: "1111",
+    replace: "[[returning to secular life (£10000 0:05)|Temple Defrock]]"
+  },
+  {
+    id: "11111",
+    replace: "<<link [[Suggest wearing a chastity belt|Temple Sydney Reset Chastity]]>>"
+  },
+  {
+    id: "11112",
+    replace: "[[Consulting about restoring virginity (0:10)|Reset Virginity]]"
+  },
+  {
+    id: "11113",
+    replace: "You gave Sydney this suggestion, <<He>> nodded after hearing it. \"But we have to wait for Jordan to come back... so, probably tomorrow then.\" Nyan"
+  },
+  {
+    id: "11114",
+    replace: "You told Sydney this suggestion, <<He>> nodded after hearing it and walked with you towards Jordan."
+  },
+  {
+    id: "11115",
+    replace: "Jordan saw you coming and smiled. \"Welcome back.\" <<He>> grasped your hand tightly."
+  },
+  {
+    id: "11116",
+    replace: "\"Even though we are already connected, I still want to wear a chastity belt to keep my vow.\""
+  },
+  {
+    id: "11117",
+    replace: "Jordan looked at you quietly and nodded slightly. \"Please follow me.\""
+  },
+  {
+    id: "11118",
+    replace: "<<link [[Next|Temple Sydney Reset Chastity 2]]>>"
+  },
+  {
+    id: "11119",
+    replace: "Jordan leads you to a small room. \"Please undress, I'll be right back.\" Sydney removes their clothes."
+  },
+  {
+    id: "11110",
+    replace: "Soon, Jordan returns, holding a metal chastity belt and a chastity cage in hand."
+  },
+  {
+    id: "1111a",
+    replace: "<<He>> doesn't say a word, just sets the chastity cage aside, and then wraps the chastity belt around Sydney's waist. You hear a loud click, and then Jordan steps back to admire his handiwork."
+  },
+  {
+    id: "1111b",
+    replace: "<<He>> look down to examine it <<himself>>. It doesn't feel as tight or uncomfortable as you expected, <<He>> wonder if it's on right. <<He>> try to slip your fingers beneath it, but have no success. <<He>> push down on the belt with both hands, but it doesn't give at all."
+  },
+  {
+    id: "1111c",
+    replace: "\"Everything is satisfactory,\" Jordan says. \"If there are any problems, come see me.\" Jordan leaves you alone in the room."
+  },
+  {
+    id: "1111d",
+    replace: "<<link [[Next|Temple]]>><<endevent>><</link>>"
+  },
+  {
+    id: "1111e",
+    replace: "<<He>> doesn't say a word, just sets the chastity belt aside, and then wraps the chastity belt around Sydney's waist. You hear a loud click, and then Jordan steps back to admire his handiwork."
+  },
+  {
+    id: "1111f",
+    replace: "<<He>> look down to examine it <<himself>>. It doesn't feel as tight or uncomfortable as you expected, <<He>> wonder if it's on right. <<He>> try to slip your fingers beneath it, but have no success. <<He>> push down on the belt with both hands, but it doesn't give at all."
+  },
+  {
+    id: "1111g",
+    replace: "\"Everything is satisfactory,\" Jordan says. \"If there are any problems, come see me.\" Jordan leaves you alone in the room."
+  },
+  {
+    id: "1111h",
+    replace: "You are not a member of the church, so how can you talk about leaving?"
+  },
+  {
+    id: "1111i",
+    replace: "After a moment of contemplation, Jordan replies."
+  },
+  {
+    id: "1111j",
+    replace: "\"Your request for returning to secular life has been approved, may God bless your new journey.\" "
+  },
+  {
+    id: "1111k",
+    replace: "He turns and returns to the altar, beginning his prayers."
+  },
+  {
+    id: "1111l",
+    replace: "The receptionist taps something into <<his>> computer and instructs you to take a seat in the waiting room."
+  },
+  {
+    id: "1111m",
+    replace: "<<npc Harper>><<person1>>You don't have to wait long. A <<personsimple>> wearing a white medical coat and carrying a clipboard emerges from an adjacent room and beckons you over."
+  },
+  {
+    id: "1111n",
+    replace: "\"This is not a simple surgery,\" <<He>> says, pulling out an anatomical diagram of the human body and pointing to the location of reproductive organs."
+  },
+  {
+    id: "1111o",
+    replace: "\"However, before we proceed, let me do a check-up first. Please take off your clothes and lie down on the bed.\""
+  },
+  {
+    id: "1111p",
+    replace: "<<He>> notices your trepidation and smiles at you. \"Don't worry, it's normal to be embarrassed, but there's really no reason to be.\""
+  },
+  {
+    id: "1111q",
+    replace: "<<link [[Next(0:15)|Reset Virginity Check]]>><<pass 15>><</link>>"
+  },
+  {
+    id: "1111r",
+    replace: "<<link [[Refuse|Reset Virginity Refuse]]>><</link>>"
+  },
+  {
+    id: "1111s",
+    replace: "You remove your clothing with shaking fingers, then lie on the bed with your hands covering your <<genitals>>. Harper rolls <<his>> chair over to your side. \"I'm going to examine you, just relax.\" <<He>> smiles. \"I promise I'll be gentle.\""
+  },
+  {
+    id: "1111t",
+    replace: "\"Could you move your hands for me? It's important I check beneath them.\" You move your hands aside, exposing yourself. You stare at the ceiling and try to stay calm."
+  },
+  {
+    id: "1111u",
+    replace: "<<He>> gently probes your <<genitals>> with <<his>> fingers."
+  },
+  {
+    id: "1111v",
+    replace: "Cum and other lewd fluids"
+  },
+  {
+    id: "1111w",
+    replace: "gush"
+  },
+  {
+    id: "1111x",
+    replace: "dribble"
+  },
+  {
+    id: "1111y",
+    replace: ", Harper's hands snap back."
+  },
+  {
+    id: "1111z",
+    replace: "\"Sexual activity is perfectly normal, but it is crucial to look after your hygiene,\" Harper rebukes."
+  },
+  {
+    id: "1111A",
+    replace: "Almost as soon as <<he>> touches you, you feel a distinct warmth spread through your groin. You try to resist, but you don't have any control over it."
+  },
+  {
+    id: "1111B",
+    replace: "Your penis soon stands conspicuously erect. Harper continues as if nothing is amiss."
+  },
+  {
+    id: "1111C",
+    replace: "Your penis soon attempts to form an erection despite the lack of space. Harper continues as if nothing is amiss."
+  },
+  {
+    id: "1111D",
+    replace: "You can feel the fluid leaking from your slit. Harper lifts <<his>> hand up to <<his>> eyes, and you see the liquid drip from <<his>> fingers."
+  },
+  {
+    id: "1111E",
+    replace: "\"There's no need to be ashamed. This is a perfectly natural and normal response,\" <<he>> says in a dry tone."
+  },
+  {
+    id: "1111F",
+    replace: "<<He>> continues <<his>> systematic investigation of your <<genitals 1>>."
+  },
+  {
+    id: "1111G",
+    replace: "The warmth within you continues to build, but Harper shows no sign of letting up. You feel yourself pass the point of no return, and you whimper softly."
+  },
+  {
+    id: "1111H",
+    replace: "\"Please, no.\" Harper is looking at you puzzled when it hits you. The orgasm emerges and your back immediately arcs."
+  },
+  {
+    id: "1111I",
+    replace: "Uncontrollable moans escape your lips and you grip the side of the bed to stop your arms flailing."
+  },
+  {
+    id: "1111J",
+    replace: "You ejaculate, generating a large wet patch and filling the inside of your $worn.genitals.name with your fluids."
+  },
+  {
+    id: "1111K",
+    replace: "You ejaculate, generating a large wet patch and filling the inside of your $worn.under_lower.name with your fluids."
+  },
+  {
+    id: "1111L",
+    replace: "Semen spurts from the tip of your penis, rising into the air and splattering all over your thighs and torso."
+  },
+  {
+    id: "1111M",
+    replace: "Despite it all, Harper continues as if absolutely nothing is amiss. You lie there, spent and humiliated, as <<he>> finishes <<his>> examination. Finally, <<he>> grabs some paper towels and starts cleaning up your fluids. You pretend to be elsewhere."
+  },
+  {
+    id: "1111N",
+    replace: "\"There we go, all done.\" <<He>> pushes <<his>> chair back over to <<his>> desk and starts typing something. \"You can put your clothes back on.\" You do so without delay. \"You seem to be perfectly healthy.\" <<He>> shows you to the door as soon as you're dressed."
+  },
+  {
+    id: "1111O",
+    replace: "\"You are currently wearing a chastity device, please remove it before coming back.\" "
+  },
+  {
+    id: "1111P",
+    replace: "<<He>> sees you dressed and then leads you to the door."
+  },
+  {
+    id: "1111Q",
+    replace: "<<link [[Next|Hospital Foyer]]>>"
+  },
+  {
+    id: "1111R",
+    replace: "\"Restoring your virginity will cost £15000。\""
+  },
+  {
+    id: "1111S",
+    replace: "<<link [[Next(1:00)|Reset Virginity Hypnosis]]>>"
+  },
+  {
+    id: "1111T",
+    replace: "You don't have enough money."
+  },
+  {
+    id: "1111UI",
+    replace: "<<link [[Refuse|Reset Virginity Refuse]]>>"
+  },
+  {
+    id: "1111U",
+    replace: "Harper picks up a pen on the desk. \"I want both of you to focus on this pen, and breathe deeply. There's nothing in the universe except this pen, my voice, and your own breath.\""
+  },
+  {
+    id: "1111V",
+    replace: "This continues for several minutes. Harper somehow picks up on whenever one of your minds wanders and brings you back to focus. You feel something shift in your consciousness as you enter a trance."
+  },
+  {
+    id: "1111W",
+    replace: "\"Very well,\" the doctor says. Then, a <<person1>><<person>> enters. You eagerly want to <<bred>> with them. "
+  },
+  {
+    id: "1111X",
+    replace: "In a daze, you feel like you have done everything that needs to be done with <<person>>, and then you hear the sound of blades cutting and needles stitching."
+  },
+  {
+    id: "1111Y",
+    replace: "\"When I drop this pen, you will wake up,\" the doctor says."
+  },
+  {
+    id: "1111Z",
+    replace: "You awaken from your daze. <span class=\"gold\">You feel something has returned to you."
+  },
+  {
+    id: "1111AA",
+    replace: "But some things that have been lost cannot be returned."
+  },
+  {
+    id: "1111AB",
+    replace: "<<link [[Next|Hospital Foyer]]>>"
+  },
+  {
+    id: "1111AC",
+    replace: "<<He>> sighs: \"As you wish.\""
+  },
+  {
+    id: "1111AD",
+    replace: "<<link [[Next|Hospital Foyer]]>>"
+  }
+]
+

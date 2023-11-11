@@ -23,6 +23,10 @@
   "imgFileList": [
   ],
   "additionFile": [
+    "replace_en_us.json5",
+    "replace_zh_cn.json5",
+    "index.json5",
+    "fnd_zh_cn.json5"
   ],
   "addonPlugin": [
     {
@@ -46,6 +50,32 @@
           "replace":"<<if $player.virginity.penile isnot true or $player.virginity.vaginal isnot true>>\n\t\t    <<templeicon \"virginity\">><<link [[咨询恢复童贞 (0:10)|Reset Virginity]]>><<pass 10>><</link>>\n\t\t<br><</if>>\n\t\t<<if $player.breastsize lte 11>>"
         }
       ]
+    },
+    {
+      "modName": "I18nTweeReplacer",
+      "addonName": "I18nTweeReplacerAddon",
+      "modVersion": "^1.0.0",
+      "params": {
+        "mainFindLanguage": "zh-CN",
+        "mainReplaceLanguage": "en-US",
+        "replaceIndexFile": "index.json5",
+        "findLanguageFile": [
+          {
+            "language": "zh-CN",
+            "file": "fnd_zh_cn.json5"
+          }
+        ],
+        "replaceLanguageFile": [
+          {
+            "language": "zh-CN",
+            "file": "replace_zh_cn.json5"
+          },
+          {
+            "language": "en-US",
+            "file": "replace_en_us.json5"
+          }
+        ]
+      }
     }
   ],
   "dependenceInfo": [
@@ -64,6 +94,10 @@
     {
       "modName": "ReplacePatcher",
       "version": ">=1.0.0"
+    },
+    {
+      "modName": "I18nTweeReplacer",
+      "version": "^1.0.0"
     }
   ]
 }

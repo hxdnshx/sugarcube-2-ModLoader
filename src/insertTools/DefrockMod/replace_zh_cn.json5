@@ -1,0 +1,343 @@
+[
+  {
+    id: "1111",
+    noop: true, replace: "",
+    findString: "[[询问还俗 (£10000 0:05)|Temple Defrock]]"
+  },
+  {
+    id: "11111",
+    noop: true, replace: "",
+    findString: "<<link [[建议戴上贞操锁|Temple Sydney Reset Chastity]]>>"
+  },
+  {
+    id: "11112",
+    noop: true, replace: "",
+    findString: "[[咨询恢复童贞 (0:10)|Reset Virginity]]"
+  },
+  {
+    id: "11113",
+    noop: true, replace: "",
+    findString: "你告诉了悉尼这个建议，<<He>>听罢点点头。\"但我们得等到约旦回来……所以，大概要明天去了。\""
+  },
+  {
+    id: "11114",
+    noop: true, replace: "",
+    findString: "你告诉了悉尼这个建议，<<He>>听罢点点头，和你一起走向约旦。"
+  },
+  {
+    id: "11115",
+    noop: true, replace: "",
+    findString: "约旦见你们走来，露出了微笑。\"欢迎回来。\" <<He>>紧紧握住了你的手。"
+  },
+  {
+    id: "11116",
+    noop: true, replace: "",
+    findString: "\"尽管我们已经相互连结，我还是希望佩戴贞操锁保持誓言。\""
+  },
+  {
+    id: "11117",
+    noop: true, replace: "",
+    findString: "约旦静静地看着你们，微微点了点头。\"请随我来。\""
+  },
+  {
+    id: "11118",
+    noop: true, replace: "",
+    findString: "<<link [[继续|Temple Sydney Reset Chastity 2]]>>"
+  },
+  {
+    id: "11119",
+    noop: true, replace: "",
+    findString: "约旦带领你们来到一个小房间。\"请脱衣服，我马上回来。\" 悉尼褪去了自己的衣物。"
+  },
+  {
+    id: "11110",
+    noop: true, replace: "",
+    findString: "不久，约旦回来了，手里拿着一个金属贞操带和贞操笼。"
+  },
+  {
+    id: "1111a",
+    noop: true, replace: "",
+    findString: "<<he>>一言不发，只是把贞操笼放到一边，然后把贞操带围在悉尼的腰间。你听到一个响亮的咔嚓声，然后约旦退后一步欣赏他的杰作。"
+  },
+  {
+    id: "1111b",
+    noop: true, replace: "",
+    findString: "<<He>>低头检查了一下，并没有想象中那样紧或不舒服。<<He>>把手伸入贞操带检查有没有戴好，但伸不进去。<<He>>双手向下按压贞操带，但它纹丝不动。"
+  },
+  {
+    id: "1111c",
+    noop: true, replace: "",
+    findString: "\"一切顺利，\"约旦很满意，\"如有问题，请来找我。\"约旦离开房间。"
+  },
+  {
+    id: "1111d",
+    noop: true, replace: "",
+    findString: "<<link [[继续|Temple]]>><<endevent>><</link>>"
+  },
+  {
+    id: "1111e",
+    noop: true, replace: "",
+    findString: "<<he>>一言不发，只是把贞操带放到一边，然后把贞操笼围在悉尼的腰间。你听到一个响亮的咔嚓声，然后约旦退后一步欣赏他的杰作。"
+  },
+  {
+    id: "1111f",
+    noop: true, replace: "",
+    findString: "<<He>>低头检查了一下，并没有想象中那样紧或不舒服。<<He>>把手伸入贞操笼检查有没有戴好，但伸不进去。<<He>>双手向下按压贞操笼，但它纹丝不动。"
+  },
+  {
+    id: "1111g",
+    noop: true, replace: "",
+    findString: "\"一切顺利，\"约旦很满意，\"如有问题，请来找我。\"约旦离开房间。"
+  },
+  {
+    id: "1111h",
+    noop: true, replace: "",
+    findString: "你不是教会的成员，何谈离开？"
+  },
+  {
+    id: "1111i",
+    noop: true, replace: "",
+    findString: "经过片刻沉思后，约旦 回复道"
+  },
+  {
+    id: "1111j",
+    noop: true, replace: "",
+    findString: "“你的还俗请求得到了批准，愿上帝保佑你的新生活。”"
+  },
+  {
+    id: "1111k",
+    noop: true, replace: "",
+    findString: "他转身回到祭坛前，开始了祷告。"
+  },
+  {
+    id: "1111l",
+    noop: true, replace: "",
+    findString: "接待员在她的电脑上敲了几下，指示你在等候室里坐下来。"
+  },
+  {
+    id: "1111m",
+    noop: true, replace: "",
+    findString: "过了一会，哈珀医生从他的办公室里走出来并向你招手。你跟着他进去并找了个地方坐了下来。"
+  },
+  {
+    id: "1111n",
+    noop: true, replace: "",
+    findString: "\"这可不是一个简单的手术。\"他拿出了一张人体的解剖学图片，指着 生殖器官 的位置。"
+  },
+  {
+    id: "1111o",
+    noop: true, replace: "",
+    findString: "\"不过，在此之前，先让我检查一下。请脱掉你的衣服，躺在床上。\""
+  },
+  {
+    id: "1111p",
+    noop: true, replace: "",
+    findString: "<<He>>注意到了你的犹豫不决，对你笑了笑。 \"别担心，难为情很正常，但真的没必要。\""
+  },
+  {
+    id: "1111q",
+    noop: true, replace: "",
+    findString: "<<link [[继续(0:15)|Reset Virginity Check]]>><<pass 15>><</link>>"
+  },
+  {
+    id: "1111r",
+    noop: true, replace: "",
+    findString: "<<link [[拒绝|Reset Virginity Refuse]]>><</link>>"
+  },
+  {
+    id: "1111s",
+    noop: true, replace: "",
+    findString: "你颤抖着脱掉衣服，然后躺在床上，双手捂住你的<<genitals>>。哈珀把<<his>>椅子滑到了你的身边。 \"我要检查你了，请放松。\"<<He>>微笑着说道。 \"我保证我会很温柔。\""
+  },
+  {
+    id: "1111t",
+    noop: true, replace: "",
+    findString: "\"可以把你的手拿开吗？我得看看下面有什么。\"<<He>>看着你问道。你移开了手，美丽的胴体不再有任何遮挡。你盯着天花板，试图保持冷静。"
+  },
+  {
+    id: "1111u",
+    noop: true, replace: "",
+    findString: "<<He>>用<<his>>的手指轻轻地探索着你的<<genitals>>。"
+  },
+  {
+    id: "1111v",
+    noop: true, replace: "",
+    findString: "精液和其他淫秽的液体"
+  },
+  {
+    id: "1111w",
+    noop: true, replace: "",
+    findString: "涌出"
+  },
+  {
+    id: "1111x",
+    noop: true, replace: "",
+    findString: "滴下"
+  },
+  {
+    id: "1111y",
+    noop: true, replace: "",
+    findString: "，哈珀的手缩了回去。"
+  },
+  {
+    id: "1111z",
+    noop: true, replace: "",
+    findString: "\"性行为是完全正常的，但是保持卫生是至关重要的，\"哈珀责备道。"
+  },
+  {
+    id: "1111A",
+    noop: true, replace: "",
+    findString: "当<<he>>接触到你时，你的下体很快就感到一种明显的温暖。你试图抵抗，但你完全控制不了它。"
+  },
+  {
+    id: "1111B",
+    noop: true, replace: "",
+    findString: "你的阴茎很快就明显地勃起了。哈珀继续进行，好像没有任何异常。"
+  },
+  {
+    id: "1111C",
+    noop: true, replace: "",
+    findString: "即使没有空间，你的阴茎也很快试图勃起。哈珀继续进行，好像没有任何异常。"
+  },
+  {
+    id: "1111D",
+    noop: true, replace: "",
+    findString: "你可以感觉到液体从你的裂缝中流出。哈珀把<<his>>的手抬到<<his>>的眼前，你看到液体从<<his>>的手指上滴落。"
+  },
+  {
+    id: "1111E",
+    noop: true, replace: "",
+    findString: "“不必感到羞愧。这是完全自然和正常的反应，”<<he>>用干燥的语气说。"
+  },
+  {
+    id: "1111F",
+    noop: true, replace: "",
+    findString: "<<He>>继续对你的<<genitals 1>>进行系统的调查。"
+  },
+  {
+    id: "1111G",
+    noop: true, replace: "",
+    findString: "你内心的温暖不断增加，但哈珀没有任何停止的迹象。你感觉自己到了无法挽回的地步，轻声哭泣。"
+  },
+  {
+    id: "1111H",
+    noop: true, replace: "",
+    findString: "\"请不要，\"当你被击中时，哈珀正疑惑地看着你。高潮出现了，你的背立刻弓起。"
+  },
+  {
+    id: "1111I",
+    noop: true, replace: "",
+    findString: "无法控制的呻吟从你的嘴里溢出，你紧握床边以防止手臂乱动。"
+  },
+  {
+    id: "1111J",
+    noop: true, replace: "",
+    findString: "你射精了，产生了一个大的湿点，并将你的体液填满了你$worn.genitals.cn_name_cap的内部。"
+  },
+  {
+    id: "1111K",
+    noop: true, replace: "",
+    findString: "你射精了，产生了一个大的湿点，并将你的体液填满了你$worn.under_lower.cn_name_cap的内部。"
+  },
+  {
+    id: "1111L",
+    noop: true, replace: "",
+    findString: "精液从你的龟头喷射而出，溅射到空中，落在你的大腿和身上。"
+  },
+  {
+    id: "1111M",
+    noop: true, replace: "",
+    findString: "尽管发生了这一切，哈珀却继续像没发生什么一样。你躺在那里，筋疲力尽和受辱，看着<<he>>完成了检查。最后，<<he>>拿起一些纸巾开始清理你的体液。你装作看不见。"
+  },
+  {
+    id: "1111N",
+    noop: true, replace: "",
+    findString: "\"好了，检查完毕。\"<<He>>把椅子推回桌子旁，开始打字。\"你可以穿上衣服了。\"你毫不拖延地这样做。"
+  },
+  {
+    id: "1111O",
+    noop: true, replace: "",
+    findString: "\"你现在还穿戴着贞操器具，请将它去掉之后再来。\""
+  },
+  {
+    id: "1111P",
+    noop: true, replace: "",
+    findString: "<<He>>看到你穿好衣服，然后把带你到了门口。"
+  },
+  {
+    id: "1111Q",
+    noop: true, replace: "",
+    findString: "<<link [[继续|Hospital Foyer]]>>"
+  },
+  {
+    id: "1111R",
+    noop: true, replace: "",
+    findString: "\"修复你的贞操需要£15000。\""
+  },
+  {
+    id: "1111S",
+    noop: true, replace: "",
+    findString: "<<link [[继续(1:00)|Reset Virginity Hypnosis]]>>"
+  },
+  {
+    id: "1111T",
+    noop: true, replace: "",
+    findString: "你的钱不够。"
+  },
+  {
+    id: "1111UI",
+    noop: true, replace: "",
+    findString: "<<link [[拒绝|Reset Virginity Refuse]]>>"
+  },
+  {
+    id: "1111U",
+    noop: true, replace: "",
+    findString: "哈珀拿起桌子上的一支笔。\"我希望你专注于这支笔，深呼吸。宇宙中除了这支笔，我的声音和你自己的呼吸之外，什么都没有。\""
+  },
+  {
+    id: "1111V",
+    noop: true, replace: "",
+    findString: "这持续了几分钟。不知为何，每次你走神的时候哈珀都会发现，然后提醒你集中注意力。当你出神时，意识中好像产生了什么变化。"
+  },
+  {
+    id: "1111W",
+    noop: true, replace: "",
+    findString: "\"很好，\"医生说道。接着，一位<<person1>><<person>>进来了。你迫不及待地想与之<<bred>>。"
+  },
+  {
+    id: "1111X",
+    noop: true, replace: "",
+    findString: "恍惚间你感觉到自己与<<person>>做了该做的一切，随后你听到了刀刃切割，与针线缝合的声音。"
+  },
+  {
+    id: "1111Y",
+    noop: true, replace: "",
+    findString: "当我掉下这支笔时，你们就会醒过来。\"医生说道。"
+  },
+  {
+    id: "1111Z",
+    noop: true, replace: "",
+    findString: "你从恍惚中惊醒。<span class=\"gold\">你感到一些东西回到了你身上。"
+  },
+  {
+    id: "1111AA",
+    noop: true, replace: "",
+    findString: "但另一些已经失去的却回不来了。"
+  },
+  {
+    id: "1111AB",
+    noop: true, replace: "",
+    findString: "<<link [[继续|Hospital Foyer]]>>"
+  },
+  {
+    id: "1111AC",
+    noop: true, replace: "",
+    findString: "<<He>>叹了口气:\"随你便。\""
+  },
+  {
+    id: "1111AD",
+    noop: true, replace: "",
+    findString: "<<link [[继续|Hospital Foyer]]>>"
+  }
+]
+

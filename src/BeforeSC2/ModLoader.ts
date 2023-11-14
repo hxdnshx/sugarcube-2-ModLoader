@@ -11,7 +11,6 @@ import {
     RemoteLoader
 } from "./ModZipReader";
 import {SC2DataManager} from "./SC2DataManager";
-import {JsPreloader} from 'JsPreloader';
 import {LogWrapper, ModLoadControllerCallback} from "./ModLoadController";
 import {ReplacePatcher} from "./ReplacePatcher";
 import {
@@ -256,7 +255,7 @@ export class ModLoader {
 
     private addModeReadZip(T: ModZipReader, from: ModLoadFromSourceType) {
         if (T.modInfo) {
-            const overwrite = !this.modReadCache.getHasByName(T.modInfo.name);
+            const overwrite = this.modReadCache.getHasByName(T.modInfo.name);
             if (overwrite) {
                 this.modReadCache.deleteAll(T.modInfo.name);
             }
@@ -408,6 +407,7 @@ export class ModLoader {
             script.setAttribute('scriptName', (name));
             script.setAttribute('modName', (modName));
             script.setAttribute('stage', ('InjectEarlyLoad'));
+            this.gSC2DataManager.getJsPreloader().runningMod.push(modName);
             if (this.gSC2DataManager) {
                 // insert before SC2 data rootNode
                 this.gSC2DataManager?.rootNode.before(script);
@@ -417,6 +417,7 @@ export class ModLoader {
                 this.logger.warn(`ModLoader ====== do_initModInjectEarlyLoadInDomScript() gSC2DataManager is undefined, insert to head`);
                 this.thisWin.document.head.appendChild(script);
             }
+            this.gSC2DataManager.getJsPreloader().runningMod.pop();
             console.log('ModLoader ====== do_initModInjectEarlyLoadInDomScript() inject end: ', [modName], [name]);
             this.logger.log(`ModLoader ====== do_initModInjectEarlyLoadInDomScript() inject end: [${modName}] [${name}]`);
             await this.gSC2DataManager.getModLoadController().InjectEarlyLoad_end(modName, name);
@@ -452,7 +453,7 @@ export class ModLoader {
             await this.gSC2DataManager.getModLoadController().EarlyLoad_start(modName, name);
             try {
                 // const R = await Function(`return ${content}`)();
-                const R = await JsPreloader.JsRunner(
+                const R = await this.gSC2DataManager.getJsPreloader().JsRunner(
                     content,
                     name,
                     modName,

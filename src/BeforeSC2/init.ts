@@ -1,19 +1,19 @@
 import {SC2DataManager} from "./SC2DataManager";
+import {getGlobal} from "./getGlobal";
 // import {Inject4Jquery} from "./JqueryInjector";
 
+console.log('getGlobal()', getGlobal());
+console.log('getGlobal().document', getGlobal().document);
+console.log('getGlobal().jQuery', getGlobal().jQuery);
 
-// @ts-ignore
-window.modSC2DataManager = new SC2DataManager(window);
-// @ts-ignore
-window.modUtils = window.modSC2DataManager.getModUtils();
-// @ts-ignore
-window.jsPreloader = window.modSC2DataManager.getJsPreloader();
-// @ts-ignore
-window.modModLoadController = window.modSC2DataManager.getModLoadController();
-// @ts-ignore
-window.modAddonPluginManager = window.modSC2DataManager.getAddonPluginManager();
-// @ts-ignore
-window.modSC2JsEvalContext = window.modSC2DataManager.getSC2JsEvalContext();
+const thisWin: Window = getGlobal();
 
-// Inject4Jquery(window);
+thisWin.modSC2DataManager = new SC2DataManager(thisWin);
+thisWin.modUtils = thisWin.modSC2DataManager.getModUtils();
+thisWin.jsPreloader = thisWin.modSC2DataManager.getJsPreloader();
+thisWin.modModLoadController = thisWin.modSC2DataManager.getModLoadController();
+thisWin.modAddonPluginManager = thisWin.modSC2DataManager.getAddonPluginManager();
+thisWin.modSC2JsEvalContext = thisWin.modSC2DataManager.getSC2JsEvalContext();
+
+// Inject4Jquery(thisWin);
 

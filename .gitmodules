@@ -45,3 +45,15 @@
 	path = mod/SweetAlert2Mod
 	url = https://github.com/Lyoko-Jeremie/SweetAlert2Mod.git
 	branch = master
+[submodule "mod/ModuleCssReplacer"]
+	path = mod/ModuleCssReplacer
+	url = https://github.com/Lyoko-Jeremie/DoL_ModuleCssReplacerAddon.git
+	branch = master
+[submodule "mod/I18nTweeReplacer"]
+	path = mod/I18nTweeReplacer
+	url = https://github.com/Lyoko-Jeremie/I18nTweeReplacerMod.git
+	branch = master
+[submodule "mod/template"]
+	path = mod/template
+	url = https://github.com/Lyoko-Jeremie/TemplateMod.git
+	branch = master

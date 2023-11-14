@@ -9,10 +9,14 @@ import JSZip from "jszip";
 import {ModInfo} from "./ModLoader";
 import {LogWrapper, ModLoadController} from "./ModLoadController";
 import {AddonPluginManager} from "./AddonPlugin";
+import {SemVerToolsType} from "./SemVer/InfiniteSemVer";
 
 export class ModUtils {
 
-    version = '2.1.0';
+    readonly _version = '2.5.2';
+    get version() {
+        return this._version;
+    }
 
     constructor(
         public pSC2DataManager: SC2DataManager,
@@ -355,6 +359,14 @@ export class ModUtils {
             this.getLogger().error(`lazyRegisterNewMod() error:[${e?.message ? e.message : e}]`);
             return false;
         }
+    }
+
+    getNowRunningModName(): string | undefined {
+        return this.pSC2DataManager.getJsPreloader().runningMod.peek();
+    }
+
+    getSemVerTools() {
+        return new SemVerToolsType();
     }
 
 }

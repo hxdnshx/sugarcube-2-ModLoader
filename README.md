@@ -44,10 +44,10 @@ Pause reduction of major attributes such as will. Pause accumulation of anxiety.
 
 ---
 
-请从Release下载预编译版：[Release](https://github.com/Lyoko-Jeremie/sugarcube-2-ModLoader/releases)   
-或下载DoL自动构建版：[DoLModLoaderBuild](https://github.com/Lyoko-Jeremie/DoLModLoaderBuild/releases)   
-Please download the precompiled version from the Release：[Release](https://github.com/Lyoko-Jeremie/sugarcube-2-ModLoader/releases)   
-Or download the DoL automatic build version：[DoLModLoaderBuild](https://github.com/Lyoko-Jeremie/DoLModLoaderBuild/releases)
+请从ModLoader/actions下载预编译版ModLoader：[ModLoader/actions](https://github.com/Lyoko-Jeremie/sugarcube-2-ModLoader/actions)   
+或下载附带ModLoader的自动构建版DoL：[DoLModLoaderBuild](https://github.com/Lyoko-Jeremie/DoLModLoaderBuild/releases)   
+Please download the precompiled version ModLoader from the ModLoader/actions：[ModLoader/actions](https://github.com/Lyoko-Jeremie/sugarcube-2-ModLoader/actions)    
+Or download the DoL with ModLoader version automatic build ：[DoLModLoaderBuild](https://github.com/Lyoko-Jeremie/DoLModLoaderBuild/releases)
 
 ---
 
@@ -56,22 +56,25 @@ Or download the DoL automatic build version：[DoLModLoaderBuild](https://github
 
 现由ModLoader提供官方支持的Mod列表：
 
-| Mod                                                                              | 状态         | 功能                                                                  |
-|----------------------------------------------------------------------------------|------------|---------------------------------------------------------------------|
-| [ModLoaderGui](mod%2FModLoaderGui)                                               | Usable     | Mod管理器，用于管理Mod的加载顺序，启用/禁用Mod，以及查看Mod加载日志                            |
-| [ConflictChecker](mod%2FConflictChecker)                                         | Stable     | Mod冲突检查器，提供附加的约束条件来检查Mod之间的冲突                                       |
-| [ImageLoaderHook](mod%2FImageLoaderHook)                                         | Stable     | 图片替换功能，用于替换游戏中的图片                                                   |
-| [ReplacePatch](mod%2FReplacePatch)                                               | Stable     | 提供对js/css/passage的简单替换                                              |
-| [TweeReplacer](mod%2FTweeReplacer)                                               | Stable     | 提供对passage的替换，可以使用正则表达式查找以及使用文件存储需替换的字符串                            |
-| [SweetAlert2Mod](mod%2FSweetAlert2Mod)                                           | Stable     | 为mod加密等功能提供通用弹出提示框，简单封装[SweetAlert2](https://sweetalert2.github.io) |
-| [CheckGameVersion](mod%2FCheckGameVersion)                                       | Stable     | 为依赖检查功能中的游戏版本检查功能提供DoL适配                                            |
-| [CheckDoLCompressorDictionaries](mod%2FCheckDoLCompressorDictionaries)           | Stable     | 对DoL的数据压缩字典进行检查，并警告用户字典变更                                           |
-| [Diff3WayMerge](mod%2FDiff3WayMerge)                                             | Developing | 基于git的Diff3Way算法实现的passage合并功能，仍在开发阶段                               |
-| [ModdedClothesAddon](mod%2FModdedClothesAddon)                                   | Stable     | DoL的快速服装添加工具                                                        |
-| [ModdedFeatsAddon](mod%2FModdedFeatsAddon)                                       | Stable     | DoL的快速成就添加工具                                                        |
-| [PhoneDebugToolsEruda](https://github.com/Lyoko-Jeremie/PhoneDebugToolsErudaMod) | Stable     | 手机调试工具，对 [Eruda](https://github.com/liriliri/eruda) 的简单封装           |
-| [i18n](mod%2Fi18n)                                                               | Stable     | i18n中文翻译Mod，其他语种基于此mod进行简单修改即可使用                                    |
-| [CryptoI18n](https://github.com/Lyoko-Jeremie/CryptoI18nMod)                     | Demo       | v2.0.0 版本的mod加密功能的demo。以i18n mod作为范例。                               |
+| Mod                                                                                                                      | 类型       | 状态         | 功能                                                                  |
+|--------------------------------------------------------------------------------------------------------------------------|----------|------------|---------------------------------------------------------------------|
+| [ModLoaderGui](https://github.com/Lyoko-Jeremie/sugarcube-2-ModLoaderGui)                                                | Built-in | Usable     | Mod管理器，用于管理Mod的加载顺序，启用/禁用Mod，以及查看Mod加载日志                            |
+| [ConflictChecker](https://github.com/Lyoko-Jeremie/ConflictCheckerAddon)                                                 | Built-in | Stable     | Mod冲突检查器，提供附加的约束条件来检查Mod之间的冲突                                       |
+| [ImageLoaderHook](https://github.com/Lyoko-Jeremie/sugarcube-2-ModLoader-ImgLoaderHooker)                                | Built-in | Stable     | 图片替换功能，用于替换游戏中的图片                                                   |
+| [ReplacePatch](https://github.com/Lyoko-Jeremie/Degrees-of-Lewdity_Mod_ReplacePatch)                                     | Built-in | Stable     | 提供对js/css/passage的简单替换                                              |
+| [TweeReplacer](https://github.com/Lyoko-Jeremie/Degrees-of-Lewdity_Mod_TweeReplacer)                                     | Built-in | Stable     | 提供对passage的替换，可以使用正则表达式查找以及使用文件存储需替换的字符串                            |
+| [I18nTweeReplacer](https://github.com/Lyoko-Jeremie/I18nTweeReplacerMod)                                                 | Built-in | Testing    | TweeReplacer的原生I18n支持版，可以为Mod作者提供原生i18n支持                           |
+| [SweetAlert2Mod](https://github.com/Lyoko-Jeremie/SweetAlert2Mod)                                                        | Built-in | Stable     | 为mod加密等功能提供通用弹出提示框，简单封装[SweetAlert2](https://sweetalert2.github.io) |
+| [CheckGameVersion](https://github.com/Lyoko-Jeremie/Degrees-of-Lewdity_Mod_CheckGameVersion)                             | Built-in | Stable     | 为依赖检查功能中的游戏版本检查功能提供DoL适配                                            |
+| [CheckDoLCompressorDictionaries](https://github.com/Lyoko-Jeremie/Degrees-of-Lewdity_Mod_CheckDoLCompressorDictionaries) | Built-in | Stable     | 对DoL的数据压缩字典进行检查，并警告用户字典变更                                           |
+| [Diff3WayMerge](https://github.com/Lyoko-Jeremie/Mod_Diff3WayMerge)                                                      | Built-in | Developing | 基于git的Diff3Way算法实现的passage合并功能，仍在开发阶段                               |
+| [ModdedClothesAddon](https://github.com/Lyoko-Jeremie/DoL_ModdedClothesAddon)                                            | Built-in | Stable     | DoL的快速服装添加工具                                                        |
+| [ModdedFeatsAddon](https://github.com/Lyoko-Jeremie/DoL_ModdedFeatsAddon)                                                | Built-in | Stable     | DoL的快速成就添加工具                                                        |
+| [ModuleCssReplacer](https://github.com/Lyoko-Jeremie/DoL_ModuleCssReplacerAddon)                                         | Built-in | Testing    | Css替换器，解决无法使用标准方法替换DoL使用的Module/css问题而专门设计                          |
+| [PhoneDebugToolsEruda](https://github.com/Lyoko-Jeremie/PhoneDebugToolsErudaMod)                                         | External | Stable     | 手机调试工具，对 [Eruda](https://github.com/liriliri/eruda) 的简单封装           |
+| [i18n](https://github.com/Lyoko-Jeremie/Degrees-of-Lewdity_Mod_i18nMod)                                                  | External | Stable     | i18n中文翻译Mod，其他语种基于此mod进行简单修改即可使用                                    |
+| [CryptoI18n](https://github.com/Lyoko-Jeremie/CryptoI18nMod)                                                             | Example  | Demo       | v2.0.0 版本的mod加密功能的demo。以i18n mod作为范例。                               |
+| [ExampleModModifyMod](https://github.com/Lyoko-Jeremie/ExampleModModifyMod)                                              | Example  | Demo       | 关于如何使用Mod B读取并修改Mod A的数据和行为的示范Mod                                   |
 
 有关各个mod的功能及用法，详见对应mod项目的README.md文件。
 
@@ -87,6 +90,7 @@ Or download the DoL automatic build version：[DoLModLoaderBuild](https://github
     * [自动打包方法](#自动打包方法)
   * [ModLoader开发及修改方法](#ModLoader开发及修改方法)
   * [有关SC2注入点](#有关SC2注入点)
+  * [如何不重新编译直接替换编译后游戏的SC2引擎](#如何不重新编译直接替换编译后游戏的sc2引擎)
 
 ---
 
@@ -680,7 +684,71 @@ Addon是一种特殊的Mod，作为一种功能扩展的形式存在，通过将
 
 为了满足部分Mod作者对内容保护的要求，设计了基于 libsodium 的 Mod 内容保护框架
 
-TODO
+v2.1.0 开始对加密 Mod 提供正式支持。有关加密 Mod 如何工作以及如何设计一个加密 Mod ，请参见样例 [CryptoI18nMod](https://github.com/Lyoko-Jeremie/CryptoI18nMod)
+
+---
+
+## 如何不重新编译直接替换编译后游戏的SC2引擎
+
+How to replace the SC2 engine of a compiled game without recompiling
+
+以 `node sc2ReplaceTool.js  "<编译后的游戏html>" "<新的SC2引擎format.js文件路径>"` 的方式可以使用sc2ReplaceTool将已编译的新SC2引擎替换到编译后的游戏html中，这样可以避免重新编译整个游戏  
+编译后的html文件名将被添加 `.sc2replace.html` 的后缀，可以再按照上面的方法使用`insert2html`来将ModLoader注入到替换后的游戏html中
+
+You can use sc2ReplaceTool to replace the compiled new SC2 engine into the compiled game's HTML by using `node sc2ReplaceTool.js "<compiled game's HTML>" "<path to the new SC2 engine 'format.js' file>"`, this way you can avoid recompiling the entire game.  
+The compiled HTML filename will be appended with the suffix `.sc2replace.html`, and you can then use the `insert2html` method mentioned above to inject the ModLoader into the replaced game HTML.
+
+
+格式 format ：
+
+```shell
+node "<sc2ReplaceTool.js 文件路径>" "<编译后的游戏html>" "<新的SC2引擎format.js文件路径>"
+```
+
+例子 example :
+
+```shell
+node "H:\Code\sugarcube-2\ModLoader\dist-insertTools\sc2ReplaceTool.js" "H:\Code\degrees-of-lewdity\Degrees of Lewdity VERSION.html" "h:\Code\DoL\sugarcube-2\build\twine2\sugarcube-2\format.js"
+```
+
+会在原始html文件同目录下生成一个同名的html.sc2replace.html文件，例如：  
+A new file with the name `html.sc2replace.html` will be generated in the same directory as the original HTML file. For example:
+```
+Degrees of Lewdity VERSION.html.sc2replace.html
+```
+
+
+之后使用 `insert2html` 将ModLoader注入到替换后的游戏html中  
+Afterwards, use `insert2html` to inject the ModLoader into the HTML of the game that has been replaced with the new SC2 engine.
+
+切换到 modList.json 所在文件夹  
+Switch to the directory where `modList.json` is located.
+
+```shell
+cd ./src/insertTools/modList.json
+```
+
+运行 (run command)：
+
+```shell
+node "<insert2html.js 文件路径>" "<Degrees of Lewdity VERSION.html 文件路径>" "<modList.json 文件>" "<BeforeSC2.js 文件路径>"
+```
+
+例如 example：
+
+```shell
+node "H:\Code\sugarcube-2\ModLoader\dist-insertTools\insert2html.js" "H:\Code\degrees-of-lewdity\Degrees of Lewdity VERSION.html.sc2replace.html" "modList.json" "H:\Code\sugarcube-2\ModLoader\dist-BeforeSC2\BeforeSC2.js"
+```
+
+会在原始html文件同目录下生成一个同名的html.mod.html文件，例如：  
+A new file with the name `html.mod.html` will be generated in the same directory as the original HTML file. For example:
+```
+Degrees of Lewdity VERSION.html.sc2replace.html.mod.html
+```
+打开`Degrees of Lewdity VERSION.html.sc2replace.html.mod.html`文件， play   
+open file and play it.
+
+
 
 ---
 
@@ -690,7 +758,7 @@ TODO
 - [ ] Mod排序(ModLoaderGUI) Mod sorting
 - [ ] Mod禁用启用(可选加载)  
 - [ ] 游戏内Mod设置界面  
-- [ ] 修改其他Mod(Mod i18n pack(eg. english a cn mod))  Modify other mods   
+- [x] 修改其他Mod(Mod i18n pack(eg. english a cn mod))  Modify other mods   
 - [ ] 在线编辑passage   
 - [ ] 查看Diff   
 - [x] Mod-游戏版本兼容性检查   

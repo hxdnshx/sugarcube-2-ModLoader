@@ -16,21 +16,19 @@ const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const config = {
   // https://webpack.js.org/configuration/entry-context/#entry
   entry: {
-    packModZip: './src/insertTools/packModZip.ts',
-    insert2html: './src/insertTools/insert2html.ts',
-    "insert2html-polyfill": './src/insertTools/insert2html-polyfill.ts',
-    sc2ReplaceTool: './src/insertTools/sc2ReplaceTool.ts',
-    polyfillInsert: './src/insertTools/polyfillInsert.ts',
+    BeforeSC2: './src/BeforeSC2/init.ts',
+    polyfillWebpack: './src/BeforeSC2/polyfill.ts',
   },
   output: {
-    path: path.resolve(__dirname, 'dist-insertTools'),
+    path: path.resolve(__dirname, 'dist-BeforeSC2-comp'),
     filename: '[name].js',
   },
   // https://webpack.js.org/configuration/devtool/
-  devtool: 'source-map',
+  // devtool: 'inline-source-map',
   // https://webpack.js.org/configuration/target/
-  // target: 'web',
-  target: 'node',
+  target: 'web',
+  // target: 'node',
+  devtool: 'inline-source-map',
 
   // devServer: {
   //   open: true,
@@ -47,7 +45,7 @@ const config = {
     //      INFO: run Ts Check in parallel, [use special tsconfig]
     new ForkTsCheckerWebpackPlugin({
       typescript: {
-        configFile: 'src/insertTools/tsconfig.json',
+        configFile: 'src/BeforeSC2/tsconfig.comp.json',
       }
     }),
 
@@ -76,10 +74,30 @@ const config = {
   ],
   module: {
     rules: [
+      // {
+      //   test: /\.(ts|tsx)$/i,
+      //   loader: 'ts-loader',
+      //   exclude: ['/node_modules/'],
+      // },
       {
         test: /\.(ts|tsx)$/i,
-        loader: 'ts-loader',
         exclude: ['/node_modules/'],
+        use: {
+          loader: "babel-loader",
+          options: {
+            presets: [["@babel/preset-typescript", { targets: "> 99% and not ie <= 12"}]]
+          }
+        }
+      },
+      {
+        test: /\.m?js$/,
+        // exclude: /node_modules/,
+        use: {
+          loader: "babel-loader",
+          options: {
+            presets: [['@babel/preset-env', { targets: "> 99% and not ie <= 12"}]]
+          }
+        }
       },
       // {
       //   test: /\.css$/i,
@@ -102,7 +120,7 @@ const config = {
     extensions: ['.tsx', '.ts', '.jsx', '.js', '...'],
     //      INFO: set a special tsconfig if you have multi, otherwise 'ts-loader' will read default from root dir
     plugins: [new TsconfigPathsPlugin({
-      configFile: 'src/insertTools/tsconfig.json'
+      configFile: 'src/BeforeSC2/tsconfig.comp.json'
     })],
 
     //      INFO: set some UMD lib to special js file, can skip webpack importer check

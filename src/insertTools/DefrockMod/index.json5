@@ -406,6 +406,24 @@
     all: true,
     passage: "Reset Virginity Refuse",
     findString: "<<link [[继续|Hospital Foyer]]>>"
+  },
+  {
+    id: "Vanilla1",
+    all: true,
+    passage: "Temple Jordan",
+    findString: "<<if $temple_harassed is 1>>"
+  },
+  {
+    id: "Vanilla2",
+    all: true,
+    passage: "Widgets Sydney",
+    findString: "<<if $location is \"temple\" and $sydneyChastityRemoveIntro>>"
+  },
+  {
+    id: "Vanilla3",
+    all: true,
+    passage: "Hospital Foyer",
+    findString: "<<if $player.breastsize lte 11>>"
   }
 ]
 

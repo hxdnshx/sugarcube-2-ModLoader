@@ -49,8 +49,32 @@
         {
           "passage": "Widgets",
           "findString": "($_gain * _skill_mod), -107, 200)",
-          "debug": true,
+          "debug": false,
           "replace":"($_gain * _skill_mod), 0, 200)"
+        },
+        {
+          "passage": "Widgets Journal",
+          "findString": "<<if $scienceproject is \"ongoing\">>",
+          "debug": true,
+          "replace":"<<concertjournal>>\n\t<<if $scienceproject is \"ongoing\">>"
+        },
+        {
+          "passage": "Dancing Lesson",
+          "findString": "<<link [[继续|Dance Studio]]>><<endevent>><</link>>",
+          "debug": true,
+          "replace":"<<if $dance_ticket_intro is undefined and $worn.neck.name is \"timehourglass\" and $NPCName[$NPCNameList.indexOf(\"Charlie\")].love gte 20>>\n\t<<link [[继续|Dance Concert Intro]]>><<endevent>><</link>>\n\t<<else>>\n\t<<link [[继续|Dance Studio]]>><<endevent>><</link>>\n\t<</if>>"
+        },
+        {
+          "passage": "Dancing Lesson",
+          "findString": "<<link [[Next|Dance Studio]]>><<endevent>><</link>>",
+          "debug": true,
+          "replace":"<<if $dance_ticket_intro is undefined and $worn.neck.name is \"timehourglass\" and $NPCName[$NPCNameList.indexOf(\"Charlie\")].love gte 20>>\n\t<<link [[Next|Dance Concert Intro]]>><<endevent>><</link>>\n\t<<else>>\n\t<<link [[继续|Dance Studio]]>><<endevent>><</link>>\n\t<</if>>"
+        },
+        {
+          "passage": "Cliff Street",
+          "findString": "<<if $scienceproject is \"ongoing\" and $scienceprojectdays is 0 and Time.dayState is \"day\" and $exposed lte 0>>",
+          "debug": true,
+          "replace":"<<if $danceconcert isnot undefined and $danceconcert is \"ongoing\" and $danceconcertdays is 0 and Time.hour gte 17 and Time.hour lt 21 and $exposed lte 0>>\n\t\t    <<link [[参加演唱会|Dance Concert Check Ticket]]>><</link>>\n\t\t\t<br>\n\t\t<</if>>\n\t\t<<if $scienceproject is \"ongoing\" and $scienceprojectdays is 0 and Time.dayState is \"day\" and $exposed lte 0>>"
         }
       ]
     },
@@ -113,6 +137,11 @@
           {
             "from": "if (V.skulduggery >= 1000 && V.skulduggeryday < 1000) V.skulduggerymessage = 1;",
             "to": "if ((V.worn.neck.name === \"timehourglass\")) return;\n\tif (V.skulduggery >= 1000 && V.skulduggeryday < 1000) V.skulduggerymessage = 1;",
+            "fileName": "time.js"
+          },
+          {
+            "from": "V.schooleventtimer--;",
+            "to": "if (V.$danceconcert === \"ongoing\") {\n\t\tV.danceconcertdays--;\n\t\tif (V.danceconcertdays < 0) {\n\t\t\tV.danceconcertdays = \"done\";\n\t\t\tfragment.append(wikifier(\"danceconcertfinish\"));\n\t\t}\n\t}\n\tV.schooleventtimer--;",
             "fileName": "time.js"
           }
         ]

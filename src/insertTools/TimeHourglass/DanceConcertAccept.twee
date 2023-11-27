@@ -1,0 +1,17 @@
+:: Dance Concert Accept
+
+<<set $dance_ticket_obtain to 1>>
+<<set $danceconcert to "ongoing">>
+<<set $danceconcertdays to (7 + (7 - Time.weekDay))>>
+<<npc Charlie>><<person1>>
+
+<<He>>微笑着点头，似乎对于能把票送给你感到很高兴。
+<br><br>
+"谢谢你，查里。我一定会去的。希望你那天的事情能够顺利处理。"
+<br><br>
+你收下了门票，向查里道别之后离开了舞蹈室。
+<br><br>
+<span class="gold">演唱会被添加到日志中。</span>
+<br><br>
+
+<<link [[继续|Barb Street]]>><</link>>

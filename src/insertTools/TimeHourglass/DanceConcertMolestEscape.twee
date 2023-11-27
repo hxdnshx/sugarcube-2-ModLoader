@@ -1,0 +1,9 @@
+:: Dance Concert Molest Escape []
+<<effects>>
+你抓住附近生锈的管子，把它砸在<<person1>><<persons>>的头上。<<He>>向后摔倒，撞进垃圾桶，被垃圾团团覆盖。
+<br><br>
+<<tearful>>你从小巷回到了会场。
+<br><br>
+<<clotheson>>
+<<endcombat>>
+<<link [[继续|Dance Concert Outside]]>><</link>>

@@ -1,0 +1,14 @@
+:: Dance Concert Chikan Progress []
+<<effects>>
+	那个<<person1>><<person>>凑近你。
+	<br><br>
+	<<if $NPCList[0].skills.security gte 600>>
+		“这会是一次很有趣的演唱会。”<<he>>用充满欲望的眼神看着你，<<he>>低声说道。
+	<<elseif $NPCList[0].skills.security lte 300>>
+		<<his>>的腿不小心撞到了你。 "对、对不起。"<<he>>紧张地说。
+	<<else>>
+		<<He>>什么也没说，但你注意到<<he>>瞥了你好几眼。
+	<</if>>
+	<br><br>
+	几分钟后，那个<<person1>><<persons>>愈发大胆，开始隔着$worn.lower.cn_name_cap摸起你的腿。
+	<<concertchikanmolestactions>>

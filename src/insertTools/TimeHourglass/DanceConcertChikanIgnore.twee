@@ -1,0 +1,7 @@
+:: Bus Chikan Molest Ignore []
+<<effects>>
+<<set $busChikanPhase++>>
+<<set $passengerAttention -=1>>
+
+/*下面的部分隐含了link，不再需要手动写*/
+<<concertmolestloop>>

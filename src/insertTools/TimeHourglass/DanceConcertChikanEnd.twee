@@ -1,0 +1,8 @@
+:: Dance Concert Chikan End []
+<<effects>>
+<<tiredness 3>>
+你离开了演唱会现场，坐在一旁的长椅上休息。
+<br><br>
+你感觉自己好了一些。<<stress -3>><<lstress>>
+<br><br>
+<<link [[继续|Dance Concert Outside]]>><</link>>

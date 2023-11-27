@@ -1,0 +1,9 @@
+:: Dance Concert Chikan Help []
+<<effects>>
+"谁来救救我，<<him>>在性侵我！"你大声喊叫。
+<br>
+<span class="red">每个人都转过身来看着你，尽管演唱会还在继续。</span>
+<br>
+<<person>>将<<his>>的手移开了。
+<br><br>
+<<link [[继续|Dance Concert Chikan Discovered]]>><</link>>

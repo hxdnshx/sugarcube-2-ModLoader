@@ -1,0 +1,80 @@
+:: Dance Concert Chikan Discovered []
+<<effects>><<famesex 5>>
+<<person2>><<person>>看着你，语气充满了愤怒。“怎么了！？”<<person2>><<person>>吼道。
+<br><br>
+<<if $busChikanOrgasm gte 1>>
+	你茫然地坐着，不知道该如何解释发生了什么，因为高潮不断使你的身体痉挛着。
+	<br><br>
+	<<if $NPCList[0].skills.security gte 600>>
+		<<pass $busChikanPhase>>
+		“这个小变态刚刚在自慰。我只是想稍微提醒一下，让<<pher>>别影响到其他人，”<<person1>><<person>>说着，从你身边走开了。
+		<br><br>
+		"哦？是这样吗？居然有个小变态来参加演唱会，"<<person2>><<person>>感叹道。"我想我们只能给这个变态一点教训了。"
+		<br><br>
+
+		<<saveNPC 3 "bus_chikan">>
+		<<clearsinglenpc 2>>
+		<<clearsinglenpc 3>>
+		<<loadNPC 2 "bus_chikan">>
+		<<clearNPC "bus_chikan">>
+
+		<<link [[继续|Dance Concert Orgasm]]>><<set $molestationstart to 1>><</link>>
+	<<elseif $NPCList[0].skills.security lte 300>>
+		"这<<girl>>似乎身体不舒服。"<<person1>><<person>>温顺地说。
+		<br><br>
+		“你看起来很难受啊，”<<person2>><<person>>带着歉意说道。"我们扶着你出门。"
+		<br><br>
+		<<link [[继续|Dance Concert Chikan End]]>><</link>>
+	<<else>>
+		"这个<<girl>>似乎身体不舒服，"<<person1>><<person>>说。"请让我来照顾<<phim>>。"
+		<br><br>
+		<<person2>><<person>>点头，<<person1>><<person>>把你拉起来，带你离开了会场。以你目前的状况，你没有条件反对。
+		<br><br>
+		“我们还没完呢，”<<person1>><<person>>在你耳边低语，<<him>>带你走进附近的小巷，开始摸索你的身体。
+		<br><br>
+
+		<<saveNPC 0 "bus_chikan">>
+		<<endevent>>
+		<<loadNPC 0 "bus_chikan">>
+		<<clearNPC "bus_chikan">>
+
+		<<link [[继续|Dance Concert Molest]]>><<set $molestationstart to 1>><</link>>
+	<</if>>
+<<else>>
+	<<tearful>>你指向<<person1>><<person>>。"是<<him>>，<<him>>想侵犯我！"
+	<br><br>
+	<<if $NPCList[0].skills.security gte 600>>
+		"你这个爱撒谎的小<<bitch>>。我碰你只有一种可能，那就是为了让你离开我！<<pShe>>一直用奇怪的眼神盯着我看。我认为<<pshe>>可能是变态或者有什么别的恶毒想法，说不定是想偷我的东西！"<<person>>说。
+		<br><br>
+		“是这样吗？”<<person2>><<person>>叹了口气。"我想只有一个办法能真正给这个撒谎的<<bitch>>上一课。"
+		<br><br>
+		在<<his>>的话语下，你只好在原地不舒服地动，<<person1>><<person>>明目张胆的捏着你的<<bottom>>。<<embarrassment>>
+		<br><br>
+
+		<<saveNPC 3 "bus_chikan">>
+		<<clearsinglenpc 2>>
+		<<clearsinglenpc 3>>
+		<<loadNPC 2 "bus_chikan">>
+		<<clearNPC "bus_chikan">>
+
+		<<link [[继续|Dance Concert orgasm]]>><<set $molestationstart to 1>><</link>>
+	<<elseif $NPCList[0].skills.security lte 300>>
+		“他们的$worn.lower.cn_name_cap上有东西。这是个误会，我只是想帮忙，”<<person1>><<person>>温顺地说。
+		<br>
+		<<person2>><<person>>沮丧地叹道：“求求你了，别再给我们本就困难的生活火上加油了。我们只想开开心心地听完演唱会。能不能…我们在结束前一直保持安静，好吗？”
+		<br><br>
+		你不想听<He>辩解，直接离开了会场。
+		<br><br>
+		<<link [[继续|Dance Concert Chikan End]]>><</link>>
+	<<else>>
+		"我不能忍受这种事，你不能做出猥亵别人的事还毫发无损地离开。你跟我走！我要去报警！"那个<<person2>><<person>>喊道。
+		<br>
+		“等等，让我解释一下！”<<person1>><<person>>紧张地说。你离开了<<him>>，重新整理好你的衣服。<<person2>><<person>>用力的抓住了<<person1>><<him>>，几分钟后，安保人员到场，<<person2>><<person>>将<<person1>><<person>>带走。
+		<br>
+		“我对此感到非常非常抱歉，”<<person2>><<person>>说。“我会确保<<person1>><<his>>为<<his>>的违法行为付出代价。”
+		<br><br>
+		骚乱结束后，演唱会继续。
+		<br><br>
+		<<link [[继续|Dance Concert Progress]]>><</link>>
+	<</if>>
+<</if>>

@@ -1,0 +1,48 @@
+:: Dance Concert Check Ticket
+<<set $outside to 0>><<set $location to "town">><<effects>>
+
+<<set $busChikanPhase to 0>>
+<<set $busChikanOrgasm to 0>>
+<<set $passengerAttention to 0>>
+<<set $assaultEnergy to random(25,50)>>
+<<generate2>><<generateyv3>><<generate4>>
+
+你穿过检票口，步入了充满活力的演唱会现场。四周是熙熙攘攘的人群，大家都在兴奋地等待演唱会的开始。
+你被推挤着，在人群中寻找一个能够清楚看到舞台的位置。
+<<set $dance_concert_attend to 1>>
+<br>
+随着时间的推移，人群变得越来越密集。
+你开始感到有些不安，注意到周围有些人对你投来了不寻常的目光。他们的行为让你感到不适，似乎对你有着不良的意图。
+<br>
+你尽量保持镇静，试图向人群中较少拥挤的区域移动。你小心地穿梭在人群中，避开那些看起来可能给自己带来麻烦的人。<<stress 12>><<ggstress>>
+<br><br>
+你费力地挤过人群，逐渐向前移动。尽管周围拥挤不已，但我始终保持着目标，想要尽可能靠近舞台。
+经过一番努力，你终于到达了人群最前方，距离舞台只有几步之遥。
+<br>
+站在这里，你能清楚地看到舞台上的每一个细节，感受到即将开始的演唱会带来的兴奋气氛。舞台的灯光闪烁，音响系统正在做最后的调试，观众的期待和兴奋几乎是可以触摸得到的。
+<br><br>
+演唱会很快开始了。舞台上的灯光突然变得耀眼，音乐随着第一首歌曲响起，整个场地立刻沸腾起来。Jolly 登上舞台，她的出现立即引发了观众的一阵热烈喝彩和尖叫。
+
+<br><br>
+<<link [[继续|Dance Concert Progress]]>><</link>>
+
+
+:: Dance Concert Progress
+周围的人群反应各异：
+<br>
+一个<<person2>><<person>>开始随着音乐节奏舞动，<<He>>的舞姿充满活力，完全沉浸在这欢快的氛围中。
+<br>
+一个<<person3>><<person>>则在为歌手喝彩，<<He>>的掌声和欢呼声汇成一片，为演唱会增添了更多的热情。
+<br>
+而一个<<person4>><<person>>则趁着音乐的间歇与身边的<<person1>><<person>>交谈，分享着对歌手的喜爱和对音乐的见解。
+<br>
+整个现场充满了音乐的魅力和观众的热情。
+<br><br>
+他们似乎都围在你身边。<span class="purple">有点不对劲…</span>
+<br><br>
+<<rngWraith>>
+<<if _wraithEvent is true>>
+<<link [[继续|Dance Concert Chikan Progress]]>><</link>>
+<<else>>
+<<link [[继续|Dance Concert Chikan Wraith Progress]]>><</link>>
+<</if>>

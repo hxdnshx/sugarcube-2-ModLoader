@@ -5,6 +5,10 @@
 <<set $busChikanOrgasm to 0>>
 <<set $passengerAttention to 0>>
 <<set $assaultEnergy to random(25,50)>>
+<<set $chikanWraith to 0>>
+<<set $chikanWraithOrgasm to 0>>
+<<set $chikanWraithKnown to 0>>
+<<set $songProgress to 0>>
 <<generate2>><<generateyv3>><<generate4>>
 
 你穿过检票口，步入了充满活力的演唱会现场。四周是熙熙攘攘的人群，大家都在兴奋地等待演唱会的开始。
@@ -42,7 +46,7 @@
 <br><br>
 <<rngWraith>>
 <<if _wraithEvent is true>>
-<<link [[继续|Dance Concert Chikan Progress]]>><</link>>
-<<else>>
-<<link [[继续|Dance Concert Chikan Wraith Progress]]>><</link>>
+<<set $chikanWraith to 1>>
 <</if>>
+
+<<link [[继续|Dance Concert Chikan Progress]]>><</link>>

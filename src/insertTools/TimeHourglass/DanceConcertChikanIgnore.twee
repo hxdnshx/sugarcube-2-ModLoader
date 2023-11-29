@@ -4,4 +4,163 @@
 <<set $passengerAttention -=1>>
 
 /*下面的部分隐含了link，不再需要手动写*/
-<<concertmolestloop>>
+/*我错了，ignore和resist有不同的台词，我不该合并的*/
+
+<<if $assaultEnergy gte 1>>
+
+    <<if $chikanWraithKnown is 1>>
+        <<concertmolestwraithloop>>
+	<<elseif $arousal gte $arousalmax>>
+            <<orgasm>>
+            <if $chikanWraith is 0>>
+                <<set $busChikanOrgasm to 1>>
+                你呻吟着瘫倒，靠到了一旁的观众身上，<<he>>把手从你的<<undies>>旁抽走，顺便在你的$worn.lower.cn_name_cap上擦净了液体。
+                <br><br>
+                <span class="red">大家都注意到你的异常。</span>
+                <br><br>
+                <<link [[继续|Dance Concert Chikan Molest Discovered]]>><</link>>
+            <<else>>
+                你不自觉地呻吟出来，但在那之前，<<He>>亲吻了你，你的耳朵立即开始嗡嗡鸣响。你的手指和脚趾变得冰冷，但脸却变得火热异常。你感觉自己的某一部分被剥夺了。
+                <<purity -25>><<llpurity>><<physique_loss 8>><<lphysique>><<awareness -20>><<lllawareness>><<gobsession>>\
+                <br><br>
+                <<if $chikanWraithKnown is 0>>
+                    <<generateWraith 1 true>><<initWraith "abomination">>
+                    你看到<<his>>的皮肤出现波纹不断变化，就像是融化的蜡油滴落在水面上，<<His>>的皮肤已经变成了赤裸裸的白色，惨白，没有生机。
+                    <br><br>
+                    <<set $chikanWraithKnown to 1>>
+                    <<if $wraith.seen gte 3>>
+                    	你马上就能认出那是一直跟着你的苍白生物。
+                    <<elseif $wraith.seen gte 1>>
+                    	<<His>>苍白的脸庞看起来十分的眼熟。你本来应该感到恐慌的，可你没有，一种奇怪的感觉取代了恐惧。
+                    <</if>>
+                    <<He>>笑了，"<span class="wraith">我能感觉到你急促的心跳，放弃吧。</span>"
+                    <br><br>
+                <<else>>
+                    祂带着微笑看着你。"<span class="wraith">再来一次，<<pcPetname "Wraith">>。</span>"
+                    <br><br>
+                <</if>>
+            <</if>>
+	<<elseif $busChikanPhase lte 2>>
+		你忽略了放在大腿上的那只<<persons>>的手，看向窗外。
+		<br><br>
+		<<if $NPCList[0].skills.security gte 600>>
+			"这感觉怎么样?"<<he>>轻轻地说，揉着你的大腿。
+			<<set $assaultEnergy -= 5>>
+		<<elseif $NPCList[0].skills.security lte 300>>
+			“你——你喜欢这个吗?”<<he>>紧张地问，轻轻地揉着你的大腿。
+			<<set $assaultEnergy += 3>>
+		<<else>>
+			<<He>>默默地抚摸你的大腿。
+		<</if>>
+	<<elseif $busChikanPhase is 3>>
+		<<person>>变得更加大胆，
+		<<if setup.clothes.lower[clothesIndex('lower', $worn.lower)].skirt is 1>>
+			将<<his>>的手放到你的$worn.lower.cn_name_cap上，开始摩擦你的<<undies>>。
+		<<else>>
+			把<<his>>的手放进你的$worn.lower.cn_name_cap 里，开始摩擦你的<<undies>>。
+		<</if>>
+		<<His>>强硬的触摸让你瑟瑟发抖。<<garousal>> <<arousal 200 "genitals">>
+		<br><br>
+		尽管如此，你还是无视<<his>>的触摸，继续向外看。
+		<br><br>
+		<<if $NPCList[0].skills.security gte 600>>
+			“你的嘴什么都不说，但你的身体却说了一切。”<<he>>一边说一边继续摩擦。
+			<<set $assaultEnergy -= 5>>
+		<<elseif $NPCList[0].skills.security lte 300>>
+			“我——我应该继续吗?”<<he>>轻声问道。
+			<<set $assaultEnergy += 3>>
+		<<else>>
+			<<He>>保持沉默。
+		<</if>>
+	<<elseif $busChikanPhase lte 6>>
+		<<persons>>的手依旧
+		<<if setup.clothes.lower[clothesIndex('lower', $worn.lower)].skirt is 1>>
+			在你的$worn.lower.cn_name_cap下，<<he>>继续摩擦你的<<undies>>。
+		<<else>>
+			脱下你的$worn.lower.cn_name_cap，<<he>>继续摩擦你的<<undies>>。
+		<</if>>
+		<<His>>有节奏的摩擦让你身体越来越热。<<garousal>> <<arousal 200 "genitals">>
+		<br><br>
+		你试图忽略它，把注意力集中在其他事情上，但是发现自己的臀部和<<his>>的手同步摆动。
+		<br><br>
+		<<if $NPCList[0].skills.security gte 600>>
+			<<if $player.penisExist>>
+				"你都这么硬了，
+			<<else>>
+				"你都这么湿了，
+			<</if>>
+			怎么还能无动于衷？"<<he>>一边说一边继续<<he>>的摩擦。
+			<<set $assaultEnergy -= 5>>
+		<<elseif $NPCList[0].skills.security lte 300>>
+			“我很高兴你喜欢这样,”<<he>>温顺地说。
+			<<set $assaultEnergy += 3>>
+		<<else>>
+			<<His>>对你<<undies>>的无声攻击还在继续。
+		<</if>>
+	<<elseif $busChikanPhase is 7>>
+		无法抗拒<<himself>>，<<persons>>的手
+		<<if $worn.under_lower.name isnot "naked">>
+			放在你的$worn.under_lower.cn_name_cap下面，
+		<</if>>
+		和
+		<<if $player.penisExist>>
+			抓住你的<<penis>>。
+		<<else>>
+			把手指深深地插进你的<<pussy>>里。
+		<</if>>
+		<br><br>
+		当<<his>>的触碰使冲击传遍你的身体时，你倒吸了一口气。<<ggarousal>><<arousal 500 "genitals">>
+		<br><br>
+		当你试图把注意力从胯部移开时，你紧紧抓住座位的边缘。
+		<br><br>
+		<<if $NPCList[0].skills.security gte 600>>
+			“我要让你在所有人面前高潮，而你却连看都不看我一眼?”<<He>>生气地说。
+			<<set $assaultEnergy -= 5>>
+		<<elseif $NPCList[0].skills.security lte 300>>
+			“我会很温柔的。”<<he>>对你耳语道。
+			<<set $assaultEnergy += 5>>
+		<<else>>
+			<<He>>一言不发的继续侵犯你的<<genitals>>。
+		<</if>>
+	<<else>>
+		<<person>>用力地
+		<<if $player.penisExist>>
+			撸动你的<<genitals>>。
+		<<else>>
+			摩擦你的<<genitals>>。
+		<</if>>
+		<br><br>
+		<<set $agrowth to 100 * $busChikanPhase>>
+		无情的攻击正把你推向边缘。<<ggarousal>><<arousal $agrowth>>
+		<br><br>
+		你一直试图忽略你的热量，但是发现它越来越难了。
+		<br><br>
+		<<if $NPCList[0].skills.security gte 600>>
+			“感觉你就要爆发了，来吧! 说点什么!”
+			<<set $assaultEnergy -= 5>>
+		<<elseif $NPCList[0].skills.security lte 300>>
+			“我也快到了，”<<he>>轻柔地说。
+			<<set $assaultEnergy += 3>>
+		<<else>>
+			<<He>>的目光看向别处，表情镇定，好像<<he>>没有公开侵犯你。
+		<</if>>
+	<</if>>
+	<<if $busChikanOrgasm lte 0>>
+        <<concertchikanattention>>
+        <<concertchikanmolestactions>>
+	<</if>>
+<<else>>
+	<<person>>似乎已经对你厌烦了。
+	<br>
+	<<if $NPCList[0].skills.security gte 600>>
+		“你一点都不好玩，”<<him>>说着，把<<him>>的手抽开了。
+	<<elseif $NPCList[0].skills.security lte 300>>
+		“对不起，”<<him>>紧张地说，然后温顺地移开了手。“对于现在这种情况，我……”<<He>>表情羞愧的看向别处。
+	<<else>>
+		<<He>>默默地把<<his>>的手移开了。
+	<</if>>
+	<br><br>
+	你把衣服整理好，坐回座位上。
+	<br><br>
+	<<link [[继续|Bus Chikan End]]>><</link>>
+<</if>>

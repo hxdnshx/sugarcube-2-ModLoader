@@ -3,20 +3,26 @@
 
 你来到了市礼堂。礼堂的门外已经排起了长龙。人们正有序地排队入场。
 
+
+<<set $danceconcertarrive to 1>>
+
+<br><br>
+
 <<if Time.hour gte 20>>
 你迟到了，演唱会早已开始。礼堂里外人头攒动，甚至有狂热的粉丝爬到了一旁的树上，凭借着高度优势想看到远处的舞台。
 
 你只能在门外勉强地听一听了。
-
-<<link [[继续|Dance Concert Outside Loop]]>><</link>>
+<br><br>
+<<link [[继续|Dance Concert Outside]]>><</link>>
 <<else>>
 <<if Time.hour gte 18>>
 你来得有些晚了，队已经从 峭壁街 排到了 沙滩，看来没有一段时间是无法入场了。
-
+<br><br>
 <<link [[排队入场(0:30)|Dance Concert Inside]]>><<pass 30>><</link>>
 <<else>>
-你来的正是时候，礼堂门口还没有多少人。
+你来的正是时候，队列还不是很长。
+<br><br>
 <<link [[排队入场|Dance Concert Inside]]>><<pass 30>><</link>>
 <</if>>
-<<link
+
 <</if>>

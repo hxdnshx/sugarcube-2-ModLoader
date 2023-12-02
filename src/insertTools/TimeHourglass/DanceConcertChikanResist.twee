@@ -1,11 +1,12 @@
-:: Dance Concert Chikan Molest Resist []
+:: Dance Concert Chikan Resist
 <<effects>>
+<<concertSongProgress>>
 <<set $busChikanPhase++>>
 <<set $passengerAttention++>>
 <<if $passengerAttention gte 10>>
 	你想摆脱<<person1>><<person>>，却干扰到了其他乘客。你搞出的动静让<<people>>都扭过头生气地看着你。
 	<br><br>
-	<<link [[继续|Dance Concert Chikan Molest Discovered]]>><</link>>
+	<<link [[继续|Dance Concert Chikan Discovered]]>><</link>>
 <<else>>
    /*下面的部分隐含了link，不再需要手动写*/
     <<concertmolestloop>>

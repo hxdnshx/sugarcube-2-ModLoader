@@ -1,4 +1,4 @@
-:: Dance Concert Widget
+:: Dance Concert Widget [widget]
 
 <<widget "singprogress">>
 <</widget>>
@@ -8,11 +8,11 @@
 
 <<widget "concertjournal">>
 <<if $danceconcert isnot undefined and $danceconcert is "ongoing">>
-<<if $scienceprojectdays is 0>>
-演唱会将于 <<ampm 18 00>> 到 <<ampm 21 00>> 期间在峭壁街举办。
+<<if $danceconcertdays is 0>>
+	<li>演唱会将于 <<ampm 18 00>> 到 <<ampm 21 00>> 期间在峭壁街举办。</li>
 <br>
 <<else>>
-演唱会将于 <span class="gold">$scienceprojectdays</span> 天后在峭壁街举办。
+    <li>演唱会将于 <span class="gold">$danceconcertdays</span> 天后在峭壁街举办。</li>
 <br>
 <</if>>
 <</if>>
@@ -20,7 +20,7 @@
 
 <<widget "concertchikanmolestactions">>
     <<if $songProgress gte 21>>
-        <<if $chikanWraithKnown is 0>>
+        <<if $chikanWraithKnown is 1>>
             <br><br>
             <<link [[忍受|Dance Concert End]]>><<stress 1>><<sub 1>><</link>><<submissivetext>><<gstress>><<lsuspicion>>
         <<else>>
@@ -32,16 +32,16 @@
             <<link [[大声呼救|Dance Concert End]]>><</link>><<gggsuspicion>>
         <</if>>
 	<<else>>
-        <<if $chikanWraithKnown is 0>>
+        <<if $chikanWraithKnown is 1>>
             <br><br>
-            <<link [[忍受|Dance Concert Chikan Molest Ignore]]>><<stress 1>><<sub 1>><</link>><<submissivetext>><<gstress>><<lsuspicion>>
+            <<link [[忍受|Dance Concert Chikan Ignore]]>><<stress 1>><<sub 1>><</link>><<submissivetext>><<gstress>><<lsuspicion>>
         <<else>>
             <br><br>
-            <<link [[抵抗|Dance Concert Chikan Molest Resist]]>><<def 1>><</link>><<defianttext>><<gsuspicion>>
+            <<link [[抵抗|Dance Concert Chikan Resist]]>><<def 1>><</link>><<defianttext>><<gsuspicion>>
             <br>
-            <<link [[忽视|Dance Concert Chikan Molest Ignore]]>><<stress 1>><<sub 1>><</link>><<submissivetext>><<gstress>><<lsuspicion>>
+            <<link [[忽视|Dance Concert Chikan Ignore]]>><<stress 1>><<sub 1>><</link>><<submissivetext>><<gstress>><<lsuspicion>>
             <br>
-            <<link [[大声呼救|Dance Concert Chikan Molest Help]]>><</link>><<gggsuspicion>>
+            <<link [[大声呼救|Dance Concert Chikan Help]]>><</link>><<gggsuspicion>>
         <</if>>
 	<</if>>
 <</widget>>
@@ -58,7 +58,7 @@
 	<</if>>
 <</widget>>
 
-<<widget "song">>
+<<widget "concertSongProgress">>
 <<set _linePool to [
 			"月が染められた窓の端を照らしている。",
             "煙がすべての視界を惑わせる。",
@@ -87,13 +87,27 @@
 		<<else>>
             <<set _str to "舞台上进行着演唱：" + _linePool[$songProgress]>>
         <</if>>
-        <<set $songProgress++>>
         <<print _str>>
         <br><br>
+
+        <<if $worn.neck.name is "timehourglass">>
+            <<if $songProgress is 14 or $songProgress is 20>>
+                <<neckruined>>
+                <<set $hourglassPassive to 1>>
+                的天蓝色沙漏项链突然应声掉落，落到了地上，碎裂开来。那些碎片四散飞溅，发出清脆的响声。
+                而项链里面的沙子仿佛具有了某种魔力，开始以不自然的方式浮起，缓缓围绕着你。
+                <br>
+                你感觉到一种奇异的感觉，仿佛这些沙子正在与我产生某种联系。它们融入了你的身体，
+                你感觉到自己内在的一些变化，<span class="gold">仿佛时间在体内停止了流动。</span>
+                这种感觉既神秘又震撼，让你在人群中短暂地失去了反应。
+                <br><br>
+            <</if>>
+        <</if>>
+        <<set $songProgress++>>
 <</widget>>
 
 <<widget "concertmolestwraithloop">>
-
+        <<set $assaultEnergy += 5>>
 		<<silently>><<speechWraith "lines">><</silently>>
 		<<He>>在你耳边低语："_line1"
 		<br><br>
@@ -110,7 +124,8 @@
             <<he>>轻轻地说，揉着你的大腿。
             <br><br>
         <<elseif $busChikanPhase is 3>>
-            "你能让我温暖起来吗，<<pcpetname "Wraith">>?</span>"
+            "<span class="wraith">你能让我温暖起来吗，<<pcpetname "Wraith">>?</span>"
+
             <<if setup.clothes.lower[clothesIndex('lower', $worn.lower)].skirt is 1>>
                 将<<his>>的袖口放到你的$worn.lower.cn_name_cap 上，开始摩擦你的<<undies>>。
             <<else>>
@@ -119,75 +134,34 @@
             <<His>>强硬的触摸让你瑟瑟发抖。<<garousal>> <<arousal 200 "genitals">>
             <br><br>
         <<elseif $busChikanPhase lte 6>>
-            <<persons>>的手依旧
+            "<span class="wraith">你会学着享受这种快乐的。</span>"
+            <<his>>的袖口依旧
             <<if setup.clothes.lower[clothesIndex('lower', $worn.lower)].skirt is 1>>
-                在你的$worn.lower.cn_name_cap下，<<he>>继续摩擦你的<<undies>>。
+                在你的$worn.lower.cn_name_cap下，苍白的触手从<<his>>的袖口伸出，抚摸着你的<<undies>>。
             <<else>>
-                脱下你的$worn.lower.cn_name_cap，<<he>>继续摩擦你的<<undies>>。
+                在你的$worn.lower.cn_name_cap下，苍白的触手从<<his>>的袖口伸出，灵巧地钻过衣物的缝隙，抚摸你的<<undies>>。
             <</if>>
-            <<His>>有节奏的摩擦让你身体越来越热。<<garousal>> <<arousal 200 "genitals">>
+            <<His>>它们的触摸充斥着淫色与狂乱，让你身体越来越热。<<garousal>> <<arousal 200 "genitals">>
             <br><br>
-            <<if $speech_attitude is "bratty">>
-                你把你的手牢牢地放在<<hers>>的身上，试图破坏这个动作。“把手拿开，你个变态”。
-            <<elseif $speech_attitude is "meek">>
-                “你，你必须停下来，”你说，你的手和<<his>>的手紧紧地握在一起，试图与<<him>>抗争。
-            <<else>>
-                "请别再碰我了，"你一半把<<him>>的手从你$worn.lower.cn_name_cap上移开一边对<<his>>说。
-            <</if>>
-            <br><br>
-            <<if $NPCList[0].skills.security gte 600>>
-                <<if $player.penisExist>>
-                    "你都这么硬了。
-                <<else>>
-                    "你已经湿透了。
-                <</if>>
-                当你这么兴奋的时候，你怎么能叫我停下来呢?”<<he>>边说边继续摩擦。
-                <<set $assaultEnergy += 3>>
-            <<elseif $NPCList[0].skills.security lte 300>>
-                “但、但是，”<<he>>温顺地说。<<He>>看起来好像想说点什么，但保持沉默。
-                <<set $assaultEnergy -= 5>>
-            <<else>>
-                <<He>>无视你的要求，继续摩擦。
-            <</if>>
+
         <<elseif $busChikanPhase is 7>>
+            "<span class="wraith">屈服。</span>"
             无法抗拒<<himself>>，
             <<if $worn.under_lower.name isnot "naked">>
-                 <<persons>>把手伸到你的$worn.under_lower.cn_name_cap下面，
+                 <<he>>把手伸到你的$worn.under_lower.cn_name_cap下面，
             <<else>>
-                那位<<person>>
+                <<he>>
             <</if>>
             <<if $player.penisExist>>
-                抓住你的<<penis>>。
+                用一根手指戳你的<<penis>>，随后握住了它。而苍白的触手也环绕着你的龟头，轻轻抽吸。
             <<else>>
-                把手指深深地插进你的<<pussy>>里。
+                用两根手指沿着你的<<pussy>>向上滑动，然后在你的阴蒂处汇合，轻轻地捏住它。苍白的触手顺势开始舔舐着你的<<genitals>>。
             <</if>>
             <br><br>
             当<<his>>的触碰使冲击传遍你的身体时，你倒吸了一口气。<<ggarousal>><<arousal 500 "genitals">>
-            <br><br>
-            <<if $speech_attitude is "bratty">>
-                你紧紧地握着<<his>>的手，瞪着他们。
-                <<if $player.penisExist>>
-                    “放、放手，不然我打断你的手。”
-                <<else>>
-                    “把、把你的手指拿开，不然我发誓会打断你的手。”
-                <</if>>
-            <<elseif $speech_attitude is "meek">>
-                “不--不，求你了，”你一边说一边虚弱地试图把<<his>>的手从你的<<genitals>>上移开。
-            <<else>>
-                “别、别这样，<<sir>>，求你了，”你一边握住<<him>>的手一边对<<him>>说。
-            <</if>>
-            <br><br>
-            <<if $NPCList[0].skills.security gte 600>>
-                “我要让你在所有人面前高潮，”<<he>>狠狠地说。
-                <<set $assaultEnergy += 3>>
-            <<elseif $NPCList[0].skills.security lte 300>>
-                “但、但我们已经快成了，”<<he>>说。
-                <<set $assaultEnergy -= 5>>
-            <<else>>
-                <<He>>无视你的要求，继续摩擦。
-            <</if>>
         <<else>>
             /*虽然 $busChikanPhase 是单向增长的，但是你怎么能假定没有人满星宇进剧情！*/
+            "<span class="wraith">屈服。</span>"
             <<person>>用力地
             <<if $player.penisExist>>
                 撸动你的<<genitals>>。
@@ -197,28 +171,6 @@
             <br><br>
             <<set $agrowth to 100 * $busChikanPhase>>
             无情的攻击正把你推向边缘。<<ggarousal>><<arousal $agrowth>>
-            <br><br>
-            <<if $speech_attitude is "bratty">>
-                你试着推开<<him>>，但无法集中力量去做。
-            <<elseif $speech_attitude is "meek">>
-                你虚弱地拉着正在攻击你胯部的手臂。
-            <<else>>
-                你试着把攻击的手从你的两腿之间抽出来，但是没有什么效果。
-            <</if>>
-            <br><br>
-            <<if $NPCList[0].skills.security gte 600>>
-                "你真的不喜欢吗？你的<<genitals>>感觉像是要破裂了。"
-                <<set $assaultEnergy += 3>>
-            <<elseif $NPCList[0].skills.security lte 300>>
-                "经过这一切，你还是不喜欢?"<<he>>温柔地问。
-                <<set $assaultEnergy -= 5>>
-            <<else>>
-                你的尝试没能阻止<<him>>，因为<<he>>继续<<his>>不受干扰的攻击。
-            <</if>>
-        <</if>>
-        <<if $busChikanOrgasm lte 0>>
-            <<concertchikanattention>>
-            <<concertchikanmolestactions>>
         <</if>>
 <</widget>>
 
@@ -229,16 +181,16 @@
             <<concertmolestwraithloop>>
         <<elseif $arousal gte $arousalmax>>
             <<orgasm>>
-            <if $chikanWraith is 0>>
+            <<if $chikanWraith is 0>>
                 <<set $busChikanOrgasm to 1>>
                 你呻吟着瘫倒，靠到了一旁的观众身上，<<he>>把手从你的<<undies>>旁抽走，顺便在你的$worn.lower.cn_name_cap上擦净了液体。
                 <br><br>
                 <span class="red">大家都注意到你的异常。</span>
                 <br><br>
-                <<link [[继续|Dance Concert Chikan Molest Discovered]]>><</link>>
+                <<link [[继续|Dance Concert Chikan Discovered]]>><</link>>
             <<else>>
                 你不自觉地呻吟出来，但在那之前，<<He>>亲吻了你，你的耳朵立即开始嗡嗡鸣响。你的手指和脚趾变得冰冷，但脸却变得火热异常。你感觉自己的某一部分被剥夺了。
-                <<purity -25>><<llpurity>><<physique_loss 8>><<lphysique>><<awareness -20>><<lllawareness>><<gobsession>>\
+                <<purity -25>><<llpurity>><<physique_loss 8>><<lphysique>><<awareness -20>><<lllawareness>><<gobsession>>
                 <br><br>
                 <<if $chikanWraithKnown is 0>>
                     <<generateWraith 1 true>><<initWraith "abomination">>
@@ -424,4 +376,44 @@
         <br><br>
         <<link [[继续|Concert Chikan Outside]]>><</link>>
     <</if>>
+<</widget>>
+
+
+<<widget "charlyafterconcert">>
+<<if $danceconcert is "done" and $charlieresponse is 0>>
+    你又遇到了查理。他似乎对你去参加演唱会的情况很感兴趣。
+    <br>
+    “嘿，你去了 Jolly 的演唱会吧？” 查理微笑着问道，“怎么样？我希望你喜欢。”
+    <br><br>
+
+    <<if $danceconcertarrive is 1>>
+    你点了点头，脸上露出了欣慰的笑容。“确实很不错，Jolly 的表演太精彩了，整个演唱会的氛围也非常棒。感谢你给我的票，这真的是一个难忘的夜晚。”
+    <br>
+    查理看起来很高兴听到我的回答。“我就知道你会喜欢的！Jolly 的音乐总是那么有感染力。很遗憾我没能去，但听你这么说，我觉得那张票没有浪费。”
+    <<npcincr Charlie love 5>><<glove>>
+    <<else>>
+    你向查理坦白，由于自己的一些原因，你并没有去参加演唱会。
+    <br>
+    你有些抱歉地说：“查理，很抱歉，但我昨晚并没有去演唱会。有些事情发生了，所以我错过了。”
+    <br><br>
+    查理听了之后，显得有些失望，但他很快露出了理解的神情。“那真是太可惜了。Jolly 的演唱会总是很精彩，她的歌声非常动听。但我理解，有时候事情就是这样，重要的是你现在一切都好。”
+    <br>
+    随后查理鼓励地拍了拍我的肩膀。“没关系的，总会有下次的。只要你现在没事就好。如果以后有其他的演唱会，我也会告诉你的。”
+    <</if>>
+    <br><br>
+    <<set $charlieresponse to 1>>
+    <<link [[继续|Dance Studio]]>><</link>>
+    <<exitAll>>
+<</if>>
+<</widget>>
+
+<<widget "caferandompassive">>
+<<if $rng gte 97 and $hourglassPassive isnot undefined>>
+    当你走进咖啡厅时，我无意中听到了柔和的旋律和歌词，“気になりだす、気になりだす、月には言わずもがな君の気配”。
+    <br>
+    但当你回过神来，环顾四周，我意识到咖啡厅里并没有任何人在唱歌，也没有留声机。店内只有轻声交谈和咖啡机的嘀嗒声。
+    <br>
+    这种体验让你感到有些神秘，也许是你的幻听。
+    <br><br>
+<</if>>
 <</widget>>

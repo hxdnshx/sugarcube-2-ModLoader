@@ -3,6 +3,8 @@
 <<npc Charlie>><<person1>>
 
 <<set $dance_ticket_intro to 1>>
+<<set $danceconcertarrive to 0>>
+<<set $charlieresponse to 0>>
 
 "等一下。" 在你正准备离开教室时，查里轻快地走过来叫住了你。
 <br><br>
@@ -16,5 +18,5 @@
 查理眼中闪烁着兴奋的光芒，继续说道：“对了，我有一张演唱会的票，是我非常喜欢的歌手 Jolly 的演出。但是，我那天恰好有些事情要处理，无法去现场。这张票就送给你吧，演唱会是周六晚上6点的。”
 <br><br>
 他从口袋里拿出一张精致的票，递给了你。
-
+<br><br>
 <<link [[接受|Dance Concert Accept]]>><</link>>

@@ -1,6 +1,6 @@
 {
   "name": "TimeHourglass",
-  "version": "1.0.3",
+  "version": "1.1.3",
   "styleFileList": [
   ],
   "scriptFileList_earlyload": [
@@ -12,6 +12,24 @@
   "scriptFileList": [
   ],
   "tweeFileList": [
+    "DanceConcertAccept.twee",
+    "DanceConcertCheckTicket.twee",
+    "DanceConcertEnd.twee",
+    "DanceConcertInside.twee",
+    "DanceConcertIntro.twee",
+    "DanceConcertMolest.twee",
+    "DanceConcertMolestEscape.twee",
+    "DanceConcertMolestFinish.twee",
+    "DanceConcertOutside.twee",
+    "DanceConcertOrgasm.twee",
+    "DanceConcertProgress.twee",
+    "DanceConcertWidget.twee",
+    "DanceConcertChikanDiscovered.twee",
+    "DanceConcertChikanEnd.twee",
+    "DanceConcertChikanHelp.twee",
+    "DanceConcertChikanIgnore.twee",
+    "DanceConcertChikanProgress.twee",
+    "DanceConcertChikanResist.twee"
   ],
   "imgFileList": [
     "img/clothes/neck/timehourglass/full.png",
@@ -75,6 +93,21 @@
           "findString": "<<if $scienceproject is \"ongoing\" and $scienceprojectdays is 0 and Time.dayState is \"day\" and $exposed lte 0>>",
           "debug": true,
           "replace":"<<if $danceconcert isnot undefined and $danceconcert is \"ongoing\" and $danceconcertdays is 0 and Time.hour gte 17 and Time.hour lt 21 and $exposed lte 0>>\n\t\t    <<link [[参加演唱会|Dance Concert Check Ticket]]>><</link>>\n\t\t\t<br>\n\t\t<</if>>\n\t\t<<if $scienceproject is \"ongoing\" and $scienceprojectdays is 0 and Time.dayState is \"day\" and $exposed lte 0>>"
+        },
+        {
+          "findString": "{\n\t\t\t\t\tname: () => V.submissive <= 850 ?",
+          "replace":"{\n\t\t\t\t\tname: () => \"月之气息\",\n\t\t\t\t\tcolour: \"lblue\",\n\t\t\t\t\thas: ($hourglassPassive isnot undefined),\n\t\t\t\t\ttext: \"你吸收了时光沙漏的粉末，现在大部分身体上的变化都会停止\",\n\t\t\t\t},\n\t\t\t\t{\n\t\t\t\t\tname: () => V.submissive <= 850 ?",
+          "passage": "Traits"
+        },
+        {
+          "passage": "Dance Studio",
+          "findString": "<<if $dance_job_intro>>",
+          "replace": "<<charlyafterconcert>>\n\t\t<<if $dance_job_intro>>"
+        },
+        {
+          "passage": "Ocean Breeze",
+          "findString": "\t<<if $openinghours is 1 and $exposed lt 1 and $oceanbreezejob is 1>>",
+          "replace": "\t<<caferandompassive>>\n\t<<if $openinghours is 1 and $exposed lt 1 and $oceanbreezejob is 1>>"
         }
       ]
     },
@@ -86,27 +119,27 @@
         "js": [
           {
             "from": "fragment.append(wikifier(\"transformationStateUpdate\"));",
-            "to": "if (!(V.worn.neck.name === \"timehourglass\"))\n\t{\n\t\tfragment.append(wikifier(\"transformationStateUpdate\"));\n\t}",
+            "to": "if (!(V.hourglassPassive !== undefined || V.worn.neck.name === \"timehourglass\"))\n\t{\n\t\tfragment.append(wikifier(\"transformationStateUpdate\"));\n\t}",
             "fileName": "time.js"
           },
           {
             "from": "earSlimeDaily();",
-            "to": "if (!(V.worn.neck.name === \"timehourglass\"))\n\t{\n\tearSlimeDaily();\n\t}",
+            "to": "if (!(V.hourglassPassive !== undefined || V.worn.neck.name === \"timehourglass\"))\n\t{\n\tearSlimeDaily();\n\t}",
             "fileName": "time.js"
           },
           {
             "from": "pregnancyProgress(genital = \"vagina\") {",
-            "to": "pregnancyProgress(genital = \"vagina\") {\n\tif ((V.worn.neck.name === \"timehourglass\")) return;",
+            "to": "pregnancyProgress(genital = \"vagina\") {\n\tif ((V.hourglassPassive !== undefined || V.worn.neck.name === \"timehourglass\")) return;",
             "fileName": "pregnancy.js"
           },
           {
             "from": "parasiteProgressDay(genital = \"anus\") {",
-            "to": "parasiteProgressDay(genital = \"anus\") {\n\tif ((V.worn.neck.name === \"timehourglass\")) return;",
+            "to": "parasiteProgressDay(genital = \"anus\") {\n\tif ((V.hourglassPassive !== undefined || V.worn.neck.name === \"timehourglass\")) return;",
             "fileName": "parasite.js"
           },
           {
             "from": "function dailyPlayerEffects() {\n\tconst fragment = document.createDocumentFragment();",
-            "to": "function dailyPlayerEffects() {\n\tconst fragment = document.createDocumentFragment();\n\tif (!(V.worn.neck.name === \"timehourglass\"))\n\t{",
+            "to": "function dailyPlayerEffects() {\n\tconst fragment = document.createDocumentFragment();\n\tif (!(V.hourglassPassive !== undefined || V.worn.neck.name === \"timehourglass\"))\n\t{",
             "fileName": "time.js"
           },
           {
@@ -116,27 +149,27 @@
           },
           {
             "from": "if (V.skulduggery >= 1000 && V.skulduggeryday < 1000) V.skulduggerymessage = 1;",
-            "to": "if ((V.worn.neck.name === \"timehourglass\")) return;\n\tif (V.skulduggery >= 1000 && V.skulduggeryday < 1000) V.skulduggerymessage = 1;",
+            "to": "if ((V.hourglassPassive !== undefined || V.worn.neck.name === \"timehourglass\")) return;\n\tif (V.skulduggery >= 1000 && V.skulduggeryday < 1000) V.skulduggerymessage = 1;",
             "fileName": "time.js"
           },
           {
             "from": "V.masochism *= 0.985;",
-            "to": "if (!(V.worn.neck.name === \"timehourglass\"))\n\t{\n\tV.masochism *= 0.985;\n\t}",
+            "to": "if (!(V.hourglassPassive !== undefined || V.worn.neck.name === \"timehourglass\"))\n\t{\n\tV.masochism *= 0.985;\n\t}",
             "fileName": "time.js"
           },
           {
             "from": "V.sadism *= 0.985;",
-            "to": "if (!(V.worn.neck.name === \"timehourglass\"))\n\t{\n\tV.sadism *= 0.985;\n\t}",
+            "to": "if (!(V.hourglassPassive !== undefined || V.worn.neck.name === \"timehourglass\"))\n\t{\n\tV.sadism *= 0.985;\n\t}",
             "fileName": "time.js"
           },
           {
             "from": "V.physiquechange = 1;",
-            "to": "if ((V.worn.neck.name === \"timehourglass\"))\n\t{\n\t\tV.physiquechange = 0;\n\t}\n\telse\n\t{\n\tV.physiquechange = 1;\n\t}",
+            "to": "if ((V.hourglassPassive !== undefined || V.worn.neck.name === \"timehourglass\"))\n\t{\n\t\tV.physiquechange = 0;\n\t}\n\telse\n\t{\n\tV.physiquechange = 1;\n\t}",
             "fileName": "time.js"
           },
           {
             "from": "if (V.skulduggery >= 1000 && V.skulduggeryday < 1000) V.skulduggerymessage = 1;",
-            "to": "if ((V.worn.neck.name === \"timehourglass\")) return;\n\tif (V.skulduggery >= 1000 && V.skulduggeryday < 1000) V.skulduggerymessage = 1;",
+            "to": "if ((V.hourglassPassive !== undefined || V.worn.neck.name === \"timehourglass\")) return;\n\tif (V.skulduggery >= 1000 && V.skulduggeryday < 1000) V.skulduggerymessage = 1;",
             "fileName": "time.js"
           },
           {

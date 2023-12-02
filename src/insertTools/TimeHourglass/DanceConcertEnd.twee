@@ -1,1 +1,24 @@
 :: Dance Concert End
+
+
+随着最后一首歌曲的落幕，演唱会终于结束了。观众们为这次精彩的表演喝彩，对 Jolly 的精彩演出表示敬意。
+<br><br>
+人潮开始缓缓向出口移动，我跟随着人群，带着满满的回忆离开了会场。
+<<if $chikanWraithKnown is 1 or $busChikanOrgasm is 1>>
+<span class="lewd">尽管那并不是关于演出的。</span><<arousal 1000>>
+<<promiscuity4>>
+<</if>>
+<<if $chikanWraithKnown is 1>>
+而祂也早已隐入人潮，不知所踪。
+<</if>>
+<br><br>
+途中，你回想起晚上的每一个细节：灯光，音乐，舞蹈，以及那充满活力的人群。这一切都让这次的演唱会成为了你难以忘怀的体验。
+<br><br>
+你很感谢查理赠送的门票，这让我有机会体验了这样一个美妙的夜晚。
+<br><br>
+<<set $danceconcert to "done">>
+
+
+<<pass 100>>
+
+<<link [[继续|Cliff Street]]>><</link>>

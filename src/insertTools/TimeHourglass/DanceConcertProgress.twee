@@ -1,0 +1,19 @@
+:: Dance Concert Progress
+周围的人群反应各异：
+<br>
+一个<<person2>><<person>>开始随着音乐节奏舞动，<<He>>的舞姿充满活力，完全沉浸在这欢快的氛围中。
+<br>
+一个<<person3>><<person>>则在为歌手喝彩，<<He>>的掌声和欢呼声汇成一片，为演唱会增添了更多的热情。
+<br>
+而一个<<person4>><<person>>则趁着音乐的间歇与身边的<<person1>><<person>>交谈，分享着对歌手的喜爱和对音乐的见解。
+<br>
+整个现场充满了音乐的魅力和观众的热情。
+<br><br>
+他们似乎都围在你身边。<span class="purple">有点不对劲…</span>
+<br><br>
+<<rngWraith>>
+<<if _wraithEvent is true>>
+<<set $chikanWraith to 1>>
+<</if>>
+
+<<link [[继续|Dance Concert Chikan Progress]]>><</link>>

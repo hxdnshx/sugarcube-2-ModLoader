@@ -1,4 +1,4 @@
-:: Dance Concert Chikan Discovered []
+:: Dance Concert Chikan Discovered
 <<effects>><<famesex 5>>
 <<person2>><<person>>看着你，语气充满了愤怒。“怎么了！？”<<person2>><<person>>吼道。
 <br><br>
@@ -18,8 +18,8 @@
 		<<loadNPC 2 "bus_chikan">>
 		<<clearNPC "bus_chikan">>
 
-		<<link [[继续|Dance Concert Orgasm]]>><<set $molestationstart to 1>><</link>>
-	<<elseif $NPCList[0].skills.security lte 300>>
+		<<link [[继续|Dance Concert orgasm]]>><<set $molestationstart to 1>><</link>>
+        <<elseif $NPCList[0].skills.security lte 300>>
 		"这<<girl>>似乎身体不舒服。"<<person1>><<person>>温顺地说。
 		<br><br>
 		“你看起来很难受啊，”<<person2>><<person>>带着歉意说道。"我们扶着你出门。"
@@ -63,7 +63,7 @@
 		<br>
 		<<person2>><<person>>沮丧地叹道：“求求你了，别再给我们本就困难的生活火上加油了。我们只想开开心心地听完演唱会。能不能…我们在结束前一直保持安静，好吗？”
 		<br><br>
-		你不想听<He>辩解，直接离开了会场。
+		你不想听<<he>>辩解，直接离开了会场。
 		<br><br>
 		<<link [[继续|Dance Concert Chikan End]]>><</link>>
 	<<else>>

@@ -1,4 +1,5 @@
-:: Dance Concert orgasm []
+:: Dance Concert orgasm
+<<concertSongProgress>>
 <<if $molestationstart is 1>>
 	<<set $molestationstart to 0>>
 	<<controlloss>>
@@ -39,7 +40,7 @@
 	<span id="next"><<link [[继续->Dance Concert orgasm]]>><</link>></span><<nexttext>>
 <</if>>
 
-:: Dance Concert orgasm Alarm []
+:: Dance Concert orgasm Alarm
 <<effects>>
 侵犯你的人注意到会场的安保听到了你们的动静探头过来查看，他们停止了对你的侵犯。
 他们随后离开了会场，在他们离开后你也觉得这里不宜久留。<<tearful>>你离开了会场。
@@ -48,7 +49,7 @@
 <<endcombat>>
 <<link [[继续|Dance Concert Outside]]>><</link>>
 
-:: Dance Concert orgasm Ejaculation []
+:: Dance Concert orgasm Ejaculation
 <<effects>>
 <<ejaculation>>
 他们在高潮时肌肉突然绷紧了，注意到会场的安保听到了你们的动静探头过来查看。
@@ -58,7 +59,7 @@
 <<endcombat>>
 <<link [[继续|Dance Concert Outside]]>><</link>>
 
-:: Dance Concert orgasm Escape []
+:: Dance Concert orgasm Escape
 <<effects>>
 这几个家伙吃痛退开，恰好会场的安保听到了你们的动静探头过来查看。
 <<tearful>>你抓紧机会离开了会场。

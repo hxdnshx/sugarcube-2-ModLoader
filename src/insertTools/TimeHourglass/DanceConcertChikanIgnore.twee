@@ -1,5 +1,6 @@
-:: Bus Chikan Molest Ignore []
+:: Dance Concert Chikan Ignore
 <<effects>>
+<<concertSongProgress>>
 <<set $busChikanPhase++>>
 <<set $passengerAttention -=1>>
 
@@ -12,19 +13,19 @@
         <<concertmolestwraithloop>>
 	<<elseif $arousal gte $arousalmax>>
             <<orgasm>>
-            <if $chikanWraith is 0>>
+            <<if $chikanWraith is 0>>
                 <<set $busChikanOrgasm to 1>>
                 你呻吟着瘫倒，靠到了一旁的观众身上，<<he>>把手从你的<<undies>>旁抽走，顺便在你的$worn.lower.cn_name_cap上擦净了液体。
                 <br><br>
                 <span class="red">大家都注意到你的异常。</span>
                 <br><br>
-                <<link [[继续|Dance Concert Chikan Molest Discovered]]>><</link>>
+                <<link [[继续|Dance Concert Chikan Discovered]]>><</link>>
             <<else>>
                 你不自觉地呻吟出来，但在那之前，<<He>>亲吻了你，你的耳朵立即开始嗡嗡鸣响。你的手指和脚趾变得冰冷，但脸却变得火热异常。你感觉自己的某一部分被剥夺了。
-                <<purity -25>><<llpurity>><<physique_loss 8>><<lphysique>><<awareness -20>><<lllawareness>><<gobsession>>\
+                <<purity -25>><<llpurity>><<physique_loss 8>><<lphysique>><<awareness -20>><<lllawareness>><<gobsession>>
                 <br><br>
                 <<if $chikanWraithKnown is 0>>
-                    <<generateWraith 1 true>><<initWraith "abomination">>
+                    <<generateWraith 1 true>>
                     你看到<<his>>的皮肤出现波纹不断变化，就像是融化的蜡油滴落在水面上，<<His>>的皮肤已经变成了赤裸裸的白色，惨白，没有生机。
                     <br><br>
                     <<set $chikanWraithKnown to 1>>

@@ -1,7 +1,11 @@
-:: Dance Concert Outside []
-
+:: Dance Concert Outside
+<<concertSongProgress>>
 你坐在会场一旁的长椅上休息。会场内人满为患，你并不想再挤进去。
 <br><br>
 不过这里依稀可以听见 Jolly 演唱的声音，你决定在这听完余下的歌曲。
 <br><br>
+<<if $songProgress gte 21>>
+<<link [[继续|Dance Concert End]]>><</link>>
+<<else>>
 <<link [[继续|Dance Concert Outside]]>><</link>>
+<</if>>

@@ -7,7 +7,7 @@
 	branch = master
 [submodule "mod/ImageLoaderHook"]
 	path = mod/ImageLoaderHook
-	url = https://github.com/Lyoko-Jeremie/sugarcube-2-ModLoader-ImgLoaderHooker.git
+	url = https://github.com/Lyoko-Jeremie/DoL_ImgLoaderHooker.git
 	branch = master
 [submodule "mod/CheckDoLCompressorDictionaries"]
 	path = mod/CheckDoLCompressorDictionaries
@@ -56,4 +56,20 @@
 [submodule "mod/template"]
 	path = mod/template
 	url = https://github.com/Lyoko-Jeremie/TemplateMod.git
+	branch = master
+[submodule "mod/I18nTweeList"]
+	path = mod/I18nTweeList
+	url = https://github.com/Lyoko-Jeremie/I18nTweeListAddonMod.git
+	branch = master
+[submodule "mod/TweeReplacerLinker"]
+	path = mod/TweeReplacerLinker
+	url = https://github.com/Lyoko-Jeremie/TweeReplacerLinkerAddon.git
+	branch = master
+[submodule "mod/BeautySelectorAddon"]
+	path = mod/BeautySelectorAddon
+	url = https://github.com/Lyoko-Jeremie/DoL_BeautySelectorAddonMod.git
+	branch = master
+[submodule "mod/I18nScriptList"]
+	path = mod/I18nScriptList
+	url = https://github.com/Lyoko-Jeremie/I18nScriptListAddonMod.git
 	branch = master

@@ -32,8 +32,13 @@ src/insertTools/**/*.zip
 !mod/ConflictChecker
 !mod/SweetAlert2Mod
 !mod/ModuleCssReplacer
+!mod/TweeReplacerLinker
 !mod/I18nTweeReplacer
+!mod/TweeReplacer
 !mod/template
+!mod/I18nTweeList
+!mod/I18nScriptList
+!mod/BeautySelectorAddon
 mod
 
 .idea/

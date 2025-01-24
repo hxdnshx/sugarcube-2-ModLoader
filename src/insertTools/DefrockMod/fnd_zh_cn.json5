@@ -270,6 +270,10 @@
   {
     id: "1111AD",
     findString: "<<link [[继续|Hospital Foyer]]>>"
+  },
+  {
+    id: "1111AE",
+    findString: "<<link [[建议脱下贞操锁|Temple Sydney Remove Chastity]]>>"
   }
 ]
 

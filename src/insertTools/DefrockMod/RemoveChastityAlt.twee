@@ -1,0 +1,30 @@
+:: Temple Sydney Remove Chastity Alt
+<<set $outside to 0>><<set $location to "temple">><<run statusCheck("Sydney")>><<temple_effects>><<effects>><<npc "Sydney">>
+<<set $NPCName[$NPCNameList.indexOf("Sydney")].chastity.anus to "">>
+<<set $NPCName[$NPCNameList.indexOf("Sydney")].chastity.vagina to "">>
+<<set $NPCName[$NPCNameList.indexOf("Sydney")].chastity.penis to "">>
+
+你们很快再次潜进神殿的禁区。
+<br><br>
+有了之前的经验，你们轻车熟路地来到了那扇门前。或许是守卫的疏忽，那扇门虚掩着，并没有上锁。
+<br>
+你们悄无声息地进入了房间，循着印象中的位置，顺利找到了钥匙。
+<br>
+<<He>>把钥匙插入锁眼，<<his>>的贞操带随即落下。<<He>>稳稳接住了贞操带。
+<br><br>
+
+/*如果玩家自己穿着着贞操带，会死档*/
+<<if !playerChastity()>>
+<<switch _sydneyStatus>>
+  <<case "corrupt" "corruptLust">>
+"来都来了，不如让我们再次玷污祈祷室吧，"<<He>>很是兴奋。
+<br>
+<<link [[去往祈祷室的隐藏入口|Sydney Temple Prayer Room]]>><<set $daily.sydney.walk to true>><<pass 5>><</link>>
+<br>
+  <<default>>
+<br>
+<</switch>>
+<</if>>
+
+
+<<link [[回到神殿|Temple]]>><<pass 15>><</link>>

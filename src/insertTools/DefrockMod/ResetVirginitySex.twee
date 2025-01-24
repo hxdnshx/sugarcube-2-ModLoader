@@ -1,0 +1,30 @@
+:: Reset Virginity Sex
+<<if $sexstart is 1>>
+	<<set $sexstart to 0>>
+	<<consensual>>
+	<<set $consensual to 1>>
+	<<neutral 1>>
+	<<maninit>>
+	<<npcexpose>>
+	<<set $enemytrust += 100>>
+	<<set $position to "missionary">>
+	<<set $position_lock to 1>>
+	<<promiscuity1>>
+	<<effectsvaginatopenis>>
+	<<bodyliquid "vaginaoutside" "goo">>
+	<<set $vaginaaction to "vaginapenisfuck">>
+	<<effectsvaginapenisfuck>>
+<</if>>
+
+<<effects>>
+<<effectsman>>
+<<man>>
+<<stateman>>
+<br><br>
+<<actionsman>>
+
+<<if _combatend>>
+	<span id="next"><<link [[继续|Reset Virginity Sex Finish]]>><</link>></span><<nexttext>>
+<<else>>
+	<span id="next"><<link [[继续|Reset Virginity Sex]]>><</link>></span><<nexttext>>
+<</if>>

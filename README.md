@@ -9,9 +9,9 @@ After enabling this Mod, you can have a conversation with Jordan to perform the 
 After completing this action, the player will no longer be a follower and will not need to adhere to 
 behavioral restrictions. Later, you can talk to Jordan again to rejoin.
 
-此外，你在完成 Sydney 的剧情后，可以通过与其在 `Temple` 进行对话重新穿上 `chastity belt`，这使得玩家可以与 Sydney 重新进行相关的剧情。
+此外，你在完成 Sydney 的剧情后，可以通过与其在 `Temple` 进行对话重新穿上、脱下 `chastity belt`，这使得玩家可以与 Sydney 重新进行相关的剧情。
 
-Additionally, after completing Sydney's storyline, you can talk to her in the `Temple` to put the `chastity belt` back on. 
+Additionally, after completing Sydney's storyline, you can talk to her in the `Temple` to put the `chastity belt` back on/off. 
 This allows the player to re-engage in the related storyline with Sydney.
 
 现在你可以在医院进行事件，以回复自己的童贞。
@@ -34,6 +34,7 @@ it will no longer trigger the feature to repurchase the clothing.
 
 新增了道具"时光项链"，在森林商店中可以购买。这个道具在佩戴时，获得以下效果：暂停野兽系转化变动。
 暂停知识遗忘。暂停怀孕进展。暂停寄生物的状态变动。暂停施虐/受虐的衰减。暂停意志等主要属性的缩减。暂停不安感的积累。
+在佩戴这个道具时，与舞蹈老师会有额外剧情，最终使得这个道具的效果变为特质，不再占用项链槽位。
 
 Added the item "Time Necklace", which can be purchased in the Forest Shop. While wearing this item, 
 the following effects are obtained: Pause transformation in beast series. Pause knowledge forgetting. 

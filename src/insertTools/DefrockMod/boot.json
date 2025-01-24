@@ -15,10 +15,15 @@
     "defrockmod.twee",
     "ResetChastity.twee",
     "ResetChastity2.twee",
+    "ResetChastityAlt.twee",
+    "ResetChastityWidget.twee",
     "ResetVirginity.twee",
     "ResetVirginityCheck.twee",
     "ResetVirginityHypnosis.twee",
-    "ResetVirginityRefuse.twee"
+    "ResetVirginityRefuse.twee",
+    "RemoveChastity.twee",
+    "RemoveChastity2.twee",
+    "RemoveChastityAlt.twee"
   ],
   "imgFileList": [
   ],

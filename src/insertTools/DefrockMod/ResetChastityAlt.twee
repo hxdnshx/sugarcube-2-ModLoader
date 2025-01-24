@@ -1,0 +1,15 @@
+:: Temple Sydney Reset Chastity Alt
+<<set $outside to 0>><<set $location to "temple">><<temple_effects>><<effects>><<npc "Sydney">>
+<<set $NPCName[$NPCNameList.indexOf("Sydney")].chastity.anus to "anal shield">>
+<<set $NPCName[$NPCNameList.indexOf("Sydney")].chastity.vagina to "chastity belt">>
+<<set $NPCName[$NPCNameList.indexOf("Sydney")].chastity.penis to "chastity belt">>
+
+房间里隐约传来了金属的碰撞声和零星的对话声，最后伴随着一个清晰的咔嚓声。
+<br>
+我不禁开始担心，约旦是否会问起那天晚上发生的事情。
+<br><br>
+不久之后，<<He>>和约旦一起从小房间里走了出来。
+<br>
+<<He>>看上去神情如常。"一切顺利，"<<He>>的语气平静而温暖，丝毫没有惊慌，让我稍稍放下了心中的疑虑。
+
+<<link [[继续|Temple]]>><<endevent>><</link>>

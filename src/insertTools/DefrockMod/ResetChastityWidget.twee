@@ -1,0 +1,13 @@
+:: Reset Chastity Widget [widget]
+
+/*原版剧情线的纯洁和堕落只能各走一次，需要有救济手段*/
+<<widget "clearchastity">>
+        <<if $location is "temple">>
+        <<if $NPCName[$NPCNameList.indexOf("Sydney")].chastity.penis is "chastity belt" or $NPCName[$NPCNameList.indexOf("Sydney")].chastity.vagina is "chastity belt">>
+        <<if $templePromised is "Sydney" or $sydneySeen.includes("corruptroom")>>
+        /*已通关纯洁或堕落线*/
+            <<ind>><<link [[建议脱下贞操锁|Temple Sydney Remove Chastity]]>><<pass 2>><</link>>
+        <</if>>
+        <</if>>
+        <</if>>
+<</widget>>

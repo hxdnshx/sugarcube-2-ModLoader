@@ -1,0 +1,16 @@
+:: Temple Sydney Remove Chastity 2
+<<set $outside to 0>><<set $location to "temple">><<temple_effects>><<effects>><<npc "Sydney">>
+<<set $NPCName[$NPCNameList.indexOf("Sydney")].chastity.anus to "">>
+<<set $NPCName[$NPCNameList.indexOf("Sydney")].chastity.vagina to "">>
+<<set $NPCName[$NPCNameList.indexOf("Sydney")].chastity.penis to "">>
+
+<br><br>
+约旦带领你们来到一个小房间。"请脱衣服。" 悉尼褪去了自己的衣物。
+<br><br>
+约旦从斗篷里拿出阴森的刀片，然后跪在了<<He>>面前。
+几秒钟后，贞操带被毁在地板上，<<He>>的<<if $NPCName[$NPCNameList.indexOf("Sydney")].gender is "m">>肉棒<<else>>小穴<</if>>暴露在外，变得裸露和脆弱。
+<br>
+
+<br>
+
+<<link [[继续|Temple]]>><<endevent>><</link>>

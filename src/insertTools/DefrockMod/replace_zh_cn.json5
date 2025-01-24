@@ -340,6 +340,11 @@
     findString: "<<link [[继续|Hospital Foyer]]>>"
   },
   {
+    id: "1111AE",
+    noop: true, replace: "",
+    findString: "<<link [[继续|Hospital Foyer]]>>"
+  },
+  {
     id: "Vanilla1",
     all: true,
     passage: "Temple Jordan",
@@ -351,7 +356,7 @@
     all: true,
     passage: "Widgets Sydney",
     findString: "<<if $location is \"temple\" and $sydneyChastityRemoveIntro>>",
-    replace:"<<if $location is \"temple\">>\n        <<if $NPCName[$NPCNameList.indexOf(\"Sydney\")].chastity.penis is \"\" or $NPCName[$NPCNameList.indexOf(\"Sydney\")].chastity.vagina is \"\">>\n            <<ind>><<link [[建议戴上贞操锁|Temple Sydney Reset Chastity]]>><<pass 2>><</link>>\n        <</if>>\n    <</if>>\n\t<<if $location is \"temple\" and $sydneyChastityRemoveIntro>>\n\t"
+    replace:"<<clearchastity>><<if $location is \"temple\">>\n        <<if $NPCName[$NPCNameList.indexOf(\"Sydney\")].chastity.penis is \"\" or $NPCName[$NPCNameList.indexOf(\"Sydney\")].chastity.vagina is \"\">>\n            <<ind>><<link [[建议戴上贞操锁|Temple Sydney Reset Chastity]]>><<pass 2>><</link>>\n        <</if>>\n    <</if>>\n\t<<if $location is \"temple\" and $sydneyChastityRemoveIntro>>\n\t"
   },
   {
     id: "Vanilla3",

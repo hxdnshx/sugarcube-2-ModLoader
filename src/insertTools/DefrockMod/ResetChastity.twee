@@ -5,10 +5,11 @@
 
 
 <<if Time.dayState is "night" or Time.dayState is "dusk">>
-	你告诉了悉尼这个建议，<<He>>听罢点点头。"但我们得等到约旦回来……所以，大概要明天去了。"
+	你告诉了<<He>>这个建议，<<He>>听罢点点头。"但我们得等到约旦回来……所以，大概要明天去了。"
 	<br><br>
 	<<sydneyOptions>>
 <<else>>
+<<if $templePromised is "Sydney">>
     你告诉了悉尼这个建议，<<He>>听罢点点头，和你一起走向约旦。
     <br>
     约旦见你们走来，露出了微笑。"欢迎回来。" <<He>>紧紧握住了你的手。
@@ -20,5 +21,21 @@
     <br><br>
 
     <<link [[继续|Temple Sydney Reset Chastity 2]]>><<pass 5>><</link>>
+<<else>>
+  你告诉了<<He>>这个建议，<<He>>听罢点点头。
+  <br>
+  <<switch _sydneyStatus>>
+  <<case "pure" "neutral">>
+  "如果我再戴上这东西，那我还算是纯洁的，对吧？"
+  <<case "corrupt">>
+  "我们都是欲望的囚徒，深陷其中无法自拔。但至少这还不算太晚。"
+  <<case "corruptLust">>
+  "但你得负责让我不无聊哦，不然，我们当然知道怎样找乐子~"
+  <<default>>
+  "如果我再戴上这东西，那我还算是纯洁的，对吧？"
+  <</switch>>
+  <br><br>
+  你看着<<He>>走向约旦。在简短的对话后，约旦带着<<He>>去到了一个小房间。
+  <<link [[继续|Temple Sydney Reset Chastity Alt]]>><<pass 5>><</link>>
 <</if>>
-
+<</if>>

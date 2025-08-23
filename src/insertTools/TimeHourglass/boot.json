@@ -118,8 +118,8 @@
       "params": {
         "js": [
           {
-            "from": "fragment.append(wikifier(\"transformationStateUpdate\"));",
-            "to": "if (!(V.hourglassPassive !== undefined || V.worn.neck.name === \"timehourglass\"))\n\t{\n\t\tfragment.append(wikifier(\"transformationStateUpdate\"));\n\t}",
+            "from": "wikifier(\"transformationStateUpdate\");",
+            "to": "if (!(V.hourglassPassive !== undefined || V.worn.neck.name === \"timehourglass\"))\n\t{\n\t\twikifier(\"transformationStateUpdate\");\n\t}",
             "fileName": "time.js"
           },
           {
@@ -138,8 +138,8 @@
             "fileName": "parasite.js"
           },
           {
-            "from": "function dailyPlayerEffects() {\n\tconst fragment = document.createDocumentFragment();",
-            "to": "function dailyPlayerEffects() {\n\tconst fragment = document.createDocumentFragment();\n\tif (!(V.hourglassPassive !== undefined || V.worn.neck.name === \"timehourglass\"))\n\t{",
+            "from": "function dailyPlayerEffects() {",
+            "to": "function dailyPlayerEffects() {\n\tif (!(V.hourglassPassive !== undefined || V.worn.neck.name === \"timehourglass\"))\n\t{",
             "fileName": "time.js"
           },
           {
@@ -174,7 +174,7 @@
           },
           {
             "from": "V.schooleventtimer--;",
-            "to": "if (V.$danceconcert === \"ongoing\") {\n\t\tV.danceconcertdays--;\n\t\tif (V.danceconcertdays < 0) {\n\t\t\tV.danceconcertdays = \"done\";\n\t\t\tfragment.append(wikifier(\"danceconcertfinish\"));\n\t\t}\n\t}\n\tV.schooleventtimer--;",
+            "to": "if (V.danceconcert === \"ongoing\") {\n\t\tV.danceconcertdays--;\n\t\tif (V.danceconcertdays < 0) {\n\t\t\tV.danceconcertdays = \"done\";\n\t\t\tfragment.append(wikifier(\"danceconcertfinish\"));\n\t\t}\n\t}\n\tV.schooleventtimer--;",
             "fileName": "time.js"
           }
         ]

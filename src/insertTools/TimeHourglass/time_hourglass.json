@@ -4,11 +4,14 @@
     "name": "timehourglass",
     "name_cap": "time hourglass", "cn_name_cap": "时光沙漏",
     "variable": "timehourglass",
+    "combat": {
+      "reference": "naked"
+    },
     "integrity": 100,
     "integrity_max": 100,
     "fabric_strength": 50,
     "reveal": 1,
-    "word": "a",
+    "word": "t",
     "plural": 0,
     "colour": 0,
     "colour_options": [],

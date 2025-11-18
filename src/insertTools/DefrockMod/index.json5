@@ -423,7 +423,7 @@
     id: "Vanilla3",
     all: true,
     passage: "Hospital Foyer",
-    findString: "<<if $player.breastsize lte 11>>"
+    findString: "<<if $player.breastsize lt 12>>"
   }
 ]
 

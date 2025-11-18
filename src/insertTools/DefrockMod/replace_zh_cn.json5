@@ -349,7 +349,7 @@
     all: true,
     passage: "Temple Jordan",
     findString: "<<if $temple_harassed is 1>>",
-    replace: "<<if $temple_rank is \"initiate\">>\n<<link [[询问还俗 (£10000 0:05)|Temple Defrock]]>><<set $money -= 1000000>><<pass 60>><</link>>\n<br>\n<</if>>\n<<if $temple_harassed is 1>>"
+    replace: "<<if $temple_rank is \"initiate\" or $temple_rank is \"monk\">>\n<<link [[询问还俗 (£10000 0:05)|Temple Defrock]]>><<set $money -= 1000000>><<pass 60>><</link>>\n<br>\n<</if>>\n<<if $temple_harassed is 1>>"
   },
   {
     id: "Vanilla2",
@@ -362,8 +362,8 @@
     id: "Vanilla3",
     all: true,
     passage: "Hospital Foyer",
-    findString: "<<if $player.breastsize lte 11>>",
-    replace:"<<if $player.virginity.penile isnot true or $player.virginity.vaginal isnot true>>\n\t\t    <<templeicon \"virginity\">><<link [[咨询恢复童贞 (0:10)|Reset Virginity]]>><<pass 10>><</link>>\n\t\t<br><</if>>\n\t\t<<if $player.breastsize lte 11>>"
+    findString: "<<if $player.breastsize lt 12>>",
+    replace:"<<if $player.virginity.penile isnot true or $player.virginity.vaginal isnot true>>\n\t\t    <<templeicon \"virginity\">><<link [[咨询恢复童贞 (0:10)|Reset Virginity]]>><<pass 10>><</link>>\n\t\t<br><</if>>\n\t\t<<if $player.breastsize lt 12>>"
   }
 ]
 

@@ -379,8 +379,9 @@
 <</widget>>
 
 
+
 <<widget "charlyafterconcert">>
-<<if $danceconcert is "done" and $charlieresponse is 0>>
+<<if ($danceconcert is "done" and $charlieresponse is 0) or $danceconcertdays is "done">>
     你又遇到了查理。他似乎对你去参加演唱会的情况很感兴趣。
     <br>
     “嘿，你去了 Jolly 的演唱会吧？” 查理微笑着问道，“怎么样？我希望你喜欢。”
@@ -399,7 +400,11 @@
     查理听了之后，显得有些失望，但他很快露出了理解的神情。“那真是太可惜了。Jolly 的演唱会总是很精彩，她的歌声非常动听。但我理解，有时候事情就是这样，重要的是你现在一切都好。”
     <br>
     随后查理鼓励地拍了拍你的肩膀。“没关系的，总会有下次的。只要你现在没事就好。如果以后有其他的演唱会，我也会告诉你的。”
+    <<unset $danceconcert>>
+    <<unset $dance_ticket_intro>>
     <</if>>
+    <<unset $danceconcertdays>>
+    <<unset $danceconcertarrive>>
     <br><br>
     <<set $charlieresponse to 1>>
     <<link [[继续|Dance Studio]]>><</link>>

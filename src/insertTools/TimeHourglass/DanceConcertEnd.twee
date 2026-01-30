@@ -3,7 +3,7 @@
 
 随着最后一首歌曲的落幕，演唱会终于结束了。观众们为这次精彩的表演喝彩，对 Jolly 的精彩演出表示敬意。
 <br><br>
-人潮开始缓缓向出口移动，我跟随着人群，带着满满的回忆离开了会场。
+人潮开始缓缓向出口移动，你跟随着人群，带着满满的回忆离开了会场。
 <<if $chikanWraithKnown is 1 or $busChikanOrgasm is 1>>
 <span class="lewd">尽管那并不是关于演出的。</span><<arousal 1000>>
 <<promiscuity4>>

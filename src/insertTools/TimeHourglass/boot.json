@@ -29,7 +29,9 @@
     "DanceConcertChikanHelp.twee",
     "DanceConcertChikanIgnore.twee",
     "DanceConcertChikanProgress.twee",
-    "DanceConcertChikanResist.twee"
+    "DanceConcertChikanResist.twee",
+    "TimeHourglassResetIntro.twee",
+    "TimeHourglassResetEnd.twee"
   ],
   "imgFileList": [
     "img/clothes/neck/timehourglass/full.png",
@@ -108,6 +110,11 @@
           "passage": "Ocean Breeze",
           "findString": "\t<<if $openinghours is 1 and $exposed lt 1 and $oceanbreezejob is 1>>",
           "replace": "\t<<caferandompassive>>\n\t<<if $openinghours is 1 and $exposed lt 1 and $oceanbreezejob is 1>>"
+        },
+        {
+          "passage": "Forest Shop Entrance",
+          "findString": "<<if $robin_in_forest_shop>>",
+          "replace": "\t<<if ($gwylan_aborted is undefined or $gwylan_aborted lte 0) and $hourglassPassive isnot undefined>>\n\t\t\n\t\t<br><<link [[询问月之气息 (0:05)|Time Hourglass Reset Intro]]>><<pass 5>><</link>><br>\n\t<</if>>\n\t<<if $robin_in_forest_shop>>"
         }
       ]
     },
@@ -174,7 +181,7 @@
           },
           {
             "from": "V.schooleventtimer--;",
-            "to": "if (V.danceconcert === \"ongoing\") {\n\t\tV.danceconcertdays--;\n\t\tif (V.danceconcertdays < 0) {\n\t\t\tV.danceconcertdays = \"done\";\n\t\t\tfragment.append(wikifier(\"danceconcertfinish\"));\n\t\t}\n\t}\n\tV.schooleventtimer--;",
+            "to": "if (V.danceconcert === \"ongoing\") {\n\t\tV.danceconcertdays--;\n\t\tif (V.danceconcertdays < 0) {\n\t\t\tV.danceconcert = \"done\";\n\t\t}\n\t}\n\tV.schooleventtimer--;",
             "fileName": "time.js"
           }
         ]

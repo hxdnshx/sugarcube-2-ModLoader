@@ -35,6 +35,7 @@ it will no longer trigger the feature to repurchase the clothing.
 新增了道具"时光项链"，在森林商店中可以购买。这个道具在佩戴时，获得以下效果：暂停野兽系转化变动。
 暂停知识遗忘。暂停怀孕进展。暂停寄生物的状态变动。暂停施虐/受虐的衰减。暂停意志等主要属性的缩减。暂停不安感的积累。
 在佩戴这个道具时，与舞蹈老师会有额外剧情，最终使得这个道具的效果变为特质，不再占用项链槽位。
+当你不再想要这个特质时，可以在森林商店触发事件移除。
 
 Added the item "Time Necklace", which can be purchased in the Forest Shop. While wearing this item, 
 the following effects are obtained: Pause transformation in beast series. Pause knowledge forgetting. 
